@@ -19,6 +19,12 @@ class _NavBarState extends State<NavBar> {
   Widget build(BuildContext context) {
     return BottomNavigationBar(
         currentIndex: cur_index,
+        showUnselectedLabels: true,
+        backgroundColor: Colors.black26,
+        unselectedItemColor: Theme.of(context).colorScheme.secondary ,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
+        selectedFontSize: 15,
+        selectedIconTheme: IconThemeData(size: 30),
         onTap: (index) {
           setState(() {
             cur_index = index;
@@ -28,24 +34,24 @@ class _NavBarState extends State<NavBar> {
           BottomNavigationBarItem(
               label: "Games",
               icon: Icon(Icons.sports_esports),
-              activeIcon: Icon(Icons.sports_esports , color: Colors.tealAccent,),
           ),
-          BottomNavigationBarItem(
-              label: "Levels",
-              icon: Icon(Icons.route),
-            ),
           BottomNavigationBarItem(
               label: "Home",
               icon: Icon(Icons.home),
           ),
           BottomNavigationBarItem(
-              label: "Community",
-              icon: Icon(Icons.groups),
-          ),
-          BottomNavigationBarItem(
-              label: "Profile",
-              icon: Icon(Icons.person_outline),
-          ),
+              label: "Levels",
+              icon: Icon(Icons.route),
+            ),
+    
+          // BottomNavigationBarItem(
+          //     label: "Community",
+          //     icon: Icon(Icons.groups),
+          // ),
+          // BottomNavigationBarItem(
+          //     label: "Profile",
+          //     icon: Icon(Icons.person_outline),
+          // ),
         ]);
   }
 }
