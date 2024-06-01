@@ -28,7 +28,8 @@ class MainApp extends StatelessWidget {
             background: Colors.black38,
             onBackground: Colors.white,
             surface: Colors.blueGrey.shade100,
-            onSurface: Colors.tealAccent),
+            onSurface: Colors.tealAccent
+        ),
         textTheme: GoogleFonts.ralewayTextTheme(
           Theme.of(context).textTheme
         ),
@@ -38,10 +39,10 @@ class MainApp extends StatelessWidget {
         routes: [
           GoRoute(
             path: '/',
-            builder: (context , state) => HomePage()),
-            
-            
-        ]),
+            builder: (context , state) => const HomePage()
+          ),
+        ],
+      ),
       debugShowCheckedModeBanner: false,
       
     );
