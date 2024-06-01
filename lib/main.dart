@@ -21,11 +21,11 @@ class MainApp extends StatelessWidget {
             brightness: Brightness.light,
             primary: Colors.tealAccent,
             onPrimary: Colors.white,
-            secondary: Colors.white,
+            secondary: Colors.greenAccent,
             onSecondary: Colors.white,
             error: Colors.pink.shade900,
             onError: Colors.white,
-            background: Colors.black38,
+            background: Colors.grey.shade900,
             onBackground: Colors.white,
             surface: Colors.blueGrey.shade100,
             onSurface: Colors.tealAccent
