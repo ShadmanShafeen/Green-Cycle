@@ -28,8 +28,8 @@ class _CarouselState extends State<Carousel> {
           options: CarouselOptions(
             enlargeCenterPage: true,
             autoPlay: true,
-            autoPlayAnimationDuration: Duration(seconds: 3),
-            autoPlayInterval: Duration(seconds: 5),
+            autoPlayAnimationDuration: const Duration(seconds: 3),
+            autoPlayInterval: const Duration(seconds: 5),
             onPageChanged: (index, reason) {
               setState(() {
                 _currentTextCard = index;
@@ -46,7 +46,7 @@ class _CarouselState extends State<Carousel> {
       children: [
         for (int i = 0; i <= triviaList.length ; i++)
           Padding(
-            padding: EdgeInsets.only(top: 15, left: 10, right: 10),
+            padding: const EdgeInsets.only(top: 15, left: 10, right: 10),
             child: CircleAvatar(
               radius: i == _currentTextCard ? 5 : 3,
               backgroundColor: i == _currentTextCard

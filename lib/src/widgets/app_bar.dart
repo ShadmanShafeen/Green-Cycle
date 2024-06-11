@@ -8,14 +8,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      leading: IconButton(icon: Icon(Icons.compost , color: Theme.of(context).colorScheme.primary,), onPressed: () {},),
+      leading: IconButton(icon: Icon(Icons.compost , color: Theme.of(context).colorScheme.error,), onPressed: () {},),
       title: Text("Green Cycle"),
       actions: [
-        IconButton(icon: Icon(Icons.notifications , color: Theme.of(context).colorScheme.primary,) ,onPressed: () {}, ),
-        IconButton(icon: Icon(Icons.person , color: Theme.of(context).colorScheme.primary,) ,onPressed: () {}, )
-
+        IconButton(icon: Icon(Icons.notifications , color: Theme.of(context).colorScheme.error,) ,onPressed: () {}, ),
+        IconButton(icon: Icon(Icons.person , color: Theme.of(context).colorScheme.error,) ,onPressed: () {}, )
       ],
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
     );
   }
 

@@ -10,14 +10,14 @@ class TextCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
           side: BorderSide(color: Colors.white.withOpacity(0.7))),
-      color: Theme.of(context).colorScheme.background,
+      color: Theme.of(context).colorScheme.surface,
       child: Padding(
         padding: const EdgeInsets.all(15),
         child: Text(
           trivia,
           style: TextStyle(
               color:
-                  Theme.of(context).colorScheme.onBackground.withOpacity(0.8)),
+                  Theme.of(context).colorScheme.onSurface.withOpacity(0.8)),
         ),
       ),
     );

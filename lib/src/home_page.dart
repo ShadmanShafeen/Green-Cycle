@@ -1,17 +1,18 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:green_cycle/src/homepage/action_card.dart';
 import 'package:green_cycle/src/homepage/carousel.dart';
+import 'package:green_cycle/src/widgets/ErrorDialogue.dart';
 import 'package:green_cycle/src/widgets/app_bar.dart';
 import 'package:green_cycle/src/widgets/nav_bar.dart';
 import 'package:green_cycle/src/homepage/search_bar.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 
 class HomePage extends StatelessWidget {
-  HomePage({super.key});
+  const HomePage({super.key});
 
-  int _currentTextCard = 0;
+  final int _currentTextCard = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +26,7 @@ class HomePage extends StatelessWidget {
             SizedBox(
               height: 20,
             ),
-            Container(
+            SizedBox(
               width: MediaQuery.of(context).size.width,
               child: Row(
                 children: [
@@ -36,9 +37,11 @@ class HomePage extends StatelessWidget {
                   IconButton(
                     icon: Icon(
                       Icons.photo_camera,
-                      color: Theme.of(context).colorScheme.primary,
+                      color: Theme.of(context).colorScheme.error,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      context.go("/camera-control");
+                    },
                   ),
                 ],
               ),
@@ -48,7 +51,7 @@ class HomePage extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 15, right: 15),
-              child: Container(
+              child: SizedBox(
                 height: MediaQuery.of(context).size.height * 0.28,
                 child: GridView.count(
                   crossAxisCount: 3,
@@ -56,9 +59,20 @@ class HomePage extends StatelessWidget {
                   mainAxisSpacing: 5,
                   childAspectRatio: 1,
                   children: [
-                    ActionCard(iconName: "locate.png", label: "Locate"),
+                    ActionCard(
+                      iconName: "locate.png",
+                      label: "Locate",
+                      onPressed: () {
+                        context.go('/locate-vendor1');
+                      },
+                    ),
                     ActionCard(iconName: "schedule.png", label: "Schedule"),
-                    ActionCard(iconName: "list.png", label: "List"),
+                    ActionCard(
+                        iconName: "list.png",
+                        label: "List",
+                        onPressed: () {
+                          context.go('/waste-item-list');
+                        }),
                     ActionCard(iconName: "voucher.png", label: "Voucher"),
                     ActionCard(iconName: "stories.png", label: "Stories"),
                     ActionCard(iconName: "community.png", label: "Community"),
@@ -71,7 +85,7 @@ class HomePage extends StatelessWidget {
               child: Text(
                 "Play Exciting Games!",
                 style: TextStyle(
-                    color: Theme.of(context).colorScheme.onBackground,
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontSize: 20,
                     fontWeight: FontWeight.w600),
               ),
@@ -88,15 +102,14 @@ class HomePage extends StatelessWidget {
               child: Text(
                 "Did You Know...",
                 style: TextStyle(
-                    color: Theme.of(context).colorScheme.onBackground,
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontSize: 20,
                     fontWeight: FontWeight.w600),
               ),
             ),
             Padding(
                 padding: const EdgeInsets.only(top: 15, left: 15, right: 15),
-                child: Carousel()
-                ),
+                child: Carousel()),
             SizedBox(
               height: 30,
             ),
@@ -106,6 +119,4 @@ class HomePage extends StatelessWidget {
       bottomNavigationBar: NavBar(),
     );
   }
-
-
 }
