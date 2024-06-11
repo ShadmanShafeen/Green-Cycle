@@ -26,25 +26,28 @@ class _NavBarState extends State<NavBar> {
         },
         items: [
           BottomNavigationBarItem(
-              label: "Games",
-              icon: Icon(Icons.sports_esports),
-              activeIcon: Icon(Icons.sports_esports , color: Colors.tealAccent,),
-          ),
-          BottomNavigationBarItem(
-              label: "Levels",
-              icon: Icon(Icons.route),
+            label: "Games",
+            icon: Icon(Icons.sports_esports),
+            activeIcon: Icon(
+              Icons.sports_esports,
+              color: Colors.tealAccent,
             ),
-          BottomNavigationBarItem(
-              label: "Home",
-              icon: Icon(Icons.home),
           ),
           BottomNavigationBarItem(
-              label: "Community",
-              icon: Icon(Icons.groups),
+            label: "Levels",
+            icon: Icon(Icons.route),
           ),
           BottomNavigationBarItem(
-              label: "Profile",
-              icon: Icon(Icons.person_outline),
+            label: "Home",
+            icon: Icon(Icons.home),
+          ),
+          BottomNavigationBarItem(
+            label: "Community",
+            icon: Icon(Icons.groups),
+          ),
+          BottomNavigationBarItem(
+            label: "Profile",
+            icon: Icon(Icons.person_outline),
           ),
         ]);
   }

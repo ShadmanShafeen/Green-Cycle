@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:green_cycle/get_started.dart';
+import 'package:green_cycle/Profile/profile.dart';
 import 'package:green_cycle/src/home_page.dart';
 
 void main() {
-  runApp(const MainApp());
+  runApp(const MaterialApp(home: Profile(), debugShowCheckedModeBanner: false,));
 }
 
 class MainApp extends StatelessWidget {
@@ -14,6 +16,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
+
       title: "Green Cycle",
       theme: ThemeData(
         useMaterial3: true,
@@ -29,21 +32,16 @@ class MainApp extends StatelessWidget {
             onBackground: Colors.white,
             surface: Colors.blueGrey.shade100,
             onSurface: Colors.tealAccent),
-        textTheme: GoogleFonts.ralewayTextTheme(
-          Theme.of(context).textTheme
-        ),
+        textTheme: GoogleFonts.ralewayTextTheme(Theme.of(context).textTheme),
       ),
       routerConfig: GoRouter(
-        initialLocation: '/',
-        routes: [
-          GoRoute(
-            path: '/',
-            builder: (context , state) => HomePage()),
-            
-            
-        ]),
+        initialLocation: '/', 
+      routes: [
+        GoRoute(path: '/', builder: (context, state) => HomePage()),
+        
+        GoRoute(path: '/profile', builder: (context, state) => Profile()),
+      ]),
       debugShowCheckedModeBanner: false,
-      
     );
   }
 }
