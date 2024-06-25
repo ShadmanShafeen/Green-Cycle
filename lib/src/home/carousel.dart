@@ -1,6 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:green_cycle/src/homepage/text_card.dart';
+import 'package:green_cycle/src/home/text_card.dart';
 
 class Carousel extends StatefulWidget {
   const Carousel({super.key});

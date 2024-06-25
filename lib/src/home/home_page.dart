@@ -3,9 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:green_cycle/src/Locate_Vendor/location_permission_modal.dart';
-import 'package:green_cycle/src/homepage/action_card.dart';
-import 'package:green_cycle/src/homepage/carousel.dart';
-import 'package:green_cycle/src/homepage/search_bar.dart';
+import 'package:green_cycle/src/home/action_card.dart';
+import 'package:green_cycle/src/home/carousel.dart';
+import 'package:green_cycle/src/home/search_bar.dart';
 import 'package:green_cycle/src/widgets/app_bar.dart';
 import 'package:green_cycle/src/widgets/nav_bar.dart';
 
