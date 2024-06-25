@@ -1,7 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:green_cycle/src/widgets/ErrorDialogue.dart';
+import 'package:green_cycle/src/utils/snackbars_alerts.dart';
 
 class CameraControl extends StatefulWidget {
   final List<CameraDescription> cameras;
@@ -37,80 +37,111 @@ class _CameraControlState extends State<CameraControl> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: buildAppBar(context),
         body: (!controller.value.isInitialized)
             ? Container(
                 alignment: Alignment.center,
                 color: Colors.white,
                 child: const CircularProgressIndicator(),
               )
-            : Stack(
-                fit: StackFit.expand,
-                children: <Widget>[
-                  CameraPreview(controller),
-                  AnimatedPositioned(
-                    top: MediaQuery.of(context).size.height/15,
-                    left: MediaQuery.of(context).size.width / 2 - 150,
-                    duration: const Duration(milliseconds: 200),
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.white10,
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          returnBackButton(context),
-                          const SizedBox(width: 30),
-                          const Text(
-                            "Scan an object",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
+            : Column(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Icon(Icons.lightbulb, color: Colors.white24),
+                            SizedBox(width: 10),
+                            Text(
+                              "Tips",
+                              style: TextStyle(
+                                color: Colors.white24,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          "Make sure the object is in focus. Take a clear picture otherwise it may lead to some mislabeling.",
+                          style: TextStyle(
+                            color: Colors.white24,
+                            fontSize: 16,
                           ),
-                          const SizedBox(width: 30),
-                          const Icon(
-                            Icons.recycling,
-                            color: Colors.white,
-                            size: 30,
-                          ),
-                        ],
-                      ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
                     ),
                   ),
+                  CameraPreview(controller),
                 ],
               ),
-        floatingActionButton: Container(
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: Colors.white10,
-            borderRadius: BorderRadius.circular(30),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              returnIconButton(
-                  context,
-                  const Icon(
-                    Icons.collections,
-                  )),
-              const SizedBox(width: 20),
-              returnFloatingActionButton(context),
-              const SizedBox(width: 20),
-              returnIconButton(
-                  context,
-                  const Icon(
-                    Icons.loop,
-                  )),
-            ],
-          ),
-        ),
+        floatingActionButton: buildFloatingButtonContainer(context),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
+    );
+  }
+
+  Container buildFloatingButtonContainer(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.white10,
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          returnIconButton(
+            context,
+            const Icon(
+              Icons.collections,
+            ),
+          ),
+          const SizedBox(width: 20),
+          returnFloatingActionButton(context),
+          const SizedBox(width: 20),
+          returnIconButton(
+            context,
+            const Icon(
+              Icons.loop,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  AppBar buildAppBar(BuildContext context) {
+    return AppBar(
+      backgroundColor: Theme.of(context).colorScheme.surfaceDim,
+      elevation: 0,
+      leading: returnBackButton(context),
+      actions: const [
+        Icon(
+          Icons.recycling,
+          color: Colors.white,
+        ),
+        SizedBox(width: 20),
+      ],
+      title: const Text(
+        "Scan an object",
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      centerTitle: true,
+      automaticallyImplyLeading: false,
     );
   }
 
@@ -134,13 +165,14 @@ class _CameraControlState extends State<CameraControl> {
         break;
     }
 
-    showDialog(
-      context: context,
-      builder: (context) => ErrorDialog(message: message),
-    );
+    createQuickAlert(
+        context: context,
+        title: "Camera Error",
+        message: message,
+        type: "error");
   }
 
-  Widget returnBackButton(BuildContext context) {
+  BackButton returnBackButton(BuildContext context) {
     return BackButton(
       color: Colors.white,
       onPressed: () {
@@ -153,7 +185,7 @@ class _CameraControlState extends State<CameraControl> {
     );
   }
 
-  Widget returnIconButton(BuildContext context, Widget icon) {
+  IconButton returnIconButton(BuildContext context, Widget icon) {
     return IconButton(
       style: IconButton.styleFrom(
         foregroundColor: Theme.of(context).colorScheme.onError,

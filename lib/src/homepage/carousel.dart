@@ -18,13 +18,13 @@ class _CarouselState extends State<Carousel> {
     'E-waste recycling recovers valuable metals as well as prevents harmful chemicals from contaminating the environment.',
     'It takes around 1,000 years for a plastic bag to degrade in a landfill. Imagine the damage to the environment.',
   ];
+
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      CarouselSlider(
-          items: [
-            ...triviaList.map((trivia) => TextCard(trivia: trivia))
-            ],
+    return Column(
+      children: [
+        CarouselSlider(
+          items: [...triviaList.map((trivia) => TextCard(trivia: trivia))],
           options: CarouselOptions(
             enlargeCenterPage: true,
             autoPlay: true,
@@ -35,16 +35,18 @@ class _CarouselState extends State<Carousel> {
                 _currentTextCard = index;
               });
             },
-          )),
-      buildCarouselDots()
-    ]);
+          ),
+        ),
+        buildCarouselDots()
+      ],
+    );
   }
 
-  buildCarouselDots() {
+  Row buildCarouselDots() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        for (int i = 0; i <= triviaList.length ; i++)
+        for (int i = 0; i <= triviaList.length; i++)
           Padding(
             padding: const EdgeInsets.only(top: 15, left: 10, right: 10),
             child: CircleAvatar(
@@ -53,7 +55,7 @@ class _CarouselState extends State<Carousel> {
                   ? Theme.of(context).colorScheme.primary
                   : Colors.grey,
             ),
-          )
+          ),
       ],
     );
   }

@@ -33,7 +33,7 @@ class _NavBarState extends State<NavBar> {
 
           switch (index) {
             case 0:
-              context.go( '/home');
+              context.go( '/games');
               break;
             case 1:
               context.go( '/home');

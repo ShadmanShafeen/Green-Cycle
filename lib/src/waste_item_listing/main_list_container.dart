@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:green_cycle/src/waste_item_listing/draft_items.dart';
+import 'package:green_cycle/src/waste_item_listing/recent_items.dart';
+import 'package:green_cycle/src/waste_item_listing/shared_items.dart';
+import 'package:green_cycle/src/widgets/nav_bar.dart';
 
 class WasteListContainer extends StatefulWidget {
   const WasteListContainer({super.key});
@@ -14,65 +18,29 @@ class _WasteListContainerState extends State<WasteListContainer> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
+        resizeToAvoidBottomInset: true,
         appBar: returnAppBar(context),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            TabBar(
-              indicatorColor: Theme.of(context).colorScheme.secondaryContainer,
-              tabs: [
-                Tab(
-                  icon: Icon(Icons.update,
-                      color: Theme.of(context).colorScheme.onSurfaceVariant),
-                ),
-                Tab(
-                  icon: Icon(Icons.groups_3),
-                ),
-                Tab(
-                  icon: Icon(Icons.edit_note),
-                ),
-              ],
-            ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  Container(
-                    child: Center(
-                      child: Text(
-                        "Recent Items",
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                          fontSize: 20,
-                        ),
-                      ),
-                    ),
+        bottomNavigationBar: const NavBar(),
+        body: Container(
+          color: Theme.of(context).colorScheme.surfaceContainerLow,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              returnTabBar(context),
+              const Expanded(
+                child: Padding(
+                  padding: EdgeInsets.all(15),
+                  child: TabBarView(
+                    children: [
+                      RecentItems(),
+                      SharedItems(),
+                      DraftItems(),
+                    ],
                   ),
-                  Container(
-                    child: Center(
-                      child: Text(
-                        "All Items",
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                          fontSize: 20,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    child: Center(
-                      child: Text(
-                        "Edit Items",
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                          fontSize: 20,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -80,8 +48,9 @@ class _WasteListContainerState extends State<WasteListContainer> {
 
   AppBar returnAppBar(BuildContext context) {
     return AppBar(
+      automaticallyImplyLeading: false,
       flexibleSpace: Padding(
-        padding: const EdgeInsets.only(right: 20),
+        padding: const EdgeInsets.only(right: 20, bottom: 5),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -118,8 +87,38 @@ class _WasteListContainerState extends State<WasteListContainer> {
           ],
         ),
       ),
-      backgroundColor: Theme.of(context).colorScheme.surfaceDim,
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainerLow,
       elevation: 0, // remove shadow
+    );
+  }
+
+  TabBar returnTabBar(BuildContext context) {
+    return TabBar(
+      overlayColor: WidgetStateProperty.all(
+        Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+      ),
+      indicatorColor: Theme.of(context).colorScheme.secondaryContainer,
+      indicatorSize: TabBarIndicatorSize.tab,
+      dividerColor: Theme.of(context).colorScheme.primaryFixed,
+      labelColor: Theme.of(context).colorScheme.secondary,
+      unselectedLabelColor: Theme.of(context).colorScheme.outlineVariant,
+      tabs: const [
+        Tab(
+          icon: Icon(
+            Icons.update,
+          ),
+        ),
+        Tab(
+          icon: Icon(
+            Icons.groups_3,
+          ),
+        ),
+        Tab(
+          icon: Icon(
+            Icons.edit_note,
+          ),
+        ),
+      ],
     );
   }
 }

@@ -2,12 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:green_cycle/src/Locate_Vendor/location_permission_modal.dart';
 import 'package:green_cycle/src/homepage/action_card.dart';
 import 'package:green_cycle/src/homepage/carousel.dart';
-import 'package:green_cycle/src/widgets/ErrorDialogue.dart';
+import 'package:green_cycle/src/homepage/search_bar.dart';
 import 'package:green_cycle/src/widgets/app_bar.dart';
 import 'package:green_cycle/src/widgets/nav_bar.dart';
-import 'package:green_cycle/src/homepage/search_bar.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -40,7 +40,7 @@ class HomePage extends StatelessWidget {
                       color: Theme.of(context).colorScheme.error,
                     ),
                     onPressed: () {
-                      context.go("/camera-control");
+                      context.push("/camera-control");
                     },
                   ),
                 ],
@@ -63,16 +63,23 @@ class HomePage extends StatelessWidget {
                       iconName: "locate.png",
                       label: "Locate",
                       onPressed: () {
-                        context.go('/locate-vendor1');
+                        showLocationPermission(context);
                       },
                     ),
-                    ActionCard(iconName: "schedule.png", label: "Schedule"),
                     ActionCard(
-                        iconName: "list.png",
-                        label: "List",
-                        onPressed: () {
-                          context.go('/waste-item-list');
-                        }),
+                      iconName: "schedule.png",
+                      label: "Schedule",
+                      onPressed: () {
+                        context.push('/calendar');
+                      },
+                    ),
+                    ActionCard(
+                      iconName: "list.png",
+                      label: "List",
+                      onPressed: () {
+                        context.push('/waste-item-list');
+                      },
+                    ),
                     ActionCard(iconName: "voucher.png", label: "Voucher"),
                     ActionCard(iconName: "stories.png", label: "Stories"),
                     ActionCard(iconName: "community.png", label: "Community"),
@@ -117,6 +124,15 @@ class HomePage extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: NavBar(),
+    );
+  }
+
+  void showLocationPermission(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return LocationPermissionModal();
+      },
     );
   }
 }

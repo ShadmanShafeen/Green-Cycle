@@ -1,32 +1,48 @@
 import "package:flutter/material.dart";
+// import "package:flutter_app/src/home_page.dart";
+import "package:flutter_map/flutter_map.dart";
 import "package:go_router/go_router.dart";
-
-import "../widgets/nav_bar.dart";
+import "package:green_cycle/src/Locate_Vendor/recents_modal.dart";
+import "package:green_cycle/src/widgets/nav_bar.dart";
+import "package:latlong2/latlong.dart";
+import "package:location/location.dart";
+import "package:modal_bottom_sheet/modal_bottom_sheet.dart";
 
 class LocateMap extends StatelessWidget {
-  const LocateMap({super.key});
+  final LocationData locationData;
+
+  LocateMap({super.key, required this.locationData});
+
+  final List<LatLng> markerLocation = [
+    const LatLng(23.8103, 90.4125),
+    const LatLng(23.8150, 90.4250),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    List<String> recentArray = [
-      "Motijheel High School",
-      "Dhaka University",
-      "Dhaka Medical College",
-      "Dhaka College",
-      "Dhaka City College",
-      "Dhaka Residential Model College",
-    ];
+    List<Marker> markers = markerLocation.map(
+      (latLng) {
+        return Marker(
+          width: 80.0,
+          height: 80.0,
+          point: latLng,
+          child: IconButton(
+            icon: const Icon(Icons.location_on),
+            color: Colors.blue,
+            iconSize: 40.0,
+            onPressed: () {},
+          ),
+        );
+      },
+    ).toList();
 
     return Scaffold(
+      bottomNavigationBar: const NavBar(),
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            if (Navigator.canPop(context)) {
-              Navigator.pop(context);
-            } else {
-              context.go('/home');
-            }
+            context.pop();
           },
         ),
         title: const Text(
@@ -38,80 +54,58 @@ class LocateMap extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          decoration: const BoxDecoration(color: Colors.black54),
-          width: double.infinity,
-          height: MediaQuery.of(context).size.height,
-          child: Column(children: [
-            Image.asset(
-              "lib/assets/images/map.png",
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text("Recents",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        )),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    ...recentArray.map(
-                      (recent) => Column(
-                        children: [
-                          Card(
-                            color: Colors.white10,
-                            elevation: 5,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: InkWell(
-                              onTap: () {
-                            
-                              },
-                              highlightColor: Colors.grey,
-                              splashColor: Colors.grey,
-                              child: Row(children: [
-                                const Icon(Icons.search),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Flexible(
-                                  child: Text(
-                                    recent,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ]),
-                            ),
-                          ),
-                          const Divider(
-                            color: Colors.white,
-                            thickness: 1,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ))
-          ]),
+      body: FlutterMap(
+        options: MapOptions(
+          initialCenter: LatLng(
+            locationData.latitude!.toDouble(),
+            locationData.longitude!.toDouble(),
+          ),
+          initialZoom: 12,
         ),
+        children: [
+          TileLayer(
+            urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            subdomains: const ['a', 'b', 'c'],
+          ),
+          MarkerLayer(
+            markers: [
+              Marker(
+                width: 80.0,
+                height: 80.0,
+                point: LatLng(
+                  locationData.latitude!,
+                  locationData.longitude!,
+                ),
+                child: const Icon(
+                  Icons.location_on,
+                  color: Colors.red,
+                  size: 40.0,
+                ),
+              ),
+              ...markers,
+            ],
+          ),
+        ],
       ),
-      bottomNavigationBar: const NavBar(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          buildShowMaterialModalBottomSheet(context);
+        },
+        child: const Icon(Icons.search),
+      ),
+    );
+  }
+
+  Future<dynamic> buildShowMaterialModalBottomSheet(BuildContext context) {
+    return showModalBottomSheet(
+      context: context,
+      elevation: 10,
+      useRootNavigator: true,
+      builder: (context) => SingleChildScrollView(
+        controller: ModalScrollController.of(context),
+        child: const RecentsModal(),
+      ),
+      showDragHandle: true,
     );
   }
 }
