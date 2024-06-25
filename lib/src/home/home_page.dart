@@ -12,12 +12,10 @@ import 'package:green_cycle/src/widgets/nav_bar.dart';
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
-  final int _currentTextCard = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -55,34 +53,18 @@ class HomePage extends StatelessWidget {
                 height: MediaQuery.of(context).size.height * 0.28,
                 child: GridView.count(
                   crossAxisCount: 3,
-                  crossAxisSpacing: 10,
+                  crossAxisSpacing: 5,
                   mainAxisSpacing: 5,
                   childAspectRatio: 1,
                   children: [
-                    ActionCard(
-                      iconName: "locate.png",
-                      label: "Locate",
-                      onPressed: () {
-                        showLocationPermission(context);
-                      },
-                    ),
-                    ActionCard(
-                      iconName: "schedule.png",
-                      label: "Schedule",
-                      onPressed: () {
-                        context.push('/calendar');
-                      },
-                    ),
-                    ActionCard(
-                      iconName: "list.png",
-                      label: "List",
-                      onPressed: () {
-                        context.push('/waste-item-list');
-                      },
-                    ),
-                    ActionCard(iconName: "voucher.png", label: "Voucher"),
-                    ActionCard(iconName: "stories.png", label: "Stories"),
-                    ActionCard(iconName: "community.png", label: "Community"),
+                    ActionCard(label: "Locate", animatedIcon: Image.asset("lib/assets/animations/Locate.gif" , width: 50 , height: 50 ,), path: ''),
+                    ActionCard(label: "Schedule", animatedIcon: Image.asset("lib/assets/animations/Schedule.gif", width: 50 , height:50), path: ''),
+                    ActionCard(label: "List", animatedIcon: Image.asset("lib/assets/animations/List.gif" , width: 50 , height: 50), path: ''),
+                    ActionCard(label: "Voucher", animatedIcon: Image.asset("lib/assets/animations/Vouchers.gif" , width: 50 , height: 50,), path: '/voucher-redemption'),
+                    ActionCard(label: "Stories", animatedIcon: Image.asset("lib/assets/animations/Stories.gif" , width: 50 , height: 50), path: ''),
+                    ActionCard(label: "Community", animatedIcon: Image.asset("lib/assets/animations/Community.gif" , width: 50 , height: 50), path: ''),
+                    
+
                   ],
                 ),
               ),
@@ -123,7 +105,6 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: NavBar(),
     );
   }
 
