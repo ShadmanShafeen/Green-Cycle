@@ -1,22 +1,15 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, must_be_immutable
 
 import 'package:flutter/material.dart';
-import 'package:green_cycle/src/homepage/action_card.dart';
-import 'package:green_cycle/src/homepage/carousel.dart';
-import 'package:green_cycle/src/widgets/app_bar.dart';
-import 'package:green_cycle/src/widgets/nav_bar.dart';
-import 'package:green_cycle/src/homepage/search_bar.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-
+import 'package:green_cycle/src/home/action_card.dart';
+import 'package:green_cycle/src/home/carousel.dart';
+import 'package:green_cycle/src/home/search_bar.dart';
 class HomePage extends StatelessWidget {
-  HomePage({super.key});
-
-  int _currentTextCard = 0;
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -52,16 +45,17 @@ class HomePage extends StatelessWidget {
                 height: MediaQuery.of(context).size.height * 0.28,
                 child: GridView.count(
                   crossAxisCount: 3,
-                  crossAxisSpacing: 10,
+                  crossAxisSpacing: 5,
                   mainAxisSpacing: 5,
                   childAspectRatio: 1,
                   children: [
-                    ActionCard(iconName: "locate.png", label: "Locate"),
-                    ActionCard(iconName: "schedule.png", label: "Schedule"),
-                    ActionCard(iconName: "list.png", label: "List"),
-                    ActionCard(iconName: "voucher.png", label: "Voucher"),
-                    ActionCard(iconName: "stories.png", label: "Stories"),
-                    ActionCard(iconName: "community.png", label: "Community"),
+                    ActionCard(label: "Locate", animatedIcon: Image.asset("lib/assets/animations/Locate.gif" , width: 50 , height: 50 ,), path: ''),
+                    ActionCard(label: "Schedule", animatedIcon: Image.asset("lib/assets/animations/Schedule.gif", width: 50 , height:50), path: ''),
+                    ActionCard(label: "List", animatedIcon: Image.asset("lib/assets/animations/List.gif" , width: 50 , height: 50), path: ''),
+                    ActionCard(label: "Voucher", animatedIcon: Image.asset("lib/assets/animations/Vouchers.gif" , width: 50 , height: 50,), path: '/voucher-redemption'),
+                    ActionCard(label: "Stories", animatedIcon: Image.asset("lib/assets/animations/Stories.gif" , width: 50 , height: 50), path: ''),
+                    ActionCard(label: "Community", animatedIcon: Image.asset("lib/assets/animations/Community.gif" , width: 50 , height: 50), path: ''),
+                    
                   ],
                 ),
               ),
@@ -71,7 +65,7 @@ class HomePage extends StatelessWidget {
               child: Text(
                 "Play Exciting Games!",
                 style: TextStyle(
-                    color: Theme.of(context).colorScheme.onBackground,
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontSize: 20,
                     fontWeight: FontWeight.w600),
               ),
@@ -88,7 +82,7 @@ class HomePage extends StatelessWidget {
               child: Text(
                 "Did You Know...",
                 style: TextStyle(
-                    color: Theme.of(context).colorScheme.onBackground,
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontSize: 20,
                     fontWeight: FontWeight.w600),
               ),
@@ -103,7 +97,6 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: NavBar(),
     );
   }
 

@@ -6,18 +6,18 @@ class TextCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 0,
+      elevation: 10,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
-          side: BorderSide(color: Colors.white.withOpacity(0.7))),
-      color: Theme.of(context).colorScheme.background,
+          side: BorderSide(color: Theme.of(context).colorScheme.surfaceBright)),
+      color: Theme.of(context).colorScheme.surfaceContainer,
       child: Padding(
         padding: const EdgeInsets.all(15),
         child: Text(
           trivia,
           style: TextStyle(
               color:
-                  Theme.of(context).colorScheme.onBackground.withOpacity(0.8)),
+                  Theme.of(context).colorScheme.onSurface),
         ),
       ),
     );
