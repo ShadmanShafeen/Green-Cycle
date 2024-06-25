@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class NavBar extends StatefulWidget implements PreferredSizeWidget {
   const NavBar({super.key});
@@ -14,11 +15,11 @@ class NavBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _NavBarState extends State<NavBar> {
-  int cur_index = 0;
+  int curIndex = 0;
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-        currentIndex: cur_index,
+        currentIndex: curIndex,
         showUnselectedLabels: true,
         backgroundColor: Colors.black26,
         unselectedItemColor: Theme.of(context).colorScheme.secondary ,
@@ -27,8 +28,20 @@ class _NavBarState extends State<NavBar> {
         selectedIconTheme: IconThemeData(size: 30),
         onTap: (index) {
           setState(() {
-            cur_index = index;
+            curIndex = index;
           });
+
+          switch (index) {
+            case 0:
+              context.go( '/games');
+              break;
+            case 1:
+              context.go( '/home');
+              break;
+            case 2:
+              context.go( '/home');
+              break;
+          }
         },
         items: [
           BottomNavigationBarItem(
