@@ -121,7 +121,7 @@ class _MainAppState extends State<MainApp> {
         ),
         textTheme: GoogleFonts.ralewayTextTheme(Theme.of(context).textTheme),
       ),
-      routerConfig: GoRouter(initialLocation: '/voucher-redemption', routes: [
+      routerConfig: GoRouter(initialLocation: 'voucher-redemption', routes: [
         ShellRoute(
             builder: (context, state, child) => Scaffold(
                   appBar: CustomAppBar(),
@@ -217,7 +217,7 @@ class _MainAppState extends State<MainApp> {
               durationMillis: 300,
             ),
           ),
-                  GoRoute(
+          GoRoute(
                     path: 'voucher-redemption',
                     pageBuilder: (context, state) {
                       return CustomTransitionPage(
@@ -240,9 +240,9 @@ class _MainAppState extends State<MainApp> {
                         },
                       );
                   })
-                ]
-              ),
-              GoRoute(
+              ]
+            ),
+            GoRoute(
                 path: '/level-tracking',
                 pageBuilder: (context, state) {
                   return CustomTransitionPage(
