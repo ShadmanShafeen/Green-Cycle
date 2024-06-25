@@ -6,12 +6,9 @@ import 'package:green_cycle/src/Locate_Vendor/location_permission_modal.dart';
 import 'package:green_cycle/src/home/action_card.dart';
 import 'package:green_cycle/src/home/carousel.dart';
 import 'package:green_cycle/src/home/search_bar.dart';
-import 'package:green_cycle/src/widgets/app_bar.dart';
-import 'package:green_cycle/src/widgets/nav_bar.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
-
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +35,7 @@ class HomePage extends StatelessWidget {
                       color: Theme.of(context).colorScheme.error,
                     ),
                     onPressed: () {
-                      context.push("/camera-control");
+                      context.go("/home/camera-control");
                     },
                   ),
                 ],
@@ -57,14 +54,60 @@ class HomePage extends StatelessWidget {
                   mainAxisSpacing: 5,
                   childAspectRatio: 1,
                   children: [
-                    ActionCard(label: "Locate", animatedIcon: Image.asset("lib/assets/animations/Locate.gif" , width: 50 , height: 50 ,), path: ''),
-                    ActionCard(label: "Schedule", animatedIcon: Image.asset("lib/assets/animations/Schedule.gif", width: 50 , height:50), path: ''),
-                    ActionCard(label: "List", animatedIcon: Image.asset("lib/assets/animations/List.gif" , width: 50 , height: 50), path: ''),
-                    ActionCard(label: "Voucher", animatedIcon: Image.asset("lib/assets/animations/Vouchers.gif" , width: 50 , height: 50,), path: '/voucher-redemption'),
-                    ActionCard(label: "Stories", animatedIcon: Image.asset("lib/assets/animations/Stories.gif" , width: 50 , height: 50), path: ''),
-                    ActionCard(label: "Community", animatedIcon: Image.asset("lib/assets/animations/Community.gif" , width: 50 , height: 50), path: ''),
-                    
-
+                    ActionCard(
+                      label: "Locate",
+                      animatedIcon: Image.asset(
+                        "lib/assets/animations/Locate.gif",
+                        width: 50,
+                        height: 50,
+                      ),
+                      path: '/home/locate-map',
+                    ),
+                    ActionCard(
+                      label: "Schedule",
+                      animatedIcon: Image.asset(
+                        "lib/assets/animations/Schedule.gif",
+                        width: 50,
+                        height: 50,
+                      ),
+                      path: '/home/calendar',
+                    ),
+                    ActionCard(
+                      label: "List",
+                      animatedIcon: Image.asset(
+                        "lib/assets/animations/List.gif",
+                        width: 50,
+                        height: 50,
+                      ),
+                      path: '/home/waste-item-list',
+                    ),
+                    ActionCard(
+                      label: "Voucher",
+                      animatedIcon: Image.asset(
+                        "lib/assets/animations/Vouchers.gif",
+                        width: 50,
+                        height: 50,
+                      ),
+                      path: '/home/voucher-redemption',
+                    ),
+                    ActionCard(
+                      label: "Stories",
+                      animatedIcon: Image.asset(
+                        "lib/assets/animations/Stories.gif",
+                        width: 50,
+                        height: 50,
+                      ),
+                      path: '',
+                    ),
+                    ActionCard(
+                      label: "Community",
+                      animatedIcon: Image.asset(
+                        "lib/assets/animations/Community.gif",
+                        width: 50,
+                        height: 50,
+                      ),
+                      path: '',
+                    ),
                   ],
                 ),
               ),
@@ -74,16 +117,19 @@ class HomePage extends StatelessWidget {
               child: Text(
                 "Play Exciting Games!",
                 style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurface,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600),
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
             Padding(
               padding: EdgeInsets.all(15),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
-                child: Image.asset("lib/assets/images/quiz.jpg"),
+                child: Image.asset(
+                  "lib/assets/images/quiz.jpg",
+                ),
               ),
             ),
             Padding(
@@ -91,14 +137,16 @@ class HomePage extends StatelessWidget {
               child: Text(
                 "Did You Know...",
                 style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurface,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600),
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
             Padding(
-                padding: const EdgeInsets.only(top: 15, left: 15, right: 15),
-                child: Carousel()),
+              padding: const EdgeInsets.only(top: 15, left: 15, right: 15),
+              child: Carousel(),
+            ),
             SizedBox(
               height: 30,
             ),
@@ -107,13 +155,14 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
+}
 
-  void showLocationPermission(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return LocationPermissionModal();
-      },
-    );
-  }
+void showLocationPermission(BuildContext context) {
+  showModalBottomSheet(
+    showDragHandle: true,
+    context: context,
+    builder: (BuildContext context) {
+      return LocationPermissionModal();
+    },
+  );
 }

@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:green_cycle/src/widgets/coins_container.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({super.key});
@@ -11,16 +10,22 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     final String currentPath =
         GoRouter.of(context).routerDelegate.currentConfiguration.fullPath;
     Text appBarTitle = Text('');
-    if (currentPath == '/' ||
+    if (currentPath == '/home' ||
         currentPath == '/level-tracking' ||
         currentPath == '/games') {
-      appBarTitle = Text('GreenCycle' , style: TextStyle(letterSpacing: 3),);
+      appBarTitle = Text(
+        'GreenCycle',
+        style: TextStyle(letterSpacing: 3),
+      );
     } else if (currentPath == '/voucher-redemption') {
-      appBarTitle = Text('Your Vouchers' , style: TextStyle(letterSpacing: 0),);
+      appBarTitle = Text(
+        'Your Vouchers',
+        style: TextStyle(letterSpacing: 0),
+      );
     }
 
     return AppBar(
-      leading: currentPath == "/" ||
+      leading: currentPath == "/home" ||
               currentPath == '/level-tracking' ||
               currentPath == '/games'
           ? IconButton(
@@ -37,25 +42,29 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: appBarTitle,
       centerTitle: true,
       titleSpacing: 0,
-      actions:  [ currentPath == '/' ||
-        currentPath == '/level-tracking' ||
-        currentPath == '/games' ?
-        IconButton(
-          icon: Icon(
-            Icons.notifications,
-            color: Theme.of(context).colorScheme.primary,
-          ),
-          onPressed: () {},
-        ) : SizedBox(),
-        currentPath == '/' ||
-        currentPath == '/level-tracking' ||
-        currentPath == '/games' ? IconButton(
-          icon: Icon(
-            Icons.person,
-            color: Theme.of(context).colorScheme.primary,
-          ),
-          onPressed: () {},
-        ) : SizedBox()
+      actions: [
+        currentPath == '/home' ||
+                currentPath == '/level-tracking' ||
+                currentPath == '/games'
+            ? IconButton(
+                icon: Icon(
+                  Icons.notifications,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                onPressed: () {},
+              )
+            : SizedBox(),
+        currentPath == '/home' ||
+                currentPath == '/level-tracking' ||
+                currentPath == '/games'
+            ? IconButton(
+                icon: Icon(
+                  Icons.person,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                onPressed: () {},
+              )
+            : SizedBox()
       ],
       backgroundColor: Theme.of(context).colorScheme.surfaceContainerLowest,
     );

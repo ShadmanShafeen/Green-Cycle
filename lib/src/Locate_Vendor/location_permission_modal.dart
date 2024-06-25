@@ -57,7 +57,7 @@ class LocationPermissionModalState extends State<LocationPermissionModal> {
               if (mapshow & context.mounted) {
                 context.pop();
                 context.push(
-                  "/locate-map",
+                  "/home/locate-map",
                   extra: locationData,
                 );
               }
