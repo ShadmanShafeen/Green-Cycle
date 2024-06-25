@@ -18,36 +18,40 @@ class _NavBarState extends State<NavBar> {
 
   @override
   Widget build(BuildContext context) {
-    final currentPath = GoRouter.of(context).routerDelegate.currentConfiguration.fullPath;
-    
+    final currentPath =
+        GoRouter.of(context).routerDelegate.currentConfiguration.fullPath;
+
     return BottomNavigationBar(
         currentIndex: curIndex,
         showUnselectedLabels: true,
         backgroundColor: Theme.of(context).colorScheme.surfaceContainerLowest,
         unselectedItemColor: Theme.of(context).colorScheme.secondary,
-        selectedItemColor: currentPath == "/" || currentPath == '/level-tracking' || currentPath == '/games' ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.secondary,
+        selectedItemColor: currentPath == "/home" ||
+                currentPath == '/level-tracking' ||
+                currentPath == '/games'
+            ? Theme.of(context).colorScheme.primary
+            : Theme.of(context).colorScheme.secondary,
         selectedFontSize: 15,
         selectedIconTheme: IconThemeData(size: 30),
         onTap: (index) {
           setState(() {
             curIndex = index;
             if (curIndex == 1) {
-              context.go('/');
+              context.go('/home');
             } else if (curIndex == 2) {
               context.go('/level-tracking');
             }
-
           });
 
           switch (index) {
             case 0:
-              context.go( '/games');
+              context.go('/games');
               break;
             case 1:
-              context.go( '/home');
+              context.go('/home');
               break;
             case 2:
-              context.go( '/home');
+              context.go('/level-tracking');
               break;
           }
         },

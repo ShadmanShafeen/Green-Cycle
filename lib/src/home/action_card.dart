@@ -2,11 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lottie/lottie.dart';
+import 'package:green_cycle/src/home/home_page.dart';
 
 class ActionCard extends StatelessWidget {
   const ActionCard(
-      {super.key, required this.label, required this.animatedIcon, required this.path});
+      {super.key,
+      required this.label,
+      required this.animatedIcon,
+      required this.path});
   final Widget animatedIcon;
   final String label;
   final String path;
@@ -15,9 +18,13 @@ class ActionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        context.go(path);
+        if (path == "/home/locate-map") {
+          showLocationPermission(context);
+        } else {
+          context.go(path);
+        }
       },
-      child: Container(
+      child: SizedBox(
         width: 100,
         height: 100,
         child: Card(
