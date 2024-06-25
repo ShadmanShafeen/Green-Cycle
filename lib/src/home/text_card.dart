@@ -11,6 +11,7 @@ class TextCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           side: BorderSide(color: Theme.of(context).colorScheme.surfaceBright)),
       color: Theme.of(context).colorScheme.surfaceContainer,
+
       child: Padding(
         padding: const EdgeInsets.all(15),
         child: Text(
@@ -18,6 +19,7 @@ class TextCard extends StatelessWidget {
           style: TextStyle(
               color:
                   Theme.of(context).colorScheme.onSurface),
+
         ),
       ),
     );

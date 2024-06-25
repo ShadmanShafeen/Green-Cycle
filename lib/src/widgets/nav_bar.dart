@@ -15,6 +15,7 @@ class NavBar extends StatefulWidget implements PreferredSizeWidget {
 
 class _NavBarState extends State<NavBar> {
   int curIndex = 1;
+
   @override
   Widget build(BuildContext context) {
     final currentPath = GoRouter.of(context).routerDelegate.currentConfiguration.fullPath;
@@ -35,7 +36,20 @@ class _NavBarState extends State<NavBar> {
             } else if (curIndex == 2) {
               context.go('/level-tracking');
             }
+
           });
+
+          switch (index) {
+            case 0:
+              context.go( '/games');
+              break;
+            case 1:
+              context.go( '/home');
+              break;
+            case 2:
+              context.go( '/home');
+              break;
+          }
         },
         items: [
           BottomNavigationBarItem(

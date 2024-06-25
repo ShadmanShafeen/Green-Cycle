@@ -1,6 +1,5 @@
 // ignore_for_file: prefer_const_constructors, must_be_immutable
 
-import 'package:animate_gradient/animate_gradient.dart';
 import 'package:flutter/material.dart';
 import 'package:green_cycle/src/leveltracking/level_list.dart';
 import 'package:green_cycle/src/leveltracking/task_list.dart';

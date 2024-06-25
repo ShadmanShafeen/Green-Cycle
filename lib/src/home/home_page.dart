@@ -1,11 +1,14 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:green_cycle/src/Locate_Vendor/location_permission_modal.dart';
 import 'package:green_cycle/src/home/action_card.dart';
 import 'package:green_cycle/src/home/carousel.dart';
 import 'package:green_cycle/src/home/search_bar.dart';
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
+
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +21,7 @@ class HomePage extends StatelessWidget {
             SizedBox(
               height: 20,
             ),
-            Container(
+            SizedBox(
               width: MediaQuery.of(context).size.width,
               child: Row(
                 children: [
@@ -29,9 +32,11 @@ class HomePage extends StatelessWidget {
                   IconButton(
                     icon: Icon(
                       Icons.photo_camera,
-                      color: Theme.of(context).colorScheme.primary,
+                      color: Theme.of(context).colorScheme.error,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      context.push("/camera-control");
+                    },
                   ),
                 ],
               ),
@@ -41,7 +46,7 @@ class HomePage extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 15, right: 15),
-              child: Container(
+              child: SizedBox(
                 height: MediaQuery.of(context).size.height * 0.28,
                 child: GridView.count(
                   crossAxisCount: 3,
@@ -56,6 +61,7 @@ class HomePage extends StatelessWidget {
                     ActionCard(label: "Stories", animatedIcon: Image.asset("lib/assets/animations/Stories.gif" , width: 50 , height: 50), path: ''),
                     ActionCard(label: "Community", animatedIcon: Image.asset("lib/assets/animations/Community.gif" , width: 50 , height: 50), path: ''),
                     
+
                   ],
                 ),
               ),
@@ -89,8 +95,7 @@ class HomePage extends StatelessWidget {
             ),
             Padding(
                 padding: const EdgeInsets.only(top: 15, left: 15, right: 15),
-                child: Carousel()
-                ),
+                child: Carousel()),
             SizedBox(
               height: 30,
             ),
@@ -100,5 +105,12 @@ class HomePage extends StatelessWidget {
     );
   }
 
-
+  void showLocationPermission(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return LocationPermissionModal();
+      },
+    );
+  }
 }
