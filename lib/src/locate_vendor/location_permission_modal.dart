@@ -42,6 +42,7 @@ class LocationPermissionModalState extends State<LocationPermissionModal> {
         children: [
           Text(
             'GreenCycle wants to know your location',
+            textAlign: TextAlign.center,
             style: TextStyle(
               color: Color.fromARGB(255, 184, 43, 219),
               fontSize: 20,
@@ -53,10 +54,10 @@ class LocationPermissionModalState extends State<LocationPermissionModal> {
           ),
           ElevatedButton(
             onPressed: () async {
-              final mapshow = await checkLocationPermission();
-              if (mapshow & context.mounted) {
+              final mapShow = await checkLocationPermission();
+              if (mapShow & context.mounted) {
                 context.pop();
-                context.push(
+                context.go(
                   "/home/locate-map",
                   extra: locationData,
                 );

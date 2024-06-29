@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:green_cycle/src/leveltracking/animated_line.dart';
+import 'package:green_cycle/src/leveltracking/coins_earned_container.dart';
 import 'package:green_cycle/src/leveltracking/level_container.dart';
 
 class LevelList extends StatefulWidget {
@@ -15,6 +16,7 @@ class LevelList extends StatefulWidget {
 
 class _LevelListState extends State<LevelList> {
   bool currentLevelReached = false;
+  bool coinsEarnedContainerVisible = false;
   final ScrollController _scrollController = ScrollController();
   final GlobalKey _targetKey = GlobalKey();
   @override
@@ -26,6 +28,7 @@ class _LevelListState extends State<LevelList> {
     Future.delayed(Duration(seconds: 2), () {
       setState(() {
         currentLevelReached = true;
+        coinsEarnedContainerVisible = true;
       });
     });
   }
@@ -42,7 +45,7 @@ class _LevelListState extends State<LevelList> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       reverse: true,
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.only(top: 10, bottom: 10),
       controller: _scrollController,
       child: Center(
         child: Column(
@@ -54,7 +57,7 @@ class _LevelListState extends State<LevelList> {
               if (i == widget.currentLevel - 1) ...[
                 LevelContainer(
                     key: _targetKey, size: 75, level: i, levelReached: true),
-                Container(
+                SizedBox(
                   height: MediaQuery.of(context).size.height / 5,
                   child: AnimatedLine(
                     value: 0, // 0 = animated line. 1 = static line
@@ -62,16 +65,31 @@ class _LevelListState extends State<LevelList> {
                 ),
               ] else if (i < widget.currentLevel) ...[
                 LevelContainer(size: 75, level: i, levelReached: true),
-                Container(
+                SizedBox(
                   height: MediaQuery.of(context).size.height / 5,
                   child: AnimatedLine(
                     value: 1, // 0 = animated line. 1 = static line
                   ),
                 ),
               ] else if (i == widget.currentLevel) ...[
-                LevelContainer(
-                    size: 75, level: i, levelReached: currentLevelReached),
-                  
+                Stack(
+                  children: [
+                    Align(
+                        alignment: Alignment.center,
+                        child: LevelContainer(
+                            size: 75,
+                            level: i,
+                            levelReached: currentLevelReached)),
+                    Visibility(
+                      visible: coinsEarnedContainerVisible,
+                      child: Positioned(
+                        top: 20,
+                        right: MediaQuery.of(context).size.width * 0.075,
+                        child: CoinsEarnedContainer(),
+                      ),
+                    )
+                  ],
+                ),
                 Container(
                   height: MediaQuery.of(context).size.height / 5,
                 ),

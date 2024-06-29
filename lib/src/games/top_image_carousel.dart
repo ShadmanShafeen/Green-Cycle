@@ -20,7 +20,7 @@ class _TopImageCarouselState extends State<TopImageCarousel> {
       "image": "lib/assets/images/quiz.jpg",
     },
     {
-      "title": "Recycle Rush",
+      "title": "TrashMania",
       "subtitle": "Sort the waste into the correct bins",
       "image": "lib/assets/images/trash.png",
     },
@@ -39,37 +39,40 @@ class _TopImageCarouselState extends State<TopImageCarousel> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        CarouselSlider(
-          carouselController: _carouselController,
-          items: [
-            ...gamesDetails.map(
-              (game) => GameImageCard(
-                context: context,
-                image: game["image"]!,
-                title: game["title"]!,
-                subtitle: game["subtitle"]!,
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.3,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CarouselSlider(
+            carouselController: _carouselController,
+            items: [
+              ...gamesDetails.map(
+                (game) => GameImageCard(
+                  context: context,
+                  image: game["image"]!,
+                  title: game["title"]!,
+                  subtitle: game["subtitle"]!,
+                ),
               ),
+            ],
+            options: CarouselOptions(
+              autoPlay: true,
+              enableInfiniteScroll: true,
+              autoPlayInterval: const Duration(seconds: 3),
+              autoPlayAnimationDuration: const Duration(milliseconds: 2000),
+              enlargeCenterPage: true,
+              viewportFraction: 1,
+              onPageChanged: (index, reason) {
+                setState(() {
+                  _currentGameCard = index;
+                });
+              },
             ),
-          ],
-          options: CarouselOptions(
-            autoPlay: true,
-            enableInfiniteScroll: true,
-            autoPlayInterval: const Duration(seconds: 3),
-            autoPlayAnimationDuration: const Duration(milliseconds: 2000),
-            enlargeCenterPage: true,
-            viewportFraction: 1,
-            onPageChanged: (index, reason) {
-              setState(() {
-                _currentGameCard = index;
-              });
-            },
           ),
-        ),
-        buildCarouselDots(),
-      ],
+          buildCarouselDots(),
+        ],
+      ),
     );
   }
 

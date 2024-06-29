@@ -1,17 +1,13 @@
-import "package:flutter/material.dart";
-// import "package:flutter_app/src/home_page.dart";
+import 'package:flutter/material.dart';
 import "package:flutter_map/flutter_map.dart";
-import "package:go_router/go_router.dart";
 import "package:green_cycle/src/Locate_Vendor/recents_modal.dart";
-import "package:green_cycle/src/widgets/nav_bar.dart";
 import "package:latlong2/latlong.dart";
-import "package:location/location.dart";
 import "package:modal_bottom_sheet/modal_bottom_sheet.dart";
 
-class LocateMap extends StatelessWidget {
-  final LocationData locationData;
-
-  LocateMap({super.key, required this.locationData});
+class VendorMapTab extends StatelessWidget {
+  VendorMapTab({
+    super.key,
+  });
 
   final List<LatLng> markerLocation = [
     const LatLng(23.8103, 90.4125),
@@ -37,29 +33,9 @@ class LocateMap extends StatelessWidget {
     ).toList();
 
     return Scaffold(
-      bottomNavigationBar: const NavBar(),
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            context.pop();
-          },
-        ),
-        title: const Text(
-          "Locate Your Vendor",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 25,
-          ),
-        ),
-        centerTitle: true,
-      ),
       body: FlutterMap(
         options: MapOptions(
-          initialCenter: LatLng(
-            locationData.latitude!.toDouble(),
-            locationData.longitude!.toDouble(),
-          ),
+          initialCenter: markerLocation[0],
           initialZoom: 12,
         ),
         children: [
@@ -72,10 +48,7 @@ class LocateMap extends StatelessWidget {
               Marker(
                 width: 80.0,
                 height: 80.0,
-                point: LatLng(
-                  locationData.latitude!,
-                  locationData.longitude!,
-                ),
+                point: markerLocation[0],
                 child: const Icon(
                   Icons.location_on,
                   color: Colors.red,

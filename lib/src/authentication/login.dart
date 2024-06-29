@@ -166,7 +166,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                       alignment: Alignment.center,
                       child: ElevatedButton(
                         onPressed: () {
-                          context.push('/home');
+                          context.go('/home');
                         },
                         style: ButtonStyle(
                           backgroundColor: WidgetStateProperty.all<Color>(

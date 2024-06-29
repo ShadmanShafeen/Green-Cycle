@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -9,18 +7,20 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     final String currentPath =
         GoRouter.of(context).routerDelegate.currentConfiguration.fullPath;
-    Text appBarTitle = Text('');
+    Text appBarTitle = const Text('');
     if (currentPath == '/home' ||
         currentPath == '/level-tracking' ||
         currentPath == '/games') {
-      appBarTitle = Text(
+      appBarTitle = const Text(
         'GreenCycle',
         style: TextStyle(letterSpacing: 3),
       );
     } else if (currentPath == '/voucher-redemption') {
-      appBarTitle = Text(
+      appBarTitle = const Text(
         'Your Vouchers',
-        style: TextStyle(letterSpacing: 0),
+        style: TextStyle(
+          letterSpacing: 0,
+        ),
       );
     }
 
@@ -53,7 +53,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
                 onPressed: () {},
               )
-            : SizedBox(),
+            : const SizedBox(),
         currentPath == '/home' ||
                 currentPath == '/level-tracking' ||
                 currentPath == '/games'
@@ -62,9 +62,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   Icons.person,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  context.go('/home/profile');
+                },
               )
-            : SizedBox()
+            : const SizedBox()
       ],
       backgroundColor: Theme.of(context).colorScheme.surfaceContainerLowest,
     );

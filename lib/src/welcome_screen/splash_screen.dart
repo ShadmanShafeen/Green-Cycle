@@ -10,7 +10,8 @@ class WelcomeSplashScreen extends StatefulWidget {
   State<WelcomeSplashScreen> createState() => _WelcomeSplashScreenState();
 }
 
-class _WelcomeSplashScreenState extends State<WelcomeSplashScreen> with SingleTickerProviderStateMixin {
+class _WelcomeSplashScreenState extends State<WelcomeSplashScreen>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
 
   @override
@@ -19,10 +20,10 @@ class _WelcomeSplashScreenState extends State<WelcomeSplashScreen> with SingleTi
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
 
     _controller = AnimationController(
-        vsync: this,
+      vsync: this,
     );
 
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 5), () {
       context.go('/welcome');
     });
   }
@@ -48,20 +49,22 @@ class _WelcomeSplashScreenState extends State<WelcomeSplashScreen> with SingleTi
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Lottie.network("https://lottie.host/477c5dd8-342d-4416-ae9a-1d9226413d13/qGmpCi9CXG.json",
+            Lottie.network(
+                "https://lottie.host/477c5dd8-342d-4416-ae9a-1d9226413d13/qGmpCi9CXG.json",
                 width: 300,
                 height: 300,
                 fit: BoxFit.contain,
                 controller: _controller,
-                frameRate: FrameRate.max,
-                onLoaded: (composition) {
-                  _controller
-                    ..duration = Duration(milliseconds: (composition.duration.inMilliseconds*2.5).round())
-                    ..repeat();
-                }
-            ),
+                frameRate: FrameRate.max, onLoaded: (composition) {
+              _controller
+                ..duration = Duration(
+                    milliseconds:
+                        (composition.duration.inMilliseconds * 2.5).round())
+                ..repeat();
+            }),
             const SizedBox(height: 20),
-            const Text("Green Cycle",
+            const Text(
+              "Green Cycle",
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 35,

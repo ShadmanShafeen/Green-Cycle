@@ -2,7 +2,9 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 import 'package:go_router/go_router.dart';
+import 'package:green_cycle/src/authentication/vendor_signup.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -14,6 +16,8 @@ class SignupPage extends StatefulWidget {
 class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
   late final AnimationController fadeController;
   late final AnimationController translateController;
+  bool isToggle = false;
+
   @override
   void initState() {
     super.initState();
@@ -97,111 +101,143 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const SizedBox(height: 90.0, width: 100.0),
-              const Column(
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Text(
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 500),
+                      width: 200,
+                      padding: const EdgeInsets.all(8.0),
+                      child: FlutterSwitch(
+                        width: isToggle ? 100 : 80,
+                        showOnOff: true,
+                        value: isToggle,
+                        onToggle: (val) {
+                          setState(() {
+                            isToggle = val;
+                          });
+                        },
+                        activeColor: Theme.of(context).colorScheme.primary,
+                        activeText: "Vendor",
+                        inactiveText: "User",
+                        inactiveColor: Colors.grey,
+                        activeTextColor:
+                            Theme.of(context).colorScheme.onSurface,
+                        inactiveTextColor:
+                            Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                  const Text(
                     "Welcome",
                     style: TextStyle(
                       color: Color.fromARGB(255, 184, 43, 219),
                       fontSize: 50,
                     ),
                   ),
-                  Text(
+                  const Text(
                     "Sign Up For A New Account",
+                    textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: Color.fromARGB(255, 184, 43, 219),
+                      color: Colors.white,
                       fontSize: 30,
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 40.0, width: 40.0),
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    const Text(
-                      "Username",
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 184, 43, 219),
-                        fontSize: 15,
-                      ),
-                    ),
-                    TextFormField(
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: 'Give Username',
-                      ),
-                    ),
-                    const SizedBox(height: 20.0, width: 20.0),
-                    const Text(
-                      "Password",
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 184, 43, 219),
-                        fontSize: 15,
-                      ),
-                    ),
-                    TextFormField(
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: 'Give Password',
-                      ),
-                    ),
-                    const SizedBox(height: 10.0, width: 10.0),
-                    const SizedBox(height: 20.0, width: 20.0),
-                    Align(
-                      alignment: Alignment.center,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          context.push("/login");
-                        },
-                        style: ButtonStyle(
-                          backgroundColor: WidgetStateProperty.all<Color>(
-                              const Color.fromARGB(255, 224, 156, 236)),
-                        ),
-                        child: const Text(
-                          "Sign Up",
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 120, 16, 146),
-                            fontSize: 20,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 15.0, width: 10.0),
-                    const Align(
-                      alignment: Alignment.bottomRight,
-                      child: Text(
-                        "Already Have an Account?",
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 184, 43, 219),
-                          fontSize: 15,
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: InkWell(
-                        onTap: () {
-                          context.push("/login");
-                        },
-                        child: const Text(
-                          'Log In',
-                          style: TextStyle(
-                            color: Color.fromRGBO(31, 216, 139, 1),
-                            fontSize: 15,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              !isToggle ? userForm(context) : const VendorSignupPage(),
             ],
           ),
         ),
       ],
+    );
+  }
+
+  Padding userForm(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          const Text(
+            "Username",
+            style: TextStyle(
+              color: Color.fromARGB(255, 184, 43, 219),
+              fontSize: 15,
+            ),
+          ),
+          TextFormField(
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: 'Give Username',
+            ),
+          ),
+          const SizedBox(height: 20.0, width: 20.0),
+          const Text(
+            "Password",
+            style: TextStyle(
+              color: Color.fromARGB(255, 184, 43, 219),
+              fontSize: 15,
+            ),
+          ),
+          TextFormField(
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: 'Give Password',
+            ),
+          ),
+          const SizedBox(height: 10.0, width: 10.0),
+          const SizedBox(height: 20.0, width: 20.0),
+          Align(
+            alignment: Alignment.center,
+            child: ElevatedButton(
+              onPressed: () {
+                context.go("/login");
+              },
+              style: ButtonStyle(
+                backgroundColor: WidgetStateProperty.all<Color>(
+                    const Color.fromARGB(255, 224, 156, 236)),
+              ),
+              child: const Text(
+                "Sign Up",
+                style: TextStyle(
+                  color: Color.fromARGB(255, 120, 16, 146),
+                  fontSize: 20,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 15.0, width: 10.0),
+          const Align(
+            alignment: Alignment.bottomRight,
+            child: Text(
+              "Already Have an Account?",
+              style: TextStyle(
+                color: Color.fromARGB(255, 184, 43, 219),
+                fontSize: 15,
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: InkWell(
+              onTap: () {
+                context.push("/login");
+              },
+              child: const Text(
+                'Log In',
+                style: TextStyle(
+                  color: Color.fromRGBO(31, 216, 139, 1),
+                  fontSize: 15,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
