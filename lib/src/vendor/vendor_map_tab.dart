@@ -5,8 +5,9 @@ import "package:latlong2/latlong.dart";
 import "package:modal_bottom_sheet/modal_bottom_sheet.dart";
 
 class VendorMapTab extends StatelessWidget {
-  VendorMapTab({super.key,});
-  // final LocationData locationData;
+  VendorMapTab({
+    super.key,
+  });
 
   final List<LatLng> markerLocation = [
     const LatLng(23.8103, 90.4125),
@@ -30,65 +31,42 @@ class VendorMapTab extends StatelessWidget {
         );
       },
     ).toList();
-    return Placeholder();
-    // return Scaffold(
-    //   bottomNavigationBar: const NavBar(),
-    //   appBar: AppBar(
-    //     leading: IconButton(
-    //       icon: const Icon(Icons.arrow_back),
-    //       onPressed: () {
-    //         context.pop();
-    //       },
-    //     ),
-    //     title: const Text(
-    //       "Locate Your Vendor",
-    //       style: TextStyle(
-    //         color: Colors.white,
-    //         fontSize: 25,
-    //       ),
-    //     ),
-    //     centerTitle: true,
-    //   ),
-    //   body: FlutterMap(
-    //     options: MapOptions(
-    //       initialCenter: LatLng(
-    //         locationData.latitude!.toDouble(),
-    //         locationData.longitude!.toDouble(),
-    //       ),
-    //       initialZoom: 12,
-    //     ),
-    //     children: [
-    //       TileLayer(
-    //         urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-    //         subdomains: const ['a', 'b', 'c'],
-    //       ),
-    //       MarkerLayer(
-    //         markers: [
-    //           Marker(
-    //             width: 80.0,
-    //             height: 80.0,
-    //             point: LatLng(
-    //               locationData.latitude!,
-    //               locationData.longitude!,
-    //             ),
-    //             child: const Icon(
-    //               Icons.location_on,
-    //               color: Colors.red,
-    //               size: 40.0,
-    //             ),
-    //           ),
-    //           ...markers,
-    //         ],
-    //       ),
-    //     ],
-    //   ),
-    //   floatingActionButton: FloatingActionButton(
-    //     onPressed: () {
-    //       buildShowMaterialModalBottomSheet(context);
-    //     },
-    //     child: const Icon(Icons.search),
-    //   ),
-    // );
+
+    return Scaffold(
+      body: FlutterMap(
+        options: MapOptions(
+          initialCenter: markerLocation[0],
+          initialZoom: 12,
+        ),
+        children: [
+          TileLayer(
+            urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            subdomains: const ['a', 'b', 'c'],
+          ),
+          MarkerLayer(
+            markers: [
+              Marker(
+                width: 80.0,
+                height: 80.0,
+                point: markerLocation[0],
+                child: const Icon(
+                  Icons.location_on,
+                  color: Colors.red,
+                  size: 40.0,
+                ),
+              ),
+              ...markers,
+            ],
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          buildShowMaterialModalBottomSheet(context);
+        },
+        child: const Icon(Icons.search),
+      ),
+    );
   }
 
   Future<dynamic> buildShowMaterialModalBottomSheet(BuildContext context) {

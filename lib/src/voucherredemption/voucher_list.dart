@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:green_cycle/src/models/company.dart';
+import 'package:green_cycle/src/models/voucher.dart';
+import 'package:green_cycle/src/voucherredemption/voucher_card.dart';
 import 'package:green_cycle/src/voucherredemption/voucher_card.dart';
 import 'package:green_cycle/src/widgets/coins_container.dart';
 

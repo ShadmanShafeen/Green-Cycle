@@ -45,7 +45,7 @@ class _LevelListState extends State<LevelList> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       reverse: true,
-      padding: EdgeInsets.only(top: 10 , bottom: 10),
+      padding: EdgeInsets.only(top: 10, bottom: 10),
       controller: _scrollController,
       child: Center(
         child: Column(
@@ -57,7 +57,7 @@ class _LevelListState extends State<LevelList> {
               if (i == widget.currentLevel - 1) ...[
                 LevelContainer(
                     key: _targetKey, size: 75, level: i, levelReached: true),
-                Container(
+                SizedBox(
                   height: MediaQuery.of(context).size.height / 5,
                   child: AnimatedLine(
                     value: 0, // 0 = animated line. 1 = static line
@@ -65,25 +65,31 @@ class _LevelListState extends State<LevelList> {
                 ),
               ] else if (i < widget.currentLevel) ...[
                 LevelContainer(size: 75, level: i, levelReached: true),
-                Container(
+                SizedBox(
                   height: MediaQuery.of(context).size.height / 5,
                   child: AnimatedLine(
                     value: 1, // 0 = animated line. 1 = static line
                   ),
                 ),
               ] else if (i == widget.currentLevel) ...[
-                Stack(children: [
-                  Align(
-                      alignment: Alignment.center,
-                      child: LevelContainer(
-                          size: 75,
-                          level: i,
-                          levelReached: currentLevelReached)),
-                  Visibility(
+                Stack(
+                  children: [
+                    Align(
+                        alignment: Alignment.center,
+                        child: LevelContainer(
+                            size: 75,
+                            level: i,
+                            levelReached: currentLevelReached)),
+                    Visibility(
                       visible: coinsEarnedContainerVisible,
                       child: Positioned(
-                          top: 20, right: 10, child: CoinsEarnedContainer()))
-                ]),
+                        top: 20,
+                        right: MediaQuery.of(context).size.width * 0.075,
+                        child: CoinsEarnedContainer(),
+                      ),
+                    )
+                  ],
+                ),
                 Container(
                   height: MediaQuery.of(context).size.height / 5,
                 ),

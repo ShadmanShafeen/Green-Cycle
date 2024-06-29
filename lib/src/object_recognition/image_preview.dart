@@ -1,8 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:green_cycle/src/widgets/nav_bar.dart';
 
 class ImagePreview extends StatefulWidget {
   final String imagePath;
@@ -18,16 +16,6 @@ class _ImagePreviewState extends State<ImagePreview> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            context.go('/camera-control');
-          },
-        ),
-        title: const Text("Waste Classification"),
-      ),
-      bottomNavigationBar: const NavBar(),
       body: SingleChildScrollView(
         child: isLoading
             ? const CircularProgressIndicator()
@@ -106,17 +94,17 @@ class _ImagePreviewState extends State<ImagePreview> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                            "Aluminium cans are 100% recyclable and can be recycled indefinitely "
-                            "without a loss in quality. Recycling aluminium saves 95% of the energy "
-                            "needed to make new aluminium from raw materials. Making cans from recycled "
-                            "aluminium reduces air pollution by 95% and water pollution by 97%."
-                            "Recycling aluminium cans saves 95% of the energy used to make aluminium cans "
-                            "from raw materials. Making new aluminium cans from used cans takes 95% less energy."
-                            "Recycling 1 tonne of aluminium saves 9 tonnes of CO2 emissions. Recycling aluminium ",
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Theme.of(context).colorScheme.onSurface,
-                            ),
+                          "Aluminium cans are 100% recyclable and can be recycled indefinitely "
+                          "without a loss in quality. Recycling aluminium saves 95% of the energy "
+                          "needed to make new aluminium from raw materials. Making cans from recycled "
+                          "aluminium reduces air pollution by 95% and water pollution by 97%."
+                          "Recycling aluminium cans saves 95% of the energy used to make aluminium cans "
+                          "from raw materials. Making new aluminium cans from used cans takes 95% less energy."
+                          "Recycling 1 tonne of aluminium saves 9 tonnes of CO2 emissions. Recycling aluminium ",
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
                           textAlign: TextAlign.justify,
                         ),
                       ),

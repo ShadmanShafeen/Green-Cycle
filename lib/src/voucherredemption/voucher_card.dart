@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:green_cycle/src/models/company.dart';
+import 'package:green_cycle/src/models/voucher.dart';
 import 'package:slide_to_act/slide_to_act.dart';
 
 class VoucherCard extends StatefulWidget {

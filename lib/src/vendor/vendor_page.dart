@@ -1,16 +1,26 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
 import 'package:flutter/material.dart';
 import 'package:green_cycle/src/vendor/vendor_approve_tab.dart';
 import 'package:green_cycle/src/vendor/vendor_communities_tab.dart';
 import 'package:green_cycle/src/vendor/vendor_map_tab.dart';
 import 'package:green_cycle/src/vendor/vendor_profile_tab.dart';
 
-class VendorPage extends StatelessWidget {
+class VendorPage extends StatefulWidget {
+  const VendorPage({super.key});
+
+  @override
+  State<VendorPage> createState() => _VendorPageState();
+}
+
+class _VendorPageState extends State<VendorPage> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      animationDuration: Duration(milliseconds: 1500),
+      animationDuration: const Duration(milliseconds: 1500),
       length: 4,
       initialIndex: 0,
       child: Scaffold(
@@ -27,28 +37,28 @@ class VendorPage extends StatelessWidget {
             indicatorWeight: 3,
             unselectedLabelColor: Theme.of(context).colorScheme.secondary,
             splashBorderRadius: BorderRadius.circular(30),
-            tabs: [
-            Tab(
-              icon: Icon(Icons.home),
-            ),
-            Tab(
-              icon: Icon(Icons.diversity_1),
-            ),
-            Tab(
-              icon: Icon(Icons.location_on),
-            ),
-            Tab(
-              icon: Icon(Icons.person),
-            )
-
-          ]),
+            tabs: const [
+              Tab(
+                icon: Icon(Icons.home),
+              ),
+              Tab(
+                icon: Icon(Icons.diversity_1),
+              ),
+              Tab(
+                icon: Icon(Icons.location_on),
+              ),
+              Tab(
+                icon: Icon(Icons.person),
+              ),
+            ],
+          ),
         ),
         body: TabBarView(
           children: [
             VendorApproveTab(),
             VendorCommunitiesTab(),
             VendorMapTab(),
-            VendorProfileTab()
+            VendorProfileTab(),
           ],
         ),
       ),

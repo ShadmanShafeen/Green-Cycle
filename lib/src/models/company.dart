@@ -1,3 +1,5 @@
+import 'package:green_cycle/src/models/voucher.dart';
+
 class Company {
   Company(
       {required this.name,
@@ -8,18 +10,4 @@ class Company {
   String imagePath;
   List<Voucher> vouchers;
   bool isExpanded;
-}
-
-class Voucher {
-  Voucher(
-      {required this.userID,
-      required this.code,
-      required this.percent,
-      required this.expiry,
-      required this.cost});
-  String userID;
-  String code;
-  int percent;
-  int expiry;
-  int cost;
 }

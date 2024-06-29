@@ -1,9 +1,8 @@
 import "package:flutter/material.dart";
 // import "package:flutter_app/src/home_page.dart";
 import "package:flutter_map/flutter_map.dart";
-import "package:go_router/go_router.dart";
 import "package:green_cycle/src/Locate_Vendor/recents_modal.dart";
-import "package:green_cycle/src/widgets/nav_bar.dart";
+import "package:green_cycle/src/locate_vendor/location_details_modal.dart";
 import "package:latlong2/latlong.dart";
 import "package:location/location.dart";
 import "package:modal_bottom_sheet/modal_bottom_sheet.dart";
@@ -30,30 +29,18 @@ class LocateMap extends StatelessWidget {
             icon: const Icon(Icons.location_on),
             color: Colors.blue,
             iconSize: 40.0,
-            onPressed: () {},
+            onPressed: () {
+              buildShowMaterialModalBottomSheet(
+                context,
+                DetailsModal1(),
+              );
+            },
           ),
         );
       },
     ).toList();
 
     return Scaffold(
-      bottomNavigationBar: const NavBar(),
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            context.pop();
-          },
-        ),
-        title: const Text(
-          "Locate Your Vendor",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 25,
-          ),
-        ),
-        centerTitle: true,
-      ),
       body: FlutterMap(
         options: MapOptions(
           initialCenter: LatLng(
@@ -76,10 +63,18 @@ class LocateMap extends StatelessWidget {
                   locationData.latitude!,
                   locationData.longitude!,
                 ),
-                child: const Icon(
-                  Icons.location_on,
-                  color: Colors.red,
-                  size: 40.0,
+                child: IconButton(
+                  onPressed: () {
+                    buildShowMaterialModalBottomSheet(
+                      context,
+                      DetailsModal1(),
+                    );
+                  },
+                  icon: const Icon(
+                    Icons.location_on,
+                    color: Colors.red,
+                    size: 40.0,
+                  ),
                 ),
               ),
               ...markers,
@@ -89,21 +84,25 @@ class LocateMap extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          buildShowMaterialModalBottomSheet(context);
+          buildShowMaterialModalBottomSheet(
+            context,
+            const RecentsModal(),
+          );
         },
         child: const Icon(Icons.search),
       ),
     );
   }
 
-  Future<dynamic> buildShowMaterialModalBottomSheet(BuildContext context) {
+  Future<dynamic> buildShowMaterialModalBottomSheet(
+      BuildContext context, Widget child) {
     return showModalBottomSheet(
       context: context,
       elevation: 10,
       useRootNavigator: true,
       builder: (context) => SingleChildScrollView(
         controller: ModalScrollController.of(context),
-        child: const RecentsModal(),
+        child: child,
       ),
       showDragHandle: true,
     );

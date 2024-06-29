@@ -31,23 +31,25 @@ class ActionCard extends StatelessWidget {
           elevation: 5,
           color: Theme.of(context).colorScheme.surfaceContainer,
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-              side: BorderSide(
-                  color: Theme.of(context).colorScheme.surfaceBright)),
+            borderRadius: BorderRadius.circular(20),
+            side: BorderSide(
+              color: Theme.of(context).colorScheme.surfaceBright,
+            ),
+          ),
           child: Padding(
             padding: const EdgeInsets.only(top: 8, bottom: 5),
             child: Center(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   animatedIcon,
-                  SizedBox(
-                    height: 5,
-                  ),
+                  SizedBox(height: 5),
                   Text(
                     label,
                     textScaler: TextScaler.linear(1.00),
                     style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSurface),
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
                   )
                 ],
               ),

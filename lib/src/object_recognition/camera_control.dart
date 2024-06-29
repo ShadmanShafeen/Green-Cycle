@@ -37,54 +37,59 @@ class _CameraControlState extends State<CameraControl> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: buildAppBar(context),
         body: (!controller.value.isInitialized)
             ? Container(
                 alignment: Alignment.center,
                 color: Colors.white,
                 child: const CircularProgressIndicator(),
               )
-            : Column(
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Icon(Icons.lightbulb, color: Colors.white24),
-                            SizedBox(width: 10),
-                            Text(
-                              "Tips",
-                              style: TextStyle(
-                                color: Colors.white24,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
+            : Container(
+                color: Theme.of(context).colorScheme.surfaceContainerLowest,
+                child: Column(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Icon(
+                                Icons.lightbulb,
+                                color: Colors.amber,
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          "Make sure the object is in focus. Take a clear picture otherwise it may lead to some mislabeling.",
-                          style: TextStyle(
-                            color: Colors.white24,
-                            fontSize: 16,
+                              SizedBox(width: 10),
+                              Text(
+                                "Tips",
+                                style: TextStyle(
+                                  color: Colors.white24,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
+                          SizedBox(height: 10),
+                          Text(
+                            "Make sure the object is in focus. Take a clear picture otherwise it may lead to some mislabeling.",
+                            style: TextStyle(
+                              color: Colors.white24,
+                              fontSize: 16,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  CameraPreview(controller),
-                ],
+                    CameraPreview(controller),
+                  ],
+                ),
               ),
         floatingActionButton: buildFloatingButtonContainer(context),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
     );
   }
