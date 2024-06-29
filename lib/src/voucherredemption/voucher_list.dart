@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:green_cycle/src/models/company.dart';
+import 'package:green_cycle/src/voucherredemption/voucher_card.dart';
 import 'package:green_cycle/src/widgets/coins_container.dart';
 
 class VoucherList extends StatefulWidget {
@@ -12,13 +13,13 @@ class _VoucherListState extends State<VoucherList> {
     Company(
         name: 'SustainCraft',
         imagePath: 'lib/assets/images/companyIcons/1.png',
-        vouchers: [Voucher(userID: '1', code: '80FEC8', percent: 15, expiry: 5),
-                   Voucher(userID: '1', code: 'K1G5P6', percent: 10, expiry: 7)]
+        vouchers: [Voucher(userID: '1', code: '80FEC8', percent: 15, expiry: 5 , cost: 100),
+                   Voucher(userID: '1', code: 'K1G5P6', percent: 10, expiry: 7 , cost: 50)]
     ),
     Company(
         name: 'PCycle',
         imagePath: 'lib/assets/images/companyIcons/2.png',
-        vouchers: [Voucher(userID: '1', code: 'D05J32', percent: 15, expiry: 5),
+        vouchers: [Voucher(userID: '1', code: 'D05J32', percent: 20, expiry: 3 , cost: 250),
         ]),
   ];
 
@@ -40,30 +41,7 @@ class _VoucherListState extends State<VoucherList> {
                   tilePadding: EdgeInsets.all(10),
                   children: [
                     ...company.vouchers.map((Voucher voucher) => 
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Card(
-                          elevation: 10,
-                          child: ListTile(
-                            title: Row(
-                              children: [
-                                Text("Code: "),
-                                SelectableText(voucher.code , 
-                                  style: TextStyle(color: Theme.of(context).colorScheme.primary),
-                                ),
-                              ],), 
-                              subtitle: Text("Expires in ${voucher.expiry} days" , style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),),
-                            trailing: Transform.translate(
-                              offset: Offset(30, -25),
-                              child: CircleAvatar(
-                                radius: 20,
-                                backgroundColor: Theme.of(context).colorScheme.secondary,
-                                child: Text('${voucher.percent}% off', style: TextStyle(fontWeight: FontWeight.w700,color: Theme.of(context).colorScheme.surface) , textScaler: TextScaler.linear(0.7),),
-                              ),
-                            ),
-                        )
-                        ),
-                      )
+                      VoucherCard(voucher: voucher)
             )],
                 ),
           ),

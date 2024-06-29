@@ -60,7 +60,7 @@ class _MainAppState extends State<MainApp> {
 
   GoRouter buildGoRouter() {
     return GoRouter(
-      initialLocation: '/home',
+      initialLocation: '/vendor',
       routes: [
         ShellRoute(
           builder: (context, state, child) => Scaffold(
@@ -186,6 +186,7 @@ class _MainAppState extends State<MainApp> {
       buttonTheme: const ButtonThemeData(
         buttonColor: Color(0xFF40BF58), // Green
         textTheme: ButtonTextTheme.primary,
+        padding: EdgeInsets.all(0)
       ),
       appBarTheme: const AppBarTheme(
         color: Color(0xFF53134A),

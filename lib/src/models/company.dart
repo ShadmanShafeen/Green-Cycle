@@ -1,5 +1,9 @@
 class Company {
-  Company({required this.name, required this.imagePath, required this.vouchers , this.isExpanded = false});
+  Company(
+      {required this.name,
+      required this.imagePath,
+      required this.vouchers,
+      this.isExpanded = false});
   String name;
   String imagePath;
   List<Voucher> vouchers;
@@ -11,9 +15,11 @@ class Voucher {
       {required this.userID,
       required this.code,
       required this.percent,
-      required this.expiry});
+      required this.expiry,
+      required this.cost});
   String userID;
   String code;
   int percent;
   int expiry;
+  int cost;
 }
