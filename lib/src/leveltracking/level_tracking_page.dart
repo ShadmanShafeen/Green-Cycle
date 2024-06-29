@@ -1,8 +1,10 @@
 // ignore_for_file: prefer_const_constructors, must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:green_cycle/src/leveltracking/coins_earned_container.dart';
 import 'package:green_cycle/src/leveltracking/level_list.dart';
 import 'package:green_cycle/src/leveltracking/task_list.dart';
+import 'package:green_cycle/src/widgets/coins_container.dart';
 
 class LevelTrackingPage extends StatelessWidget {
   LevelTrackingPage({super.key});
@@ -16,9 +18,12 @@ class LevelTrackingPage extends StatelessWidget {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body:  LevelList(currentLevel: 5),
+        body:  Stack(
+          children: [
+            LevelList(currentLevel: 5),
+            Positioned(top: 10, right: 10,child: CoinsContainer()),
+          ]),
             
-        
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             _displayBottomSheet(context);

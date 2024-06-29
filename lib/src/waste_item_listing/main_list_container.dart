@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:green_cycle/src/waste_item_listing/draft_items.dart';
 import 'package:green_cycle/src/waste_item_listing/recent_items.dart';
 import 'package:green_cycle/src/waste_item_listing/shared_items.dart';
-import 'package:green_cycle/src/widgets/nav_bar.dart';
 
 class WasteListContainer extends StatefulWidget {
   const WasteListContainer({super.key});
@@ -19,8 +18,6 @@ class _WasteListContainerState extends State<WasteListContainer> {
       length: 3,
       child: Scaffold(
         resizeToAvoidBottomInset: true,
-        appBar: returnAppBar(context),
-        bottomNavigationBar: const NavBar(),
         body: Container(
           color: Theme.of(context).colorScheme.surfaceContainerLow,
           child: Column(
