@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class CommunityExplore extends StatelessWidget {
   final List<String> imgList = [
@@ -30,14 +31,19 @@ class CommunityExplore extends StatelessWidget {
             CarouselSlider(
               items: imgList
                   .map(
-                    (item) => Center(
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8.0),
-                        child: Image.asset(
-                          item,
-                          fit: BoxFit.cover,
-                          width: 1000,
-                          height: 300,
+                    (item) => InkWell(
+                      onTap: () {
+                        context.go("/home/community-explore/my_com");
+                      },
+                      child: Center(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: Image.asset(
+                            item,
+                            fit: BoxFit.cover,
+                            width: 1000,
+                            height: 300,
+                          ),
                         ),
                       ),
                     ),
@@ -67,7 +73,9 @@ class CommunityExplore extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  context.go("/home/community-explore/explore-communities");
+                },
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

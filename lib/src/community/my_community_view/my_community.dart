@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:green_cycle/src/my_community_view/member-circle.dart';
-import 'package:green_cycle/src/my_community_view/members.dart';
+import 'package:green_cycle/src/community/my_community_view/member-circle.dart';
+import 'package:green_cycle/src/models/members.dart';
 
 class MyCommunity extends StatelessWidget {
   const MyCommunity({super.key});
@@ -8,9 +8,6 @@ class MyCommunity extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('My Community'),
-      ),
       body: Container(
         padding: const EdgeInsets.all(16.0),
         color: Theme.of(context).colorScheme.surface,
@@ -71,10 +68,10 @@ class MyCommunity extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Column(
+      child: const Column(
         children: [
-          const SizedBox(height: 20),
-          const Row(
+          SizedBox(height: 20),
+          Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
@@ -87,20 +84,20 @@ class MyCommunity extends StatelessWidget {
               )
             ],
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               MemberCircle(
                 imageUrl:
-                    'assets/img/avatar2.png', // Replace with actual image URL
+                    'lib/assets/img/avatar2.png', // Replace with actual image URL
                 name: 'Alex Turner',
                 points: '450 pts',
                 rank: 2,
               ),
               MemberCircle(
                 imageUrl:
-                    'assets/img/avatar1.png', // Replace with actual image URL
+                    'lib/assets/img/avatar1.png', // Replace with actual image URL
                 name: 'Bryan Wolf',
                 points: '542 pts',
                 rank: 1,
@@ -108,14 +105,14 @@ class MyCommunity extends StatelessWidget {
               ),
               MemberCircle(
                 imageUrl:
-                    'assets/img/avatar3.png', // Replace with actual image URL
+                    'lib/assets/img/avatar3.png', // Replace with actual image URL
                 name: 'Nick Burg',
                 points: '312 pts',
                 rank: 3,
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
         ],
       ),
     );
