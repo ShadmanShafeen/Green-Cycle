@@ -84,7 +84,7 @@ class _LevelListState extends State<LevelList> {
                       visible: coinsEarnedContainerVisible,
                       child: Positioned(
                         top: 20,
-                        right: MediaQuery.of(context).size.width * 0.075,
+                        right: MediaQuery.of(context).size.width * 0.04,
                         child: CoinsEarnedContainer(),
                       ),
                     )

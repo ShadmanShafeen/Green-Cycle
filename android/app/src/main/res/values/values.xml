@@ -1,0 +1,6 @@
+<resources>
+    <string name="google_api_key" translatable="false">AIzaSyC3wtxm29NSORQDGwRnf_0fK3NqGrIMby8</string>
+    <string name="gcm_defaultSenderId" translatable="false">374353890410</string>
+    <string name="google_app_id" translatable="false">1:374353890410:android:1992180e0c65ddb20ece13</string>
+    <string name="project_id" translatable="false">greencycle-03747690</string>
+</resources>

@@ -1,8 +1,12 @@
+import 'dart:async';
 import 'dart:ui';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:green_cycle/auth.dart';
+import 'package:green_cycle/src/utils/snackbars_alerts.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -12,6 +16,23 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
+  String? errorMessage = '';
+  bool isLoggedIn = true;
+  final TextEditingController _controllerEmail = TextEditingController();
+  final TextEditingController _controllerPassword = TextEditingController();
+
+  Future<void> signInWithEmailAndPassword() async {
+    try {
+      await Auth().signInWithEmailAndPassword(
+          email: _controllerEmail.text, password: _controllerPassword.text);
+      errorMessage = '';
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        errorMessage = e.message;
+      });
+    }
+  }
+
   late final AnimationController fadeController;
   late final AnimationController translateController;
   @override
@@ -121,16 +142,18 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     const Text(
-                      "Username",
+                      "Email",
                       style: TextStyle(
                         color: Color.fromARGB(255, 184, 43, 219),
                         fontSize: 15,
                       ),
                     ),
                     TextFormField(
+                      controller: _controllerEmail,
+                      style: TextStyle(color: Colors.white),
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
-                        hintText: 'Give Username',
+                        hintText: 'Enter Email',
                       ),
                     ),
                     const SizedBox(height: 20.0, width: 20.0),
@@ -142,9 +165,12 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                       ),
                     ),
                     TextFormField(
+                      obscureText: true,
+                      controller: _controllerPassword,
+                      style: TextStyle(color: Colors.white),
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
-                        hintText: 'Give Password',
+                        hintText: 'Enter Password',
                       ),
                     ),
                     const SizedBox(height: 10.0, width: 10.0),
@@ -165,8 +191,17 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                     Align(
                       alignment: Alignment.center,
                       child: ElevatedButton(
-                        onPressed: () {
-                          context.go('/home');
+                        onPressed: () async {
+                          await signInWithEmailAndPassword();
+                          if (errorMessage == '') {
+                            context.go('/home');
+                          } else {
+                            createQuickAlert(
+                                context: context,
+                                title: "Login Failed",
+                                message: "Please try again",
+                                type: 'error');
+                          }
                         },
                         style: ButtonStyle(
                           backgroundColor: WidgetStateProperty.all<Color>(

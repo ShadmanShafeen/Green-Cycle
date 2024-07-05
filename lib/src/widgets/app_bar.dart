@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:green_cycle/src/widgets/coins_container.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({super.key});
@@ -69,6 +70,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             : const SizedBox()
       ],
       backgroundColor: Theme.of(context).colorScheme.surfaceContainerLowest,
+      
     );
   }
 

@@ -99,7 +99,7 @@ class HomePage extends StatelessWidget {
                           width: 50,
                           height: 50,
                         ),
-                        path: '',
+                        path: '/home',
                       ),
                       ActionCard(
                         label: "Community",
