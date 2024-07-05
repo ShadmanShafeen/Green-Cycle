@@ -1,10 +1,16 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:green_cycle/src/utils/server.dart';
+import 'package:http/http.dart' as http;
 
 class ImagePreview extends StatefulWidget {
   final String imagePath;
-  const ImagePreview({super.key, required this.imagePath});
+  final XFile imageFile;
+  const ImagePreview(
+      {super.key, required this.imagePath, required this.imageFile});
 
   @override
   State<ImagePreview> createState() => _ImagePreviewState();
@@ -14,11 +20,44 @@ class _ImagePreviewState extends State<ImagePreview> {
   bool isLoading = false;
 
   @override
+  void initState() {
+    super.initState();
+    isLoading = true;
+    _getDetectedImage().then((_) {
+      setState(() {
+        isLoading = false;
+      });
+    });
+  }
+
+  Future<dynamic> _getDetectedImage() async {
+    final response = await http.post(
+      Uri.parse("$serverURL/object-rec"),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: jsonEncode({
+        "image": widget.imagePath,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      return data;
+    } else {
+      throw Exception('Failed to load data');
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
         child: isLoading
-            ? const CircularProgressIndicator()
+            ? Center(
+                heightFactor: MediaQuery.of(context).size.height,
+                child: const CircularProgressIndicator(),
+              )
             : Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
@@ -30,7 +69,9 @@ class _ImagePreviewState extends State<ImagePreview> {
                   children: [
                     SizedBox(
                       height: 300,
-                      child: Image.file(File(widget.imagePath)),
+                      child: Image.file(
+                        File(widget.imagePath),
+                      ),
                     ),
                     const SizedBox(height: 20),
                     Card(
@@ -47,13 +88,15 @@ class _ImagePreviewState extends State<ImagePreview> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text("Recyclable Waste",
-                                    style: TextStyle(
-                                        fontSize: 30,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onSurface,
-                                        fontWeight: FontWeight.bold)),
+                                Text(
+                                  "Recyclable Waste",
+                                  style: TextStyle(
+                                    fontSize: 30,
+                                    color:
+                                        Theme.of(context).colorScheme.onSurface,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                                 Icon(
                                   Icons.recycling,
                                   size: 30,
@@ -61,11 +104,14 @@ class _ImagePreviewState extends State<ImagePreview> {
                                 ),
                               ],
                             ),
-                            Text("Not organic waste",
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    color: Theme.of(context).colorScheme.error,
-                                    fontWeight: FontWeight.bold)),
+                            Text(
+                              "Not organic waste",
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Theme.of(context).colorScheme.error,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                             Text(
                               "Aluminium can",
                               style: TextStyle(
