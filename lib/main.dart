@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:camera/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -10,6 +8,7 @@ import 'package:green_cycle/src/Locate_Vendor/map.dart';
 import 'package:green_cycle/src/Profile/profile.dart';
 import 'package:green_cycle/src/authentication/login.dart';
 import 'package:green_cycle/src/authentication/signup.dart';
+import 'package:green_cycle/src/community/com_goals/community_goals.dart';
 import 'package:green_cycle/src/community/community_calendar.dart';
 import 'package:green_cycle/src/community/community_explore.dart';
 import 'package:green_cycle/src/community/explore_community/communities_nearby.dart';
@@ -71,17 +70,17 @@ class _MainAppState extends State<MainApp> {
       routes: [
         ShellRoute(
           builder: (context, state, child) => Scaffold(
-            appBar: CustomAppBar(),
+            appBar: const CustomAppBar(),
             body: child,
-            bottomNavigationBar: NavBar(),
+            bottomNavigationBar: const NavBar(),
           ),
           routes: [
             GoRoute(
               path: '/home',
-              builder: (context, state) => HomePage(),
+              builder: (context, state) => const HomePage(),
               pageBuilder: (context, state) {
                 return returnCustomTransitionPage(
-                  child: HomePage(),
+                  child: const HomePage(),
                   context: context,
                   type: PageTransitionType.bottomToTop,
                 );
@@ -111,6 +110,7 @@ class _MainAppState extends State<MainApp> {
                   name: "image-preview",
                   builder: (context, state) => ImagePreview(
                     imagePath: state.pathParameters['imagePath']!,
+                    imageFile: state.extra as XFile,
                   ),
                 ),
                 GoRoute(
@@ -135,7 +135,7 @@ class _MainAppState extends State<MainApp> {
                   path: 'voucher-redemption',
                   pageBuilder: (context, state) {
                     return returnCustomTransitionPage(
-                      child: VoucherRedemptionPage(),
+                      child: const VoucherRedemptionPage(),
                       context: context,
                       type: PageTransitionType.bottomToTop,
                       durationMillis: 800,
@@ -184,6 +184,17 @@ class _MainAppState extends State<MainApp> {
                           child: const MyCommunity(),
                           context: context,
                           type: PageTransitionType.rightToLeft,
+                        );
+                      },
+                    ),
+                    GoRoute(
+                      path: "com-goals",
+                      name: "com-goals",
+                      pageBuilder: (context, state) {
+                        return returnCustomTransitionPage(
+                          child: const CommunityGoals(),
+                          context: context,
+                          type: PageTransitionType.bottomToTop,
                         );
                       },
                     ),
@@ -257,7 +268,7 @@ class _MainAppState extends State<MainApp> {
         ),
         GoRoute(
           path: '/vendor',
-          builder: (context, state) => VendorPage(),
+          builder: (context, state) => const VendorPage(),
         ),
         GoRoute(
           path: "/",

@@ -233,9 +233,13 @@ class _CameraControlState extends State<CameraControl> {
           });
 
           if (context.mounted) {
-            context.goNamed("image-preview", pathParameters: {
-              "imagePath": imageFile!.path,
-            });
+            context.goNamed(
+              "image-preview",
+              pathParameters: {
+                "imagePath": imageFile!.path,
+              },
+              extra: imageFile,
+            );
           }
         } catch (e) {
           if (context.mounted) {

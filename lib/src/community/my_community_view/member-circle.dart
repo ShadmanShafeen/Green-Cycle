@@ -44,8 +44,8 @@ class MemberCircle extends StatelessWidget {
             ),
             if (isTopMember)
               Positioned(
-                top: 0,
-                left: 18,
+                top: -1.5,
+                left: 21,
                 child: Image.asset(
                   'lib/assets/img/crown.png',
                   height: 20,
