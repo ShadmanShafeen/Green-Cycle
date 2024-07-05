@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:camera/camera.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:green_cycle/src/utils/server.dart';
-import 'package:http/http.dart' as http;
 
 class ImagePreview extends StatefulWidget {
   final String imagePath;
@@ -31,21 +31,27 @@ class _ImagePreviewState extends State<ImagePreview> {
   }
 
   Future<dynamic> _getDetectedImage() async {
-    final response = await http.post(
-      Uri.parse("$serverURL/object-rec"),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: jsonEncode({
-        "image": widget.imagePath,
-      }),
-    );
+    var dio = Dio();
+    try {
+      final response = await dio.post(
+        "$serverURLFlask/object-rec",
+        options: Options(
+          headers: {
+            "Content-Type": "application/json",
+          },
+        ),
+        data: jsonEncode({
+          "image": widget.imagePath,
+        }),
+      );
 
-    if (response.statusCode == 200) {
-      var data = jsonDecode(response.body);
-      return data;
-    } else {
-      throw Exception('Failed to load data');
+      if (response.statusCode == 200) {
+        return response.data;
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      throw Exception('Failed to load data: $e');
     }
   }
 

@@ -35,7 +35,6 @@ dependencies:
   icons_launcher: ^2.1.7
   modal_bottom_sheet: ^3.0.0
   latlong2: ^0.9.1
-  http: ^1.2.1
   flutter_map: ^7.0.1
   location: ^6.0.2
   table_calendar: ^3.1.2
