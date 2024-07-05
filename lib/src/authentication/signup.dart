@@ -1,10 +1,13 @@
 import 'dart:ui';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:go_router/go_router.dart';
+import 'package:green_cycle/auth.dart';
 import 'package:green_cycle/src/authentication/vendor_signup.dart';
+import 'package:green_cycle/src/utils/snackbars_alerts.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -17,6 +20,34 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
   late final AnimationController fadeController;
   late final AnimationController translateController;
   bool isToggle = false;
+
+  String? errorMessage = '';
+  // bool isLoggedIn = false;
+  final TextEditingController _controllerEmail = TextEditingController();
+  final TextEditingController _controllerPassword = TextEditingController();
+
+  Future<void> createUserWithEmailAndPassword() async {
+    try {
+      print(_controllerEmail.text);
+      print(_controllerPassword.text);
+      if (_controllerPassword.text.length < 6) {
+        createQuickAlert(
+            context: context,
+            title: "Password length must be at least 6 characters",
+            message: "Please add more characters",
+            type: 'error');
+      } else {
+        await Auth().createUserWithEmailAndPassword(
+          email: _controllerEmail.text, password: _controllerPassword.text);
+        errorMessage = '';
+      }
+      
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        errorMessage = e.message;
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -42,10 +73,7 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: returnForm(context),
-        ),
+        child: returnForm(context),
       ),
     );
   }
@@ -147,7 +175,7 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
                   ),
                 ],
               ),
-              const SizedBox(height: 40.0, width: 40.0),
+              const SizedBox(height: 10),
               !isToggle ? userForm(context) : const VendorSignupPage(),
             ],
           ),
@@ -163,16 +191,18 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           const Text(
-            "Username",
+            "Email",
             style: TextStyle(
               color: Color.fromARGB(255, 184, 43, 219),
               fontSize: 15,
             ),
           ),
           TextFormField(
+            style: const TextStyle(color: Colors.white),
+            controller: _controllerEmail,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
-              hintText: 'Give Username',
+              hintText: 'Enter Email',
             ),
           ),
           const SizedBox(height: 20.0, width: 20.0),
@@ -184,9 +214,12 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
             ),
           ),
           TextFormField(
+            obscureText: true,
+            style: const TextStyle(color: Colors.white),
+            controller: _controllerPassword,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
-              hintText: 'Give Password',
+              hintText: 'Enter Password',
             ),
           ),
           const SizedBox(height: 10.0, width: 10.0),
@@ -194,8 +227,12 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
           Align(
             alignment: Alignment.center,
             child: ElevatedButton(
-              onPressed: () {
-                context.go("/login");
+              onPressed: () async {
+                await createUserWithEmailAndPassword();
+                if ( _controllerPassword.text.length >= 6 && errorMessage == '') {
+                  context.go("/login");
+                }
+                
               },
               style: ButtonStyle(
                 backgroundColor: WidgetStateProperty.all<Color>(

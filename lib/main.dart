@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:camera/camera.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -33,8 +34,9 @@ import 'package:permission_handler/permission_handler.dart' as ph;
 
 late List<CameraDescription> cameras;
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   cameras = await availableCameras();
   runApp(const MainApp());
 }
@@ -65,7 +67,7 @@ class _MainAppState extends State<MainApp> {
 
   GoRouter buildGoRouter() {
     return GoRouter(
-      initialLocation: '/vendor',
+      initialLocation: '/signup',
       routes: [
         ShellRoute(
           builder: (context, state, child) => Scaffold(
@@ -281,10 +283,9 @@ class _MainAppState extends State<MainApp> {
     return ThemeData(
       useMaterial3: true,
       buttonTheme: const ButtonThemeData(
-        buttonColor: Color(0xFF40BF58), // Green
-        textTheme: ButtonTextTheme.primary,
-        padding: EdgeInsets.all(0)
-      ),
+          buttonColor: Color(0xFF40BF58), // Green
+          textTheme: ButtonTextTheme.primary,
+          padding: EdgeInsets.all(0)),
       appBarTheme: const AppBarTheme(
         color: Color(0xFF53134A),
         iconTheme: IconThemeData(color: Colors.white, size: 30),

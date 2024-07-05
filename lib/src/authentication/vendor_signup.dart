@@ -26,7 +26,7 @@ class _VendorSignupPageState extends State<VendorSignupPage> {
           TextFormField(
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
-              hintText: 'Give Company Name',
+              hintText: 'Enter Company Name',
             ),
           ),
           const SizedBox(height: 20.0, width: 20.0),
@@ -40,7 +40,7 @@ class _VendorSignupPageState extends State<VendorSignupPage> {
           TextFormField(
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
-              hintText: 'Give Password',
+              hintText: 'Enter Password',
             ),
           ),
           const SizedBox(height: 20.0, width: 20.0),

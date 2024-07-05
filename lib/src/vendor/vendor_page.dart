@@ -20,7 +20,7 @@ class _VendorPageState extends State<VendorPage> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      animationDuration: const Duration(milliseconds: 1500),
+      animationDuration: const Duration(seconds: 1),
       length: 4,
       initialIndex: 0,
       child: Scaffold(
