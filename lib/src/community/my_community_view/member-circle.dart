@@ -7,7 +7,8 @@ class MemberCircle extends StatelessWidget {
   final int rank;
   final bool isTopMember;
 
-  MemberCircle({
+  const MemberCircle({
+    super.key,
     required this.imageUrl,
     required this.name,
     required this.points,
@@ -30,10 +31,10 @@ class MemberCircle extends StatelessWidget {
               left: 18,
               child: CircleAvatar(
                 radius: 12,
-                backgroundColor: Color.fromARGB(255, 101, 247, 196),
+                backgroundColor: const Color.fromARGB(255, 101, 247, 196),
                 child: Text(
                   rank.toString(),
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Color(0xFF8844F0),
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
@@ -46,23 +47,31 @@ class MemberCircle extends StatelessWidget {
                 top: 0,
                 left: 18,
                 child: Image.asset(
-                  'assets/img/crown.png',
+                  'lib/assets/img/crown.png',
                   height: 20,
                   width: 20,
                 ),
               ),
           ],
         ),
-        SizedBox(height: 8),
-        Text(name, style: TextStyle(color: Colors.white)),
+        const SizedBox(height: 8),
+        Text(
+          name,
+          style: const TextStyle(color: Colors.white),
+        ),
         Row(
           children: [
-            Icon(
+            const Icon(
               Icons.rocket_launch,
               color: Colors.white54,
               size: 15,
             ),
-            Text(points, style: TextStyle(color: Color(0xFF1F8762))),
+            Text(
+              points,
+              style: const TextStyle(
+                color: Color(0xFF1F8762),
+              ),
+            ),
           ],
         ),
       ],

@@ -12,14 +12,14 @@ import 'package:green_cycle/src/authentication/login.dart';
 import 'package:green_cycle/src/authentication/signup.dart';
 import 'package:green_cycle/src/community/community_calendar.dart';
 import 'package:green_cycle/src/community/community_explore.dart';
-import 'package:green_cycle/src/explore_community/communities_nearby.dart';
+import 'package:green_cycle/src/community/explore_community/communities_nearby.dart';
+import 'package:green_cycle/src/community/my_community_view/my_community.dart';
 import 'package:green_cycle/src/games/archive/archive_container.dart';
 import 'package:green_cycle/src/games/games.dart';
 import 'package:green_cycle/src/games/quiz/quiz_question_holder.dart';
 import 'package:green_cycle/src/games/quiz/quiz_welcome.dart';
 import 'package:green_cycle/src/home/home_page.dart';
 import 'package:green_cycle/src/leveltracking/level_tracking_page.dart';
-import 'package:green_cycle/src/my_community_view/my_community.dart';
 import 'package:green_cycle/src/object_recognition/camera_control.dart';
 import 'package:green_cycle/src/object_recognition/image_preview.dart';
 import 'package:green_cycle/src/vendor/vendor_page.dart';
@@ -67,7 +67,7 @@ class _MainAppState extends State<MainApp> {
 
   GoRouter buildGoRouter() {
     return GoRouter(
-      initialLocation: '/signup',
+      initialLocation: '/home',
       routes: [
         ShellRoute(
           builder: (context, state, child) => Scaffold(
