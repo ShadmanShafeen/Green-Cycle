@@ -35,6 +35,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
 
   late final AnimationController fadeController;
   late final AnimationController translateController;
+
   @override
   void initState() {
     super.initState();
@@ -150,7 +151,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                     ),
                     TextFormField(
                       controller: _controllerEmail,
-                      style: TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.white),
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: 'Enter Email',
@@ -167,7 +168,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                     TextFormField(
                       obscureText: true,
                       controller: _controllerPassword,
-                      style: TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.white),
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: 'Enter Password',
@@ -197,10 +198,11 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                             context.go('/home');
                           } else {
                             createQuickAlert(
-                                context: context,
-                                title: "Login Failed",
-                                message: "Please try again",
-                                type: 'error');
+                              context: context,
+                              title: "Login Failed",
+                              message: "Please try again",
+                              type: 'error',
+                            );
                           }
                         },
                         style: ButtonStyle(
