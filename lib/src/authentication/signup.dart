@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
@@ -28,8 +29,11 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
 
   Future<void> createUserWithEmailAndPassword() async {
     try {
-      print(_controllerEmail.text);
-      print(_controllerPassword.text);
+      if (kDebugMode) {
+        print(_controllerEmail.text);
+        print(_controllerPassword.text);
+      }
+
       if (_controllerPassword.text.length < 6) {
         createQuickAlert(
             context: context,
@@ -232,7 +236,6 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
                 if ( _controllerPassword.text.length >= 6 && errorMessage == '') {
                   context.go("/login");
                 }
-                
               },
               style: ButtonStyle(
                 backgroundColor: WidgetStateProperty.all<Color>(
