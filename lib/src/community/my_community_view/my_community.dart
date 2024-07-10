@@ -119,9 +119,12 @@ class MyCommunity extends StatelessWidget {
         children: [
           Positioned.fill(
             child: Image.asset(
-              'lib/assets/img/leaderboard_bg.jpg',
+              'lib/assets/img/leaderboard_bg3.jpg',
               fit: BoxFit.cover,
             ),
+          ),
+          Container(
+            color: Colors.black.withOpacity(0),
           ),
           Positioned(
             top: 15,
@@ -199,7 +202,7 @@ class MyCommunity extends StatelessWidget {
                     },
                     style: const ButtonStyle(
                       backgroundColor: WidgetStatePropertyAll<Color>(
-                        Color.fromARGB(200, 136, 68, 240),
+                        Color.fromARGB(240, 136, 68, 240),
                       ),
                       fixedSize: WidgetStatePropertyAll<Size>(
                         Size.fromWidth(200),
@@ -223,7 +226,7 @@ class MyCommunity extends StatelessWidget {
                     },
                     style: const ButtonStyle(
                       backgroundColor: WidgetStatePropertyAll<Color>(
-                        Color.fromARGB(200, 136, 68, 240),
+                        Color.fromARGB(240, 136, 68, 240),
                       ),
                       fixedSize: WidgetStatePropertyAll<Size>(
                         Size.fromWidth(200),

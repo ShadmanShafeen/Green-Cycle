@@ -133,7 +133,7 @@ class _CommunityGoalsState extends State<CommunityGoals> {
                                 width: 50,
                               ),
                               Text(
-                                '${goals[index].quantity} / ${goals[index].total}',
+                                '${goals[index].current_weight}kg / ${goals[index].total_weight}kg',
                                 style: TextStyle(
                                   color: goals[index].isCompleted
                                       ? Theme.of(context).colorScheme.onSurface
@@ -149,8 +149,8 @@ class _CommunityGoalsState extends State<CommunityGoals> {
                           padding: const EdgeInsets.all(16.0),
                           child: LinearProgressIndicator(
                             minHeight: 5.0,
-                            value:
-                                (goals[index].quantity) / (goals[index].total),
+                            value: (goals[index].current_weight) /
+                                (goals[index].total_weight),
                             color: goals[index].isCompleted
                                 ? Theme.of(context)
                                     .colorScheme
