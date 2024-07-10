@@ -9,7 +9,6 @@ class MemberAddModal extends StatefulWidget {
 }
 
 class _MemberAddModalState extends State<MemberAddModal> {
-  bool customIcon = false;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -52,12 +51,7 @@ class _MemberAddModalState extends State<MemberAddModal> {
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
-                    trailing: Icon(
-                      customIcon
-                          ? Icons.arrow_drop_up_outlined
-                          : Icons.arrow_drop_down_circle_outlined,
-                      color: Theme.of(context).colorScheme.secondaryFixedDim,
-                    ),
+                   
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(16.0),
@@ -146,11 +140,7 @@ class _MemberAddModalState extends State<MemberAddModal> {
                         ),
                       ),
                     ],
-                    onExpansionChanged: (bool expanded) {
-                      setState(() {
-                        customIcon = expanded;
-                      });
-                    },
+                   
                   ),
                 );
               },
