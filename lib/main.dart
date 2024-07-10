@@ -143,16 +143,38 @@ class _MainAppState extends State<MainApp> {
                   },
                 ),
                 GoRoute(
-                  path: "profile",
-                  name: "profile",
-                  pageBuilder: (context, state) {
-                    return returnCustomTransitionPage(
-                      child: const Profile(),
-                      context: context,
-                      type: PageTransitionType.rightToLeft,
-                    );
-                  },
-                ),
+                    path: "profile",
+                    name: "profile",
+                    pageBuilder: (context, state) {
+                      return returnCustomTransitionPage(
+                        child: const Profile(),
+                        context: context,
+                        type: PageTransitionType.rightToLeft,
+                      );
+                    },
+                    routes: [
+                      GoRoute(
+                        path: "waste_item_list",
+                        name: "waste_item_list",
+                        pageBuilder: (context, state) =>
+                            returnCustomTransitionPage(
+                          child: const WasteListContainer(),
+                          context: context,
+                          type: PageTransitionType.rightToLeft,
+                        ),
+                      ),
+                      GoRoute(
+                        path: "community_calender",
+                        name: "community_calender",
+                        pageBuilder: (context, state) {
+                          return returnCustomTransitionPage(
+                            child: const CommunityCalendar(),
+                            context: context,
+                            type: PageTransitionType.rightToLeft,
+                          );
+                        },
+                      ),
+                    ]),
                 GoRoute(
                   path: 'community-explore',
                   name: 'community-explore',
