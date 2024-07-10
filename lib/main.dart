@@ -198,6 +198,17 @@ class _MainAppState extends State<MainApp> {
                         );
                       },
                     ),
+                    GoRoute(
+                      path: "community-calender",
+                      name: "community-calender",
+                      pageBuilder: (context, state) {
+                        return returnCustomTransitionPage(
+                          child: const CommunityCalendar(),
+                          context: context,
+                          type: PageTransitionType.bottomToTop,
+                        );
+                      },
+                    ),
                   ],
                 ),
               ],

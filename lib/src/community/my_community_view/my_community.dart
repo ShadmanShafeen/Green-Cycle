@@ -219,7 +219,7 @@ class MyCommunity extends StatelessWidget {
                   width: 150,
                   child: FilledButton(
                     onPressed: () {
-                      context.go('/home/community-explore/com-goals');
+                      context.go('/home/community-explore/community-calender');
                     },
                     style: const ButtonStyle(
                       backgroundColor: WidgetStatePropertyAll<Color>(
@@ -237,11 +237,6 @@ class MyCommunity extends StatelessWidget {
                     ),
                   ),
                 )
-
-                // IconButton(
-                //   icon: const Icon(Icons.event_note, color: Colors.white),
-                //   onPressed: () {},
-                // ),
               ],
             ),
           ),

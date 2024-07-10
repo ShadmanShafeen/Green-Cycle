@@ -12,8 +12,6 @@ class CommunityGoals extends StatefulWidget {
 }
 
 class _CommunityGoalsState extends State<CommunityGoals> {
-  bool customIcon = false;
-
   @override
   Widget build(BuildContext context) {
     int completedGoalsCount = 0;
@@ -64,7 +62,7 @@ class _CommunityGoalsState extends State<CommunityGoals> {
                       ),
                       IconButton(
                         onPressed: () {
-                          context.go('/my_com');
+                          context.go('/home/community-explore/my_com');
                         },
                         icon: Icon(
                           Icons.close,
@@ -117,12 +115,6 @@ class _CommunityGoalsState extends State<CommunityGoals> {
                               : Theme.of(context).colorScheme.secondaryFixedDim,
                         ),
                       ),
-                      trailing: Icon(
-                        customIcon
-                            ? Icons.arrow_drop_down_circle_rounded
-                            : Icons.arrow_drop_down_circle_outlined,
-                        color: Theme.of(context).colorScheme.secondaryFixedDim,
-                      ),
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(16.0),
@@ -150,13 +142,6 @@ class _CommunityGoalsState extends State<CommunityGoals> {
                                 ),
                               ),
                               const SizedBox(width: 20),
-                              Text(
-                                goals[index].isCompleted ? 'Completed!' : '',
-                                style: TextStyle(
-                                  color:
-                                      Theme.of(context).colorScheme.onSurface,
-                                ),
-                              ),
                             ],
                           ),
                         ),
@@ -174,11 +159,6 @@ class _CommunityGoalsState extends State<CommunityGoals> {
                           ),
                         ),
                       ],
-                      onExpansionChanged: (bool expanded) {
-                        setState(() {
-                          customIcon = expanded;
-                        });
-                      },
                     ),
                   );
                 },
@@ -202,9 +182,11 @@ class _CommunityGoalsState extends State<CommunityGoals> {
                   backgroundColor: Theme.of(context).colorScheme.tertiary,
                 ),
                 onPressed: () {},
-                child: const Text(
-                  'Not ready for pickup',
-                  style: TextStyle(fontSize: 20),
+                child: Text(
+                  (completedGoalsCount == goals.length)
+                      ? 'Ready for Pickup'
+                      : 'Not ready for pickup',
+                  style: const TextStyle(fontSize: 20),
                 ),
               ),
             ),
