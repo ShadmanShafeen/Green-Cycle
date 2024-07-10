@@ -124,17 +124,16 @@ class MyCommunity extends StatelessWidget {
             ),
           ),
           Positioned(
-            top: 20,
+            top: 15,
             left: 0,
             right: 0,
             child: Row(
               children: [
-                
                 const Expanded(
                   child: Align(
                     alignment: Alignment.center,
                     child: Text(
-                      'Members',
+                      'My Community Members',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.white,

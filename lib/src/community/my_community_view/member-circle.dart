@@ -27,8 +27,8 @@ class MemberCircle extends StatelessWidget {
               backgroundImage: AssetImage(imageUrl),
             ),
             Positioned(
-              bottom: isTopMember ? -2 : -3,
-              left: isTopMember ? 27 : 21,
+              bottom: isTopMember ? -1 : -2,
+              left: isTopMember ? 35 : 23,
               child: CircleAvatar(
                 radius: 12,
                 backgroundColor: const Color.fromARGB(255, 101, 247, 196),
@@ -45,7 +45,7 @@ class MemberCircle extends StatelessWidget {
             if (isTopMember)
               Positioned(
                 top: -1.5,
-                left: 27,
+                left: 35,
                 child: Image.asset(
                   'lib/assets/img/crown.png',
                   height: 30,

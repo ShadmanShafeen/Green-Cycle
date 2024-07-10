@@ -49,7 +49,7 @@ class _MemberAddModalState extends State<MemberAddModal> {
                     title: Text(
                       newmem[index].name,
                       style: TextStyle(
-                        color: Theme.of(context).colorScheme.secondaryFixedDim,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                     trailing: Icon(
@@ -71,7 +71,7 @@ class _MemberAddModalState extends State<MemberAddModal> {
                                 style: const ButtonStyle(
                                   backgroundColor:
                                       WidgetStatePropertyAll<Color>(
-                                    Color.fromARGB(255, 136, 68, 240),
+                                    Color.fromARGB(50, 136, 68, 240),
                                   ),
                                   fixedSize: WidgetStatePropertyAll<Size>(
                                     Size.fromWidth(200),
@@ -111,7 +111,7 @@ class _MemberAddModalState extends State<MemberAddModal> {
                                 style: const ButtonStyle(
                                   backgroundColor:
                                       WidgetStatePropertyAll<Color>(
-                                    Color.fromARGB(255, 136, 68, 240),
+                                    Color.fromARGB(50, 136, 68, 240),
                                   ),
                                   fixedSize: WidgetStatePropertyAll<Size>(
                                     Size.fromWidth(200),
