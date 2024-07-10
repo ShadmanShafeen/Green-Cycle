@@ -317,7 +317,7 @@ class _MainAppState extends State<MainApp> {
         onSecondary: Colors.white,
         secondaryContainer: Color(0xFF40BF58), // Green
         onSecondaryContainer: Colors.white,
-        secondaryFixed: Color(0xFF40BF58),
+        secondaryFixed: Color.fromARGB(255, 64, 191, 88),
         secondaryFixedDim: Color(0xFF1F8762),
         onSecondaryFixed: Colors.white,
         onSecondaryFixedVariant: Colors.white,
