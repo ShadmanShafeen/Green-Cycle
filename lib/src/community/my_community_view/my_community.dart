@@ -199,7 +199,7 @@ class MyCommunity extends StatelessWidget {
                     },
                     style: const ButtonStyle(
                       backgroundColor: WidgetStatePropertyAll<Color>(
-                        Color.fromARGB(255, 136, 68, 240),
+                        Color.fromARGB(200, 136, 68, 240),
                       ),
                       fixedSize: WidgetStatePropertyAll<Size>(
                         Size.fromWidth(200),
@@ -223,7 +223,7 @@ class MyCommunity extends StatelessWidget {
                     },
                     style: const ButtonStyle(
                       backgroundColor: WidgetStatePropertyAll<Color>(
-                        Color.fromARGB(255, 136, 68, 240),
+                        Color.fromARGB(200, 136, 68, 240),
                       ),
                       fixedSize: WidgetStatePropertyAll<Size>(
                         Size.fromWidth(200),
