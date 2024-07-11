@@ -143,16 +143,38 @@ class _MainAppState extends State<MainApp> {
                   },
                 ),
                 GoRoute(
-                  path: "profile",
-                  name: "profile",
-                  pageBuilder: (context, state) {
-                    return returnCustomTransitionPage(
-                      child: const Profile(),
-                      context: context,
-                      type: PageTransitionType.rightToLeft,
-                    );
-                  },
-                ),
+                    path: "profile",
+                    name: "profile",
+                    pageBuilder: (context, state) {
+                      return returnCustomTransitionPage(
+                        child: const Profile(),
+                        context: context,
+                        type: PageTransitionType.rightToLeft,
+                      );
+                    },
+                    routes: [
+                      GoRoute(
+                        path: "waste_item_list",
+                        name: "waste_item_list",
+                        pageBuilder: (context, state) =>
+                            returnCustomTransitionPage(
+                          child: const WasteListContainer(),
+                          context: context,
+                          type: PageTransitionType.rightToLeft,
+                        ),
+                      ),
+                      GoRoute(
+                        path: "community_calender",
+                        name: "community_calender",
+                        pageBuilder: (context, state) {
+                          return returnCustomTransitionPage(
+                            child: const CommunityCalendar(),
+                            context: context,
+                            type: PageTransitionType.rightToLeft,
+                          );
+                        },
+                      ),
+                    ]),
                 GoRoute(
                   path: 'community-explore',
                   name: 'community-explore',
@@ -193,6 +215,17 @@ class _MainAppState extends State<MainApp> {
                       pageBuilder: (context, state) {
                         return returnCustomTransitionPage(
                           child: const CommunityGoals(),
+                          context: context,
+                          type: PageTransitionType.bottomToTop,
+                        );
+                      },
+                    ),
+                    GoRoute(
+                      path: "community-calender",
+                      name: "community-calender",
+                      pageBuilder: (context, state) {
+                        return returnCustomTransitionPage(
+                          child: const CommunityCalendar(),
                           context: context,
                           type: PageTransitionType.bottomToTop,
                         );
@@ -317,7 +350,7 @@ class _MainAppState extends State<MainApp> {
         onSecondary: Colors.white,
         secondaryContainer: Color(0xFF40BF58), // Green
         onSecondaryContainer: Colors.white,
-        secondaryFixed: Color(0xFF40BF58),
+        secondaryFixed: Color.fromARGB(255, 64, 191, 88),
         secondaryFixedDim: Color(0xFF1F8762),
         onSecondaryFixed: Colors.white,
         onSecondaryFixedVariant: Colors.white,
