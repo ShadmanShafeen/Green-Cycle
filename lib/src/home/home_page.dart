@@ -6,6 +6,8 @@ import 'package:green_cycle/src/Locate_Vendor/location_permission_modal.dart';
 import 'package:green_cycle/src/home/action_card.dart';
 import 'package:green_cycle/src/home/carousel.dart';
 import 'package:green_cycle/src/home/search_bar.dart';
+import 'package:green_cycle/src/widgets/app_bar.dart';
+import 'package:green_cycle/src/widgets/nav_bar.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -13,6 +15,8 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: CustomAppBar(),
+      bottomNavigationBar: NavBar(),
       body: Container(
         color: Theme.of(context).colorScheme.surfaceContainerLowest,
         child: SingleChildScrollView(

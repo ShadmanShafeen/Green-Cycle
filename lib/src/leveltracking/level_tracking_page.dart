@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:green_cycle/src/leveltracking/coins_earned_container.dart';
 import 'package:green_cycle/src/leveltracking/level_list.dart';
 import 'package:green_cycle/src/leveltracking/task_list.dart';
+import 'package:green_cycle/src/widgets/app_bar.dart';
 import 'package:green_cycle/src/widgets/coins_container.dart';
+import 'package:green_cycle/src/widgets/nav_bar.dart';
 
 class LevelTrackingPage extends StatelessWidget {
   LevelTrackingPage({super.key});
@@ -17,6 +19,8 @@ class LevelTrackingPage extends StatelessWidget {
         image: DecorationImage(image: AssetImage('lib/assets/images/LevelTrackingPage.jpeg'), fit: BoxFit.cover)
       ),
       child: Scaffold(
+        appBar: CustomAppBar(),
+        bottomNavigationBar: NavBar(),
         backgroundColor: Colors.transparent,
         body:  Stack(
           children: [
