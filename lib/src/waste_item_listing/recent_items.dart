@@ -1,4 +1,6 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:green_cycle/src/utils/server.dart';
 import 'package:green_cycle/src/waste_item_listing/details_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
@@ -98,54 +100,20 @@ class _RecentItemsState extends State<RecentItems>
   }
 
   Future<List<Map<String, String>>> fetchRecentItems() async {
-    List<Map<String, String>> draftItems = [
-      {
-        "name": "Plastic Shoe Boxes",
-        "description": "Sterilite Plastic Shoe Boxes - 13 x 8 x 5",
-        "Amount": "1",
-      },
-      {
-        "name": "Coca-Cola Classic Slim Can, 320 m.L.",
-        "description": "Coca-Cola Classic Slim Can, 320 m.L.",
-        "Amount": "10",
-      },
-      {
-        "name": "Cashews",
-        "description": "Kirkland Signature Organic Whole Cashews",
-        "Amount": "111"
-      },
-      {
-        "name": "Plastic Shoe Boxes",
-        "description": "Sterilite Plastic Shoe Boxes - 13 x 8 x 5",
-        "Amount": "1",
-      },
-      {
-        "name": "Coca-Cola Classic Slim Can, 320 m.L.",
-        "description": "Coca-Cola Classic Slim Can, 320 m.L.",
-        "Amount": "10",
-      },
-      {
-        "name": "Cashews",
-        "description": "Kirkland Signature Organic Whole Cashews",
-        "Amount": "111"
-      },
-      {
-        "name": "Plastic Shoe Boxes",
-        "description": "Sterilite Plastic Shoe Boxes - 13 x 8 x 5",
-        "Amount": "1",
-      },
-      {
-        "name": "Coca-Cola Classic Slim Can, 320 m.L.",
-        "description": "Coca-Cola Classic Slim Can, 320 m.L.",
-        "Amount": "10",
-      },
-      {
-        "name": "Cashews",
-        "description": "Kirkland Signature Organic Whole Cashews",
-        "Amount": "111"
-      },
-    ];
-    await Future.delayed(const Duration(seconds: 1));
-    return draftItems;
+    List<Map<String, String>> draftItems = [];
+    final dio = Dio();
+    try {
+      final response = await dio.get(
+        "$serverURLExpress/recent-show/shadmanskystar@gmail.com",
+      );
+
+      if (response.statusCode == 200) {
+        return response.data;
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      throw Exception('Failed to load data: $e');
+    }
   }
 }
