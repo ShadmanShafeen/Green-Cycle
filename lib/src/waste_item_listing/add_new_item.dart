@@ -1,4 +1,6 @@
+import "package:dio/dio.dart";
 import "package:flutter/material.dart";
+import "package:green_cycle/src/utils/server.dart";
 
 class AddNewItem extends StatefulWidget {
   final List<Map<String, String>> draftItems;
@@ -101,7 +103,7 @@ class _AddNewItemState extends State<AddNewItem> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       setState(() {
                         widget.draftItems.add({
@@ -110,8 +112,22 @@ class _AddNewItemState extends State<AddNewItem> {
                           "Amount": _itemAmountController.text,
                         });
                       });
-                      widget.onNewItemAdded();
-                      Navigator.pop(context);
+                      final dio = Dio();
+                      try {
+                        final response = await dio.post(
+                          "$serverURLExpress/draft-insert/shadmanskystar@gmail.com",
+                          data: {
+                            "name": _itemNameController.text,
+                            "description": _itemDescriptionController.text,
+                            "Amount": _itemAmountController.text,
+                          },
+                        );
+
+                        widget.onNewItemAdded();
+                        Navigator.pop(context);
+                      } catch (e) {
+                        throw Exception('Failed to load data: $e');
+                      }
                     }
                   },
                   child: Text(
