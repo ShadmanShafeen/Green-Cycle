@@ -1,5 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:green_cycle/src/utils/server.dart';
 import 'package:green_cycle/src/utils/snackbars_alerts.dart';
 import 'package:green_cycle/src/waste_item_listing/add_new_item.dart';
 import 'package:green_cycle/src/waste_item_listing/details_modal.dart';
@@ -68,59 +70,22 @@ class _DraftItemsState extends State<DraftItems>
     );
   }
 
-  List<Map<String, String>> draftItems = [
-    {
-      "name": "Plastic Shoe Boxes",
-      "description": "Sterilite Plastic Shoe Boxes - 13 x 8 x 5",
-      "Amount": "1",
-    },
-    {
-      "name": "Coca-Cola Classic Slim Can, 320 m.L.",
-      "description": "Coca-Cola Classic Slim Can, 320 m.L.",
-      "Amount": "10",
-    },
-    {
-      "name": "Cashews",
-      "description": "Kirkland Signature Organic Whole Cashews",
-      "Amount": "111"
-    },
-    {
-      "name": "Plastic Shoe Boxes",
-      "description": "Sterilite Plastic Shoe Boxes - 13 x 8 x 5",
-      "Amount": "1",
-    },
-    {
-      "name": "Coca-Cola Classic Slim Can, 320 m.L.",
-      "description": "Coca-Cola Classic Slim Can, 320 m.L.",
-      "Amount": "10",
-    },
-    {
-      "name": "Cashews",
-      "description": "Kirkland Signature Organic Whole Cashews",
-      "Amount": "111"
-    },
-    {
-      "name": "Plastic Shoe Boxes",
-      "description": "Sterilite Plastic Shoe Boxes - 13 x 8 x 5, "
-          "Sterilite Plastic Shoe Boxes - 13 x 8 x 5, "
-          "Sterilite Plastic Shoe Boxes - 13 x 8 x 5",
-      "Amount": "1",
-    },
-    {
-      "name": "Coca-Cola Classic Slim Can, 320 m.L.",
-      "description": "Coca-Cola Classic Slim Can, 320 m.L.",
-      "Amount": "10",
-    },
-    {
-      "name": "Cashews",
-      "description": "Kirkland Signature Organic Whole Cashews",
-      "Amount": "111"
-    },
-  ];
-
+  List<Map<String, String>> draftItems = [];
   Future<List<Map<String, String>>> fetchDraftItems() async {
-    await Future.delayed(const Duration(seconds: 1));
-    return draftItems;
+    final dio = Dio();
+    try {
+      final response = await dio.get(
+        "$serverURLExpress/draft-show/shadmanskystar@gmail.com",
+      );
+
+      if (response.statusCode == 200) {
+        return response.data;
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      throw Exception('Failed to load data: $e');
+    }
   }
 
   ListView _getListView(BuildContext context, AsyncSnapshot snapshot) {
@@ -139,7 +104,7 @@ class _DraftItemsState extends State<DraftItems>
           child: ListTile(
             onLongPress: () {
               setState(() {
-                draftItems.removeAt(index);
+                snapshot.data.removeAt(index);
               });
             },
             onTap: () {
@@ -202,7 +167,16 @@ class _DraftItemsState extends State<DraftItems>
       style: TextButton.styleFrom(
         overlayColor: Theme.of(context).colorScheme.onSurface,
       ),
-      onPressed: () {},
+      onPressed: () async {
+        final dio = Dio();
+        try {
+          final response = await dio.post(
+            "$serverURLExpress/draft-insert/shadmanskystar@gmail.com",
+          );
+        } catch (e) {
+          throw Exception('Failed to load data: $e');
+        }
+      },
       child: Row(
         children: [
           Icon(
