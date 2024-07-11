@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:green_cycle/src/widgets/coins_container.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({super.key});
@@ -16,7 +15,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         'GreenCycle',
         style: TextStyle(letterSpacing: 3),
       );
-    } else if (currentPath == '/voucher-redemption') {
+    } else if (currentPath == '/home/voucher-redemption') {
       appBarTitle = const Text(
         'Your Vouchers',
         style: TextStyle(

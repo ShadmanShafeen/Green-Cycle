@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:green_cycle/src/widgets/nav_bar.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CommunityCalendar extends StatefulWidget {
@@ -39,6 +40,8 @@ class CalendarScreenState extends State<CommunityCalendar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
+      bottomNavigationBar: NavBar(),
       body: Container(
         color: Theme.of(context).colorScheme.surfaceContainerLowest,
         child: Column(

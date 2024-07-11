@@ -1,6 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:green_cycle/src/widgets/app_bar.dart';
+import 'package:green_cycle/src/widgets/nav_bar.dart';
 
 class CommunityExplore extends StatelessWidget {
   final List<String> imgList = [
@@ -16,6 +18,8 @@ class CommunityExplore extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: CustomAppBar(),
+      bottomNavigationBar: NavBar(),
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
@@ -84,7 +88,7 @@ class CommunityExplore extends StatelessWidget {
                       style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
-                        fontSize: 15,
+                        fontSize: 13,
                       ),
                     ),
                     Icon(

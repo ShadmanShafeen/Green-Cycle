@@ -1,5 +1,7 @@
 // import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:green_cycle/src/widgets/app_bar.dart';
+import 'package:green_cycle/src/widgets/nav_bar.dart';
 import 'package:go_router/go_router.dart';
 
 class Profile extends StatelessWidget {
@@ -8,35 +10,22 @@ class Profile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('lib/assets/img/pp_bg.jpg'),
-                fit: BoxFit.cover)),
-        child: ListView(
-          padding: const EdgeInsets.all(16.0),
-          children: [
-            const SizedBox(
-              height: 20,
-            ),
-            Column(
-              children: [
-                Stack(children: [
-                  const CircleAvatar(
-                    backgroundImage: AssetImage("lib/assets/img/loki.png"),
-                    radius: 50,
-                  ),
-                  Positioned(
-                      bottom: -6,
-                      right: -3,
-                      child: IconButton(
-                        icon: const Icon(Icons.add_photo_alternate),
-                        onPressed: () {},
-                      ))
-                ]),
-                const SizedBox(
-                  height: 10,
-                ),
+      appBar: CustomAppBar(),
+      bottomNavigationBar: NavBar(),
+      body: ListView(
+        padding: const EdgeInsets.all(16.0),
+        children: [
+          Column(
+            children: [
+              const CircleAvatar(
+                backgroundImage: AssetImage("lib/assets/img/loki.png"),
+                radius: 50,
+              ),
+              Text(
+                'Loki Layperson',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),),
                 Text(
                   'Loki Laufeyson',
                   style: TextStyle(
@@ -184,7 +173,7 @@ class Profile extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
+      );
+
   }
 }
