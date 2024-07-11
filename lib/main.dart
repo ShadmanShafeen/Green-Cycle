@@ -68,13 +68,6 @@ class _MainAppState extends State<MainApp> {
     return GoRouter(
       initialLocation: '/home',
       routes: [
-        ShellRoute(
-          builder: (context, state, child) => Scaffold(
-            appBar: const CustomAppBar(),
-            body: child,
-            bottomNavigationBar: const NavBar(),
-          ),
-          routes: [
             GoRoute(
               path: '/home',
               builder: (context, state) => const HomePage(),
@@ -135,7 +128,7 @@ class _MainAppState extends State<MainApp> {
                   path: 'voucher-redemption',
                   pageBuilder: (context, state) {
                     return returnCustomTransitionPage(
-                      child: const VoucherRedemptionPage(),
+                      child: VoucherRedemptionPage(),
                       context: context,
                       type: PageTransitionType.bottomToTop,
                       durationMillis: 800,
@@ -264,8 +257,7 @@ class _MainAppState extends State<MainApp> {
                 ),
               ],
             ),
-          ],
-        ),
+
         GoRoute(
           path: '/vendor',
           builder: (context, state) => const VendorPage(),
@@ -286,7 +278,7 @@ class _MainAppState extends State<MainApp> {
           path: "/signup",
           builder: (context, state) => const SignupPage(),
         ),
-      ],
+      ]
     );
   }
 

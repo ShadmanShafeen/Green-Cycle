@@ -3,6 +3,8 @@ import "package:flutter/material.dart";
 import "package:flutter_map/flutter_map.dart";
 import "package:green_cycle/src/Locate_Vendor/recents_modal.dart";
 import "package:green_cycle/src/locate_vendor/location_details_modal.dart";
+import "package:green_cycle/src/widgets/app_bar.dart";
+import "package:green_cycle/src/widgets/nav_bar.dart";
 import "package:latlong2/latlong.dart";
 import "package:location/location.dart";
 import "package:modal_bottom_sheet/modal_bottom_sheet.dart";
@@ -41,6 +43,8 @@ class LocateMap extends StatelessWidget {
     ).toList();
 
     return Scaffold(
+      appBar: CustomAppBar(),
+      bottomNavigationBar: NavBar(),
       body: FlutterMap(
         options: MapOptions(
           initialCenter: LatLng(

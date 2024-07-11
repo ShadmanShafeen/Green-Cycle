@@ -4,7 +4,7 @@ import 'package:slide_to_act/slide_to_act.dart';
 
 class VoucherCard extends StatefulWidget {
   const VoucherCard({super.key, required this.voucher});
-  final Voucher voucher;
+  final voucher;
 
   @override
   State<VoucherCard> createState() => _VoucherCardState();
@@ -24,7 +24,7 @@ class _VoucherCardState extends State<VoucherCard> {
                     children: [
                       const Text("Code: "),
                       SelectableText(
-                        widget.voucher.code,
+                        widget.voucher['code'],
                         style: TextStyle(
                             color: Theme.of(context).colorScheme.primary),
                       ),
@@ -47,7 +47,7 @@ class _VoucherCardState extends State<VoucherCard> {
                           width: 40,
                         ),
                         Text(
-                          "Redeem for ${widget.voucher.cost} coins",
+                          "Redeem for ${widget.voucher['coins']} coins",
                           style: TextStyle(
                               color: Theme.of(context).colorScheme.onSurface),
                           textScaler: const TextScaler.linear(1.1),
@@ -56,7 +56,7 @@ class _VoucherCardState extends State<VoucherCard> {
                     ),
                   ),
             subtitle: Text(
-              "Expires in ${widget.voucher.expiry} days",
+              "Expires in ${widget.voucher['expiry']} days",
               style: TextStyle(
                   color:
                       Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
@@ -67,7 +67,7 @@ class _VoucherCardState extends State<VoucherCard> {
                 radius: 20,
                 backgroundColor: Theme.of(context).colorScheme.secondary,
                 child: Text(
-                  '${widget.voucher.percent}% off',
+                  '${widget.voucher['discount']}% off',
                   style: TextStyle(
                       fontWeight: FontWeight.w700,
                       color: Theme.of(context).colorScheme.surface),

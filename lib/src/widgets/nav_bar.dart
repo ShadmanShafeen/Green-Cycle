@@ -15,10 +15,18 @@ class NavBar extends StatefulWidget implements PreferredSizeWidget {
 
 class _NavBarState extends State<NavBar> {
   int curIndex = 1;
+
   @override
   Widget build(BuildContext context) {
     final currentPath =
         GoRouter.of(context).routerDelegate.currentConfiguration.fullPath;
+    if (currentPath == '/games') {
+      curIndex = 0;
+    } else if (currentPath == '/home') {
+      curIndex = 1;
+    } else if (currentPath == '/level-tracking') {
+      curIndex = 2;
+    }
     print(currentPath);
 
     return BottomNavigationBar(
