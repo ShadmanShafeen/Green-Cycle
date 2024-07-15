@@ -1,25 +1,41 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:green_cycle/src/models/voucher.dart';
+import 'package:green_cycle/.env';
+import 'package:green_cycle/src/utils/snackbars_alerts.dart';
+import 'package:green_cycle/src/widgets/coins_container.dart';
 import 'package:slide_to_act/slide_to_act.dart';
 
 class VoucherCard extends StatefulWidget {
-  const VoucherCard({super.key, required this.voucher});
+  VoucherCard({
+    super.key,
+    required this.voucher,
+    required this.redeemed,
+    required this.voucherID,
+    required this.voucherCost,
+    required this.userEmail,
+    required this.userCoins,
+  });
   final voucher;
-
+  final String voucherID;
+  final int voucherCost;
+  final String userEmail;
+  final int userCoins;
+  bool redeemed;
   @override
   State<VoucherCard> createState() => _VoucherCardState();
 }
 
 class _VoucherCardState extends State<VoucherCard> {
-  bool redeemed = false;
+  final dio = Dio();
   @override
   Widget build(BuildContext context) {
+    print(widget.voucherID);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Card(
           elevation: 10,
           child: ListTile(
-            title: redeemed
+            title: widget.redeemed
                 ? Row(
                     children: [
                       const Text("Code: "),
@@ -37,8 +53,24 @@ class _VoucherCardState extends State<VoucherCard> {
                     sliderButtonIconPadding: 10,
                     onSubmit: () {
                       setState(() {
-                        redeemed = !redeemed;
-                      });
+                        if (widget.userCoins > widget.voucherCost) {
+                          widget.redeemed = !widget.redeemed;
+                          Object body = {
+                            "email": widget.userEmail,
+                            "voucher_id": widget.voucherID
+                          };
+                          dio.patch('${backend_server}avail-voucher',
+                              data: body);
+                          
+                        } else {
+                          createQuickAlert(
+                              context: context,
+                              title: "Oops! ",
+                              message:
+                                  "Looks like you don't have enough coins.\nEarn coins by completing tasks and challenges",
+                              type: "info");
+                        }
+                                            });
                       return null;
                     },
                     child: Row(
@@ -49,7 +81,8 @@ class _VoucherCardState extends State<VoucherCard> {
                         Text(
                           "Redeem for ${widget.voucher['coins']} coins",
                           style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurface),
+                              color: Theme.of(context).colorScheme.onSurface,
+                              fontWeight: FontWeight.bold),
                           textScaler: const TextScaler.linear(1.1),
                         ),
                       ],
