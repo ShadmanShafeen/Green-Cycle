@@ -34,7 +34,7 @@ class _VendorPageState extends State<VendorPage> {
           ),
           bottom: TabBar(
             indicatorSize: TabBarIndicatorSize.tab,
-            indicatorWeight: 3,
+            indicatorWeight: 1,
             unselectedLabelColor: Theme.of(context).colorScheme.secondary,
             splashBorderRadius: BorderRadius.circular(30),
             tabs: const [
