@@ -52,20 +52,19 @@ class UnfinishedQuizzes extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-        SizedBox(
-          height: 310,
-          child: ListView.builder(
-            itemCount: sliderDetails.length,
-            itemBuilder: (context, index) {
-              return UnfinishedQuizCard(
-                color: randomColors[index],
-                image: sliderDetails[index]["image"]!,
-                title: sliderDetails[index]["title"]!,
-                questions: int.parse(sliderDetails[index]["questions"]!),
-                progress: int.parse(sliderDetails[index]["progress"]!),
-              );
-            },
-          ),
+        ...randomColors.asMap().entries.map(
+          (entry) {
+            final int index = entry.key;
+            final Color color = entry.value;
+            final Map<String, String> details = sliderDetails[index];
+            return UnfinishedQuizCard(
+              color: randomColors[index],
+              image: sliderDetails[index]["image"]!,
+              title: sliderDetails[index]["title"]!,
+              questions: int.parse(sliderDetails[index]["questions"]!),
+              progress: int.parse(sliderDetails[index]["progress"]!),
+            );
+          },
         ),
       ],
     );

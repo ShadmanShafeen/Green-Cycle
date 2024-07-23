@@ -13,6 +13,10 @@ class _MemberAddModalState extends State<MemberAddModal> {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
           image: DecorationImage(
               image: AssetImage(
                 'lib/assets/img/member_modal_bg.jpg',
@@ -21,9 +25,9 @@ class _MemberAddModalState extends State<MemberAddModal> {
               opacity: .8)),
       child: Column(
         children: [
-          Container(
+          const SizedBox(
             height: 60,
-            child: const Center(
+            child: Center(
               child: Text(
                 'Member Request',
                 style: TextStyle(color: Colors.white, fontSize: 25),
@@ -51,7 +55,6 @@ class _MemberAddModalState extends State<MemberAddModal> {
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
-                   
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(16.0),
@@ -140,7 +143,6 @@ class _MemberAddModalState extends State<MemberAddModal> {
                         ),
                       ),
                     ],
-                   
                   ),
                 );
               },

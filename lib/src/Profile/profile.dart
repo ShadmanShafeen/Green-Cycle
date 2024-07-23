@@ -1,8 +1,8 @@
 // import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:green_cycle/src/widgets/app_bar.dart';
 import 'package:green_cycle/src/widgets/nav_bar.dart';
-import 'package:go_router/go_router.dart';
 
 class Profile extends StatelessWidget {
   const Profile({super.key});
@@ -10,22 +10,19 @@ class Profile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(),
-      bottomNavigationBar: NavBar(),
-      body: ListView(
-        padding: const EdgeInsets.all(16.0),
-        children: [
-          Column(
-            children: [
-              const CircleAvatar(
-                backgroundImage: AssetImage("lib/assets/img/loki.png"),
-                radius: 50,
-              ),
-              Text(
-                'Loki Layperson',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),),
+      appBar: const CustomAppBar(),
+      bottomNavigationBar: const NavBar(),
+      body: Container(
+        color: Theme.of(context).colorScheme.surfaceContainerLowest,
+        child: ListView(
+          padding: const EdgeInsets.all(16.0),
+          children: [
+            Column(
+              children: [
+                const CircleAvatar(
+                  backgroundImage: AssetImage("lib/assets/img/loki.png"),
+                  radius: 50,
+                ),
                 Text(
                   'Loki Laufeyson',
                   style: TextStyle(
@@ -101,7 +98,9 @@ class Profile extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
               child: ListTile(
-                onTap: () {},
+                onTap: () {
+                  // context.go('/home/profile/usage_history');
+                },
                 splashColor: Colors.grey,
                 trailing: Icon(
                   Icons.arrow_right,
@@ -173,7 +172,7 @@ class Profile extends StatelessWidget {
             ),
           ],
         ),
-      );
-
+      ),
+    );
   }
 }

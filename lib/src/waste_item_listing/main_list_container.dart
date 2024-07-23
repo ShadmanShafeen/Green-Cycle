@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:green_cycle/src/waste_item_listing/draft_items.dart';
 import 'package:green_cycle/src/waste_item_listing/recent_items.dart';
-import 'package:green_cycle/src/waste_item_listing/shared_items.dart';
 import 'package:green_cycle/src/widgets/nav_bar.dart';
 
 class WasteListContainer extends StatefulWidget {
@@ -16,10 +15,10 @@ class _WasteListContainerState extends State<WasteListContainer> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 2,
       child: Scaffold(
-        appBar: AppBar(),
-        bottomNavigationBar: NavBar(),
+        appBar: returnAppBar(context),
+        bottomNavigationBar: const NavBar(),
         resizeToAvoidBottomInset: true,
         body: Container(
           color: Theme.of(context).colorScheme.surfaceContainerLow,
@@ -33,7 +32,6 @@ class _WasteListContainerState extends State<WasteListContainer> {
                   child: TabBarView(
                     children: [
                       RecentItems(),
-                      SharedItems(),
                       DraftItems(),
                     ],
                   ),
@@ -74,13 +72,15 @@ class _WasteListContainerState extends State<WasteListContainer> {
                     fontSize: 20,
                   ),
                 ),
-                CircleAvatar(
-                  backgroundColor:
-                      Theme.of(context).colorScheme.onSurfaceVariant,
-                  child: Icon(
+                IconButton(
+                  icon: Icon(
                     Icons.person,
-                    color: Theme.of(context).colorScheme.surfaceDim,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    size: 30,
                   ),
+                  onPressed: () {
+                    context.go("/home/profile");
+                  },
                 ),
               ],
             ),
@@ -106,11 +106,6 @@ class _WasteListContainerState extends State<WasteListContainer> {
         Tab(
           icon: Icon(
             Icons.update,
-          ),
-        ),
-        Tab(
-          icon: Icon(
-            Icons.groups_3,
           ),
         ),
         Tab(

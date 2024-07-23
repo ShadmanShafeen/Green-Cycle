@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:green_cycle/src/community/my_community_view/member-circle.dart';
 import 'package:green_cycle/src/community/my_community_view/member_add_modal.dart';
 import 'package:green_cycle/src/models/members.dart';
+import 'package:green_cycle/src/widgets/app_bar.dart';
 
 class MyCommunity extends StatelessWidget {
   const MyCommunity({super.key});
@@ -17,14 +17,17 @@ class MyCommunity extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const CustomAppBar(),
       body: Container(
         decoration: const BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage(
-                  'lib/assets/img/my_com_bg.jpg',
-                ),
-                fit: BoxFit.cover,
-                opacity: .5)),
+          image: DecorationImage(
+            image: AssetImage(
+              'lib/assets/img/my_com_bg.jpg',
+            ),
+            fit: BoxFit.cover,
+            opacity: .5,
+          ),
+        ),
         // padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
@@ -44,15 +47,20 @@ class MyCommunity extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            showModalBottomSheet(
-                context: context, builder: (ctx) => MemberAddModal());
-          },
-          backgroundColor: Theme.of(context).colorScheme.primaryFixed,
-          child: const Icon(
-            Icons.person_add,
-            color: Colors.white,
-          )),
+        onPressed: () {
+          showModalBottomSheet(
+            backgroundColor: Colors.transparent,
+            showDragHandle: true,
+            context: context,
+            builder: (ctx) => const MemberAddModal(),
+          );
+        },
+        backgroundColor: Theme.of(context).colorScheme.primaryFixed,
+        child: const Icon(
+          Icons.person_add,
+          color: Colors.white,
+        ),
+      ),
     );
   }
 

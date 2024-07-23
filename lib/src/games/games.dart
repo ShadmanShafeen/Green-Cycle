@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:green_cycle/src/games/games_row.dart';
 import 'package:green_cycle/src/games/top_image_carousel.dart';
 import 'package:green_cycle/src/games/top_players_list.dart';
+import 'package:green_cycle/src/widgets/app_bar.dart';
 import 'package:green_cycle/src/widgets/nav_bar.dart';
 
 class GamesPage extends StatelessWidget {
@@ -10,22 +11,22 @@ class GamesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      bottomNavigationBar: NavBar(),
+      appBar: const CustomAppBar(),
+      bottomNavigationBar: const NavBar(),
       body: Container(
-      height: MediaQuery.of(context).size.height,
-      color: Theme.of(context).colorScheme.surfaceContainerLowest,
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            const TopImageCarousel(),
-            const SizedBox(height: 16),
-            GamesRow(),
-            TopPlayersList(),
-          ],
+        height: MediaQuery.of(context).size.height,
+        color: Theme.of(context).colorScheme.surfaceContainerLowest,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const TopImageCarousel(),
+              const SizedBox(height: 16),
+              GamesRow(),
+              TopPlayersList(),
+            ],
+          ),
         ),
       ),
-    ),
     );
   }
 }

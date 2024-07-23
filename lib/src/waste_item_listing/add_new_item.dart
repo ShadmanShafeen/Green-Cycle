@@ -1,6 +1,7 @@
 import "package:dio/dio.dart";
 import "package:flutter/material.dart";
 import "package:green_cycle/src/utils/server.dart";
+import "package:green_cycle/src/utils/snackbars_alerts.dart";
 
 class AddNewItem extends StatefulWidget {
   final List<Map<String, String>> draftItems;
@@ -105,13 +106,6 @@ class _AddNewItemState extends State<AddNewItem> {
                   ),
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      setState(() {
-                        widget.draftItems.add({
-                          "name": _itemNameController.text,
-                          "description": _itemDescriptionController.text,
-                          "Amount": _itemAmountController.text,
-                        });
-                      });
                       final dio = Dio();
                       try {
                         final response = await dio.post(
@@ -123,8 +117,19 @@ class _AddNewItemState extends State<AddNewItem> {
                           },
                         );
 
+                        if (response.statusCode != 200) {
+                          throw createQuickAlert(
+                            context: context.mounted ? context : context,
+                            title: "${response.statusCode}",
+                            message: "${response.statusMessage}",
+                            type: "error",
+                          );
+                        }
+
                         widget.onNewItemAdded();
-                        Navigator.pop(context);
+                        if (context.mounted) {
+                          Navigator.pop(context);
+                        }
                       } catch (e) {
                         throw Exception('Failed to load data: $e');
                       }

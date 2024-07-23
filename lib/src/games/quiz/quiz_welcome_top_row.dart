@@ -17,7 +17,7 @@ class QuizWelcomeTopRow extends StatelessWidget {
             color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
         ),
-        CoinsContainer(),
+        const CoinsContainer(),
       ],
     );
   }

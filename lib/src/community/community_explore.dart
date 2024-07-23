@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:green_cycle/src/utils/responsive_functions.dart';
 import 'package:green_cycle/src/widgets/app_bar.dart';
 import 'package:green_cycle/src/widgets/nav_bar.dart';
 
@@ -18,8 +19,9 @@ class CommunityExplore extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(),
-      bottomNavigationBar: NavBar(),
+      extendBodyBehindAppBar: true,
+      appBar: const CustomAppBar(),
+      bottomNavigationBar: const NavBar(),
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
@@ -29,8 +31,8 @@ class CommunityExplore extends StatelessWidget {
         ),
         child: Column(
           children: [
-            const SizedBox(
-              height: 40,
+            SizedBox(
+              height: MediaQuery.sizeOf(context).height * 0.1,
             ),
             CarouselSlider(
               items: imgList
@@ -68,8 +70,8 @@ class CommunityExplore extends StatelessWidget {
               height: 40,
             ),
             SizedBox(
-              height: 60,
-              width: 300,
+              height: 70,
+              width: MediaQuery.sizeOf(context).width * 0.8,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Theme.of(context).colorScheme.onSurface,
@@ -80,7 +82,7 @@ class CommunityExplore extends StatelessWidget {
                 onPressed: () {
                   context.go("/home/community-explore/explore-communities");
                 },
-                child: const Row(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
@@ -88,10 +90,10 @@ class CommunityExplore extends StatelessWidget {
                       style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
-                        fontSize: 13,
+                        fontSize: dynamicFontSize(context, 13),
                       ),
                     ),
-                    Icon(
+                    const Icon(
                       Icons.arrow_forward,
                       color: Colors.black,
                     ),
