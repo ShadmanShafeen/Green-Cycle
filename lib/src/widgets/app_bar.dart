@@ -15,13 +15,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         'GreenCycle',
         style: TextStyle(letterSpacing: 3),
       );
-    } else if (currentPath == '/home/voucher-redemption') {
-      appBarTitle = const Text(
-        'Your Vouchers',
-        style: TextStyle(
-          letterSpacing: 0,
-        ),
-      );
+    
     }
 
     return AppBar(

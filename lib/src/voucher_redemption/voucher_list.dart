@@ -6,8 +6,8 @@ import 'package:green_cycle/src/voucher_redemption/voucher_card.dart';
 import '../../.env';
 
 class VoucherList extends StatefulWidget {
-  const VoucherList({super.key});
-
+  const VoucherList({super.key, required this.allVouchers});
+  final bool allVouchers;
   @override
   State<VoucherList> createState() => _VoucherListState();
 }
@@ -15,21 +15,34 @@ class VoucherList extends StatefulWidget {
 class _VoucherListState extends State<VoucherList> {
   final Auth _auth = Auth();
   final dio = Dio();
-  var allVoucherData;
-  var yourVoucherData;
-  Future<void> getData() async {
-    User? user = _auth.currentUser;
+  var voucherData;
+  var userEmail;
+  late int userCoins;
 
+  Future<void> getAllVouchers() async {
+    User? user = _auth.currentUser;
     if (user != null) {
-      String? email = user.email;
-      final allVouchers = await dio.get('${backend_server}vouchers');
-      final yourVouchers =
-          await dio.get('${backend_server}user/vouchers/${email}');
+      userEmail = user.email;
+      final allVouchers = await dio.get('${backend_server}user/vouchers/${userEmail}');
       List<dynamic> iterable = allVouchers.data;
-      print(iterable);
-      allVoucherData = groupVouchersByCompany(iterable);
-      print('allVoucherData');
-      print(allVoucherData);
+      voucherData = groupVouchersByCompany(iterable);
+
+      final userInfo = await dio.get('${backend_server}user-info/${user.email}');
+      userCoins = userInfo.data['coins'];
+    }
+    
+  }
+
+  Future<void> getOnlyUserVouchers() async {
+    User? user = _auth.currentUser;
+    if (user != null) {
+      userEmail = user.email;
+      final yourVouchers = await dio.get('${backend_server}user/availed-vouchers/${userEmail}');
+      List<dynamic> iterable = yourVouchers.data;
+      voucherData = groupVouchersByCompany(iterable);
+
+      final userInfo = await dio.get('${backend_server}user-info/${user.email}');
+      userCoins = userInfo.data['coins'];
     }
   }
 
@@ -44,46 +57,32 @@ class _VoucherListState extends State<VoucherList> {
   @override
   void initState() {
     super.initState();
-    getData();
+    if (widget.allVouchers == true) {
+      getAllVouchers();
+    } else {
+      getOnlyUserVouchers();
+    }
+   
   }
-
-  // final List<Company> _voucherData = [
-  //   Company(
-  //       name: 'SustainCraft',
-  //       imagePath: 'lib/assets/images/companyIcons/1.png',
-  //       vouchers: [
-  //         Voucher(
-  //             userID: '1', code: '80FEC8', percent: 15, expiry: 5, cost: 100),
-  //         Voucher(
-  //             userID: '1', code: 'K1G5P6', percent: 10, expiry: 7, cost: 50),
-  //       ]),
-  //   Company(
-  //       name: 'PCycle',
-  //       imagePath: 'lib/assets/images/companyIcons/2.png',
-  //       vouchers: [
-  //         Voucher(
-  //             userID: '1', code: 'D05J32', percent: 20, expiry: 3, cost: 250),
-  //       ]),
-  // ];
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: getData(),
+        future: widget.allVouchers ? getAllVouchers() : getOnlyUserVouchers(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return LinearProgressIndicator(
               color: Theme.of(context).colorScheme.surface,
             );
           } else if (snapshot.hasError) {
-            return Text(
+            return const Text(
               'Error Fetching Data :(',
               style: TextStyle(color: Colors.white),
             );
           } else {
             return ListView(
               children: [
-                ...allVoucherData!.entries.map(
+                ...voucherData!.entries.map(
                   (entry) => Padding(
                     padding: const EdgeInsets.only(left: 5, right: 5, top: 10),
                     child: Card(
@@ -110,8 +109,23 @@ class _VoucherListState extends State<VoucherList> {
                         ),
                         tilePadding: const EdgeInsets.all(10),
                         children: [
-                          ...entry.value
-                              .map((voucher) => VoucherCard(voucher: voucher))
+                          ...entry.value.map(widget.allVouchers
+                              ? (voucher) => VoucherCard(
+                                    voucher: voucher,
+                                    redeemed: false,
+                                    voucherID: voucher['_id'],
+                                    voucherCost: voucher['coins'],
+                                    userEmail: userEmail,
+                                    userCoins : userCoins
+                                  )
+                              : (voucher) => VoucherCard(
+                                    voucher: voucher,
+                                    redeemed: true,
+                                    voucherID: voucher['_id'],
+                                    voucherCost: voucher['coins'],
+                                    userEmail: userEmail,
+                                    userCoins : userCoins
+                                  ))
                         ],
                       ),
                     ),

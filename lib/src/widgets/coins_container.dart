@@ -8,7 +8,7 @@ class CoinsContainer extends StatefulWidget {
   const CoinsContainer({
     super.key,
   });
-
+  
   @override
   State<CoinsContainer> createState() => _CoinsContainerState();
 }
@@ -19,7 +19,7 @@ class _CoinsContainerState extends State<CoinsContainer> {
   final Auth _auth = Auth();
   final dio = Dio();
 
-  Future<void> getUserCoins() async {
+  Future<void> getAndUpdateUserCoins() async {
     User? user = _auth.currentUser;
     final response = await dio.get('${backend_server}user-info/${user?.email}');
     coins = response.data['coins'];
@@ -28,13 +28,13 @@ class _CoinsContainerState extends State<CoinsContainer> {
   @override
   void initState() {
     super.initState();
-    getUserCoins();
+    getAndUpdateUserCoins();
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: getUserCoins(),
+      future: getAndUpdateUserCoins(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();

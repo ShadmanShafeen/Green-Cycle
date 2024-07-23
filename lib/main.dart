@@ -24,7 +24,8 @@ import 'package:green_cycle/src/leveltracking/level_tracking_page.dart';
 import 'package:green_cycle/src/object_recognition/camera_control.dart';
 import 'package:green_cycle/src/object_recognition/image_preview.dart';
 import 'package:green_cycle/src/vendor/vendor_page.dart';
-import 'package:green_cycle/src/voucher_redemption/voucher_redemption_page.dart';
+import 'package:green_cycle/src/voucher_redemption/all_voucher_tab.dart';
+import 'package:green_cycle/src/voucher_redemption/voucher_page.dart';
 import 'package:green_cycle/src/waste_item_listing/main_list_container.dart';
 import 'package:green_cycle/src/welcome_screen/splash_screen.dart';
 import 'package:green_cycle/src/welcome_screen/welcome_screen.dart';
@@ -235,6 +236,7 @@ class _MainAppState extends State<MainApp> {
                     child: const CommunityCalendar(),
                     context: context,
                     type: PageTransitionType.bottomToTop,
+
                   );
                 },
               ),
