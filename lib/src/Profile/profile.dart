@@ -1,9 +1,6 @@
 // import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:green_cycle/auth.dart';
-import 'package:green_cycle/src/widgets/app_bar.dart';
-import 'package:green_cycle/src/widgets/nav_bar.dart';
 
 class Profile extends StatelessWidget {
   const Profile({super.key});
@@ -11,18 +8,34 @@ class Profile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(),
-      bottomNavigationBar: const NavBar(),
       body: Container(
-        color: Theme.of(context).colorScheme.surfaceContainerLowest,
+        decoration: const BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage('lib/assets/img/pp_bg.jpg'),
+                fit: BoxFit.cover)),
         child: ListView(
           padding: const EdgeInsets.all(16.0),
           children: [
+            const SizedBox(
+              height: 20,
+            ),
             Column(
               children: [
-                const CircleAvatar(
-                  backgroundImage: AssetImage("lib/assets/img/loki.png"),
-                  radius: 50,
+                Stack(children: [
+                  const CircleAvatar(
+                    backgroundImage: AssetImage("lib/assets/img/loki.png"),
+                    radius: 50,
+                  ),
+                  Positioned(
+                      bottom: -6,
+                      right: -3,
+                      child: IconButton(
+                        icon: const Icon(Icons.add_photo_alternate),
+                        onPressed: () {},
+                      ))
+                ]),
+                const SizedBox(
+                  height: 10,
                 ),
                 Text(
                   'Loki Laufeyson',
@@ -30,36 +43,20 @@ class Profile extends StatelessWidget {
                       color: Theme.of(context).colorScheme.onSurface,
                       fontWeight: FontWeight.bold),
                 ),
-              ),
-              Text(
-                'Loki Laufeyson',
-                style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurface,
-                    fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(
-                height: 5,
-              ),
-              Text(
-                'lokilaufeyson1050@sylvie.com',
-                style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurface,
-                    fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 50,
-            width: double.infinity,
-          ),
-          Card(
-            color: Theme.of(context)
-                .colorScheme
-                .surfaceContainerHigh
-                .withOpacity(0.7),
-            elevation: 5,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
+                const SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  'lokilaufeyson1050@sylvie.com',
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
+                      fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 50,
+              width: double.infinity,
             ),
             Card(
               color: Theme.of(context)
@@ -72,8 +69,50 @@ class Profile extends StatelessWidget {
               ),
               child: ListTile(
                 onTap: () {
-                  // context.go('/home/profile/usage_history');
+                  context.go('/home/profile/waste_item_list');
                 },
+                splashColor: Colors.grey,
+                trailing: Icon(
+                  Icons.arrow_right,
+                  color: Theme.of(context).colorScheme.primaryFixed,
+                ),
+                title: const Text("Recycling History"),
+                leading: const Icon(Icons.history),
+              ),
+            ),
+            Card(
+              color: Theme.of(context)
+                  .colorScheme
+                  .surfaceContainerHigh
+                  .withOpacity(0.7),
+              elevation: 5,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: ListTile(
+                onTap: () {
+                  context.go('/home/profile/community_calender');
+                },
+                splashColor: Colors.grey,
+                trailing: Icon(
+                  Icons.arrow_right,
+                  color: Theme.of(context).colorScheme.primaryFixed,
+                ),
+                title: const Text("Collection Dates"),
+                leading: const Icon(Icons.today),
+              ),
+            ),
+            Card(
+              color: Theme.of(context)
+                  .colorScheme
+                  .surfaceContainerHigh
+                  .withOpacity(0.7),
+              elevation: 5,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: ListTile(
+                onTap: () {},
                 splashColor: Colors.grey,
                 trailing: Icon(
                   Icons.arrow_right,
@@ -81,115 +120,67 @@ class Profile extends StatelessWidget {
                 ),
                 title: const Text("Usage History"),
                 leading: const Icon(Icons.history),
-
               ),
-              title: const Text("Recycling History"),
-              leading: const Icon(Icons.history),
             ),
-          ),
-          Card(
-            color: Theme.of(context)
-                .colorScheme
-                .surfaceContainerHigh
-                .withOpacity(0.7),
-            elevation: 5,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: ListTile(
-              onTap: () {
-                context.go('/home/profile/community_calender');
-              },
-              splashColor: Colors.grey,
-              trailing: Icon(
-                Icons.arrow_right,
-                color: Theme.of(context).colorScheme.primaryFixed,
+            Card(
+              color: Theme.of(context)
+                  .colorScheme
+                  .surfaceContainerHigh
+                  .withOpacity(0.7),
+              elevation: 5,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
               ),
-              title: const Text("Collection Dates"),
-              leading: const Icon(Icons.today),
-            ),
-          ),
-          Card(
-            color: Theme.of(context)
-                .colorScheme
-                .surfaceContainerHigh
-                .withOpacity(0.7),
-            elevation: 5,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: ListTile(
-              onTap: () {},
-              splashColor: Colors.grey,
-              trailing: Icon(
-                Icons.arrow_right,
-                color: Theme.of(context).colorScheme.primaryFixed,
+              child: ListTile(
+                onTap: () {},
+                splashColor: Colors.grey,
+                trailing: Icon(
+                  Icons.arrow_right,
+                  color: Theme.of(context).colorScheme.primaryFixed,
+                ),
+                title: const Text("Privacy"),
+                leading: const Icon(Icons.privacy_tip),
               ),
-              title: const Text("Usage History"),
-              leading: const Icon(Icons.history),
             ),
-          ),
-          Card(
-            color: Theme.of(context)
-                .colorScheme
-                .surfaceContainerHigh
-                .withOpacity(0.7),
-            elevation: 5,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: ListTile(
-              onTap: () {},
-              splashColor: Colors.grey,
-              trailing: Icon(
-                Icons.arrow_right,
-                color: Theme.of(context).colorScheme.primaryFixed,
+            Card(
+              color: Theme.of(context)
+                  .colorScheme
+                  .surfaceContainerHigh
+                  .withOpacity(0.7),
+              elevation: 5,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
               ),
-              title: const Text("Privacy"),
-              leading: const Icon(Icons.privacy_tip),
-            ),
-          ),
-          Card(
-            color: Theme.of(context)
-                .colorScheme
-                .surfaceContainerHigh
-                .withOpacity(0.7),
-            elevation: 5,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: ListTile(
-              onTap: () {},
-              splashColor: Colors.grey,
-              trailing: Icon(
-                Icons.arrow_right,
-                color: Theme.of(context).colorScheme.primaryFixed,
+              child: ListTile(
+                onTap: () {},
+                splashColor: Colors.grey,
+                trailing: Icon(
+                  Icons.arrow_right,
+                  color: Theme.of(context).colorScheme.primaryFixed,
+                ),
+                title: const Text("Settings"),
+                leading: const Icon(Icons.settings),
               ),
-              title: const Text("Settings"),
-              leading: const Icon(Icons.settings),
             ),
-          ),
-          Card(
-            color: Theme.of(context)
-                .colorScheme
-                .surfaceContainerHigh
-                .withOpacity(0.7),
-            elevation: 5,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: ListTile(
-              onTap: () async {
-                await Auth().signOut();
-                context.go('/login');
-              },
-              splashColor: Colors.grey,
-              trailing: Icon(
-                Icons.arrow_right,
-                color: Theme.of(context).colorScheme.primaryFixed,
+            Card(
+              color: Theme.of(context)
+                  .colorScheme
+                  .surfaceContainerHigh
+                  .withOpacity(0.7),
+              elevation: 5,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
               ),
-              title: const Text("Log Out"),
-              leading: const Icon(Icons.logout),
+              child: ListTile(
+                onTap: () {},
+                splashColor: Colors.grey,
+                trailing: Icon(
+                  Icons.arrow_right,
+                  color: Theme.of(context).colorScheme.primaryFixed,
+                ),
+                title: const Text("Log Out"),
+                leading: const Icon(Icons.logout),
+              ),
             ),
           ],
         ),
