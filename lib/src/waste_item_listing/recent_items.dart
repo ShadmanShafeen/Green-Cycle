@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:green_cycle/src/utils/server.dart';
+import 'package:green_cycle/src/utils/snackbars_alerts.dart';
 import 'package:green_cycle/src/waste_item_listing/details_modal.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
@@ -11,14 +12,9 @@ class RecentItems extends StatefulWidget {
   State<RecentItems> createState() => _RecentItemsState();
 }
 
-class _RecentItemsState extends State<RecentItems>
-    with AutomaticKeepAliveClientMixin {
-  @override
-  bool get wantKeepAlive => true;
-
+class _RecentItemsState extends State<RecentItems> {
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return Column(
       children: [
         Padding(
@@ -49,7 +45,9 @@ class _RecentItemsState extends State<RecentItems>
             future: fetchRecentItems(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
               } else if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
               } else {
@@ -86,7 +84,9 @@ class _RecentItemsState extends State<RecentItems>
                           Icons.arrow_right,
                           color: Theme.of(context).colorScheme.primaryFixed,
                         ),
-                        title: Text(snapshot.data[index]['name']),
+                        title: Text(
+                          snapshot.data[index]['name'],
+                        ),
                       ),
                     );
                   },
@@ -100,20 +100,37 @@ class _RecentItemsState extends State<RecentItems>
   }
 
   Future<List<Map<String, String>>> fetchRecentItems() async {
-    List<Map<String, String>> draftItems = [];
     final dio = Dio();
+    List<Map<String, String>> data = [];
     try {
       final response = await dio.get(
         "$serverURLExpress/recent-show/shadmanskystar@gmail.com",
       );
 
       if (response.statusCode == 200) {
-        return response.data;
+        for (final item in response.data) {
+          data.add({
+            "name": item['name'].toString(),
+            "description": item['description'].toString(),
+            "Amount": item['Amount'].toString(),
+          });
+        }
+        return data;
       } else {
-        throw Exception('Failed to load data');
+        throw createQuickAlert(
+          context: context.mounted ? context : context,
+          title: "${response.statusMessage}",
+          message: "${response.statusCode}",
+          type: "error",
+        );
       }
     } catch (e) {
-      throw Exception('Failed to load data: $e');
+      throw createQuickAlert(
+        context: context.mounted ? context : context,
+        title: "Failed to load data",
+        message: "$e",
+        type: "error",
+      );
     }
   }
 }

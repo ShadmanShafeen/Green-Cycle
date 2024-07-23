@@ -8,6 +8,7 @@ import 'package:green_cycle/src/home/carousel.dart';
 import 'package:green_cycle/src/home/search_bar.dart';
 import 'package:green_cycle/src/widgets/app_bar.dart';
 import 'package:green_cycle/src/widgets/nav_bar.dart';
+import 'package:location/location.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -164,12 +165,25 @@ class HomePage extends StatelessWidget {
   }
 }
 
-void showLocationPermission(BuildContext context) {
-  showModalBottomSheet(
-    showDragHandle: true,
-    context: context,
-    builder: (BuildContext context) {
-      return LocationPermissionModal();
-    },
-  );
+void showLocationPermission(BuildContext context) async {
+  final Location location = Location();
+  final serviceStatus = await location.serviceEnabled();
+  if (!serviceStatus && context.mounted) {
+    showModalBottomSheet(
+      showDragHandle: true,
+      context: context,
+      builder: (BuildContext context) {
+        return LocationPermissionModal();
+      },
+    );
+    return;
+  }
+
+  final locationData = await location.getLocation();
+  if (context.mounted) {
+    context.go(
+      "/home/locate-map",
+      extra: locationData,
+    );
+  }
 }

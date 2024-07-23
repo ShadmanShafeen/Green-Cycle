@@ -4,6 +4,8 @@ import 'package:green_cycle/src/games/archive/archive_card_title_column.dart';
 import 'package:green_cycle/src/games/archive/archive_carousel.dart';
 import 'package:green_cycle/src/games/archive/archive_search_bar.dart';
 import 'package:green_cycle/src/games/archive/title_row.dart';
+import 'package:green_cycle/src/widgets/app_bar.dart';
+import 'package:green_cycle/src/widgets/nav_bar.dart';
 
 class ArchiveContainer extends StatelessWidget {
   ArchiveContainer({super.key});
@@ -36,41 +38,44 @@ class ArchiveContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.only(top: 5, left: 25, right: 25, bottom: 25),
-      height: MediaQuery.of(context).size.height,
-      color: Theme.of(context).colorScheme.surfaceContainerLowest,
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            const ArchiveSearchBar(),
-            const SizedBox(height: 25),
-            const TitleRow(),
-            const SizedBox(height: 25),
-            ArchiveCarousel(
-              height: MediaQuery.of(context).size.height * 0.3,
-              items: [
-                for (int i = 0; i < archiveImages.length; i++)
-                  buildArchiveImageCard(i),
-              ],
-            ),
-            const ArchiveCardTitleColumn(),
-            const SizedBox(height: 25),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  for (int i = 0; i < archiveCardTrivia.length; i++)
-                    ArchiveCard(
-                      cardTitle: archiveCardTrivia[i]["title"]!,
-                      cardText: archiveCardTrivia[i]["description"]!,
-                      image1: archiveCardTrivia[i]["image1"]!,
-                      image2: archiveCardTrivia[i]["image2"]!,
-                    ),
+    return Scaffold(
+      appBar: const CustomAppBar(),
+      bottomNavigationBar: const NavBar(),
+      body: Container(
+        padding: const EdgeInsets.only(top: 5, left: 15, right: 15),
+        color: Theme.of(context).colorScheme.surfaceContainerLowest,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const ArchiveSearchBar(),
+              const SizedBox(height: 25),
+              const TitleRow(),
+              const SizedBox(height: 25),
+              ArchiveCarousel(
+                height: MediaQuery.of(context).size.height * 0.3,
+                items: [
+                  for (int i = 0; i < archiveImages.length; i++)
+                    buildArchiveImageCard(i),
                 ],
               ),
-            ),
-          ],
+              const ArchiveCardTitleColumn(),
+              const SizedBox(height: 25),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    for (int i = 0; i < archiveCardTrivia.length; i++)
+                      ArchiveCard(
+                        cardTitle: archiveCardTrivia[i]["title"]!,
+                        cardText: archiveCardTrivia[i]["description"]!,
+                        image1: archiveCardTrivia[i]["image1"]!,
+                        image2: archiveCardTrivia[i]["image2"]!,
+                      ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

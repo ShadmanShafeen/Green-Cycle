@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:green_cycle/src/community/explore_community/community_nearby_card.dart';
 import 'package:green_cycle/src/models/community.dart';
+import 'package:green_cycle/src/widgets/app_bar.dart';
 
 class CommunitiesNearby extends StatelessWidget {
   const CommunitiesNearby({super.key});
@@ -8,6 +9,7 @@ class CommunitiesNearby extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const CustomAppBar(),
       body: Container(
         color: Theme.of(context).colorScheme.surfaceContainerLowest,
         padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 25.0),

@@ -5,7 +5,7 @@ import 'package:green_cycle/.env';
 import 'package:green_cycle/auth.dart';
 
 class CoinsContainer extends StatefulWidget {
-  CoinsContainer({
+  const CoinsContainer({
     super.key,
   });
   
@@ -14,7 +14,7 @@ class CoinsContainer extends StatefulWidget {
 }
 
 class _CoinsContainerState extends State<CoinsContainer> {
-  var coins;
+  late var coins = -1;
 
   final Auth _auth = Auth();
   final dio = Dio();
@@ -39,49 +39,50 @@ class _CoinsContainerState extends State<CoinsContainer> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();
         } else if (snapshot.hasError) {
-          return Text('Loading...');
+          return buildCoinContainer(context);
         } else {
-          return IntrinsicWidth(
-            child: IntrinsicHeight(
-              child: Container(
-                decoration: BoxDecoration(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .secondary
-                        .withOpacity(0.9),
-                    borderRadius: BorderRadius.circular(30)),
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      left: 5, right: 10, top: 7, bottom: 7),
-                  child: Row(
-                    children: [
-                      Image.asset(
-                        'lib/assets/animations/Coins.gif',
-                        width: 20,
-                        height: 20,
-                      ),
-                      Text(
-                        "Coins: ",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            color: Theme.of(context).colorScheme.onSurface),
-                        textScaler: const TextScaler.linear(0.9),
-                      ),
-                      Text(
-                        "$coins",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            color: Theme.of(context).colorScheme.onSurface),
-                        textScaler: const TextScaler.linear(0.9),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ); 
+          return buildCoinContainer(context);
         }
       },
+    );
+  }
+
+  IntrinsicWidth buildCoinContainer(BuildContext context) {
+    return IntrinsicWidth(
+      child: IntrinsicHeight(
+        child: Container(
+          decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.secondary.withOpacity(0.9),
+              borderRadius: BorderRadius.circular(30)),
+          child: Padding(
+            padding:
+                const EdgeInsets.only(left: 5, right: 10, top: 7, bottom: 7),
+            child: Row(
+              children: [
+                Image.asset(
+                  'lib/assets/animations/Coins.gif',
+                  width: 20,
+                  height: 20,
+                ),
+                Text(
+                  "Coins: ",
+                  style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context).colorScheme.onSurface),
+                  textScaler: const TextScaler.linear(0.9),
+                ),
+                Text(
+                  "$coins",
+                  style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      color: Theme.of(context).colorScheme.onSurface),
+                  textScaler: const TextScaler.linear(0.9),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

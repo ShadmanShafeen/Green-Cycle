@@ -27,51 +27,7 @@ class _CommunityGoalsState extends State<CommunityGoals> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Card(
-              color: Theme.of(context)
-                  .colorScheme
-                  .surfaceContainerHigh
-                  .withOpacity(0.7),
-              elevation: 5,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Container(
-                  alignment: Alignment.bottomLeft,
-                  height: 150,
-                  padding: const EdgeInsets.all(16),
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      fit: BoxFit.cover,
-                      alignment: Alignment.topCenter,
-                      image: AssetImage('lib/assets/img/goals_bg.png'),
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      Text(
-                        'Community goals',
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.primaryFixedDim,
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 50,
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          context.go('/home/community-explore/my_com');
-                        },
-                        icon: Icon(
-                          Icons.close,
-                          color: Theme.of(context).colorScheme.primaryFixedDim,
-                        ),
-                      ),
-                    ],
-                  )),
-            ),
+            goalsImageCard(context),
             const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -164,6 +120,9 @@ class _CommunityGoalsState extends State<CommunityGoals> {
                 },
               ),
             ),
+            const SizedBox(
+              height: 20,
+            ),
             Center(
               child: Text(
                 'Completed $completedGoalsCount / ${goals.length}',
@@ -191,6 +150,65 @@ class _CommunityGoalsState extends State<CommunityGoals> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Card goalsImageCard(BuildContext context) {
+    return Card(
+      elevation: 5,
+      child: Container(
+        width: double.infinity,
+        height: MediaQuery.of(context).size.height * 0.3,
+        alignment: Alignment.bottomLeft,
+        decoration: BoxDecoration(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(10),
+          image: const DecorationImage(
+            image: AssetImage('lib/assets/images/recy1.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          width: double.infinity,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.bottomCenter,
+              end: Alignment.center,
+              colors: [
+                Colors.black.withOpacity(0.9),
+                Colors.black.withOpacity(0.7),
+                Colors.black.withOpacity(0.5),
+                Colors.black.withOpacity(0.1),
+              ],
+            ),
+          ),
+          child: Row(
+            children: [
+              Text(
+                'Community goals',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onPrimaryFixed,
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(
+                width: 50,
+              ),
+              IconButton(
+                onPressed: () {
+                  context.pop();
+                },
+                icon: Icon(
+                  Icons.close,
+                  color: Theme.of(context).colorScheme.onPrimaryFixed,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

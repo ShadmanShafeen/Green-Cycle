@@ -2,6 +2,9 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:green_cycle/src/utils/snackbars_alerts.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:image_picker_android/image_picker_android.dart';
+import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
 
 class CameraControl extends StatefulWidget {
   final List<CameraDescription> cameras;
@@ -13,14 +16,19 @@ class CameraControl extends StatefulWidget {
 
 class _CameraControlState extends State<CameraControl> {
   late CameraController controller;
+  double _currentScale = 1.0;
+  double _baseScale = 1.0;
   late XFile? imageFile;
   int currentCamera = 0;
+  final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
     super.initState();
-    controller =
-        CameraController(widget.cameras[currentCamera], ResolutionPreset.max);
+    controller = CameraController(
+      widget.cameras[currentCamera],
+      ResolutionPreset.max,
+    );
     controller.initialize().then((_) {
       if (!mounted) {
         return;
@@ -37,6 +45,7 @@ class _CameraControlState extends State<CameraControl> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: buildAppBar(context),
         body: (!controller.value.isInitialized)
             ? Container(
                 alignment: Alignment.center,
@@ -47,44 +56,34 @@ class _CameraControlState extends State<CameraControl> {
                 color: Theme.of(context).colorScheme.surfaceContainerLowest,
                 child: Column(
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Icon(
-                                Icons.lightbulb,
-                                color: Colors.amber,
-                              ),
-                              SizedBox(width: 10),
-                              Text(
-                                "Tips",
-                                style: TextStyle(
-                                  color: Colors.white24,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 10),
-                          Text(
-                            "Make sure the object is in focus. Take a clear picture otherwise it may lead to some mislabeling.",
-                            style: TextStyle(
-                              color: Colors.white24,
-                              fontSize: 16,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
+                    buildTipsSection(),
+                    Expanded(
+                      child: GestureDetector(
+                        onScaleStart: (details) {
+                          _baseScale = _currentScale;
+                        },
+                        onScaleUpdate: (details) async {
+                          _currentScale =
+                              (_baseScale * details.scale).clamp(1.0, 5.0);
+                          await controller.setZoomLevel(_currentScale);
+                        },
+                        onTapUp: (details) async {
+                          if (controller.value.isTakingPicture) {
+                            return;
+                          }
+                          final RenderBox box =
+                              context.findRenderObject() as RenderBox;
+                          final Offset localPoint =
+                              box.globalToLocal(details.globalPosition);
+                          final Offset scaledPoint = Offset(
+                            localPoint.dx / box.size.width,
+                            localPoint.dy / box.size.height,
+                          );
+                          await controller.setFocusPoint(scaledPoint);
+                        },
+                        child: CameraPreview(controller),
                       ),
                     ),
-                    CameraPreview(controller),
                   ],
                 ),
               ),
@@ -94,12 +93,87 @@ class _CameraControlState extends State<CameraControl> {
     );
   }
 
+  Padding buildTipsSection() {
+    return const Padding(
+      padding: EdgeInsets.all(10.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Icon(
+                Icons.lightbulb,
+                color: Colors.amber,
+              ),
+              SizedBox(width: 10),
+              Text(
+                "Tips",
+                style: TextStyle(
+                  color: Colors.white24,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 10),
+          Text(
+            "Make sure the object is in focus. Take a clear picture otherwise it may lead to some mislabeling.",
+            style: TextStyle(
+              color: Colors.white24,
+              fontSize: 16,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> openGallery(BuildContext context) async {
+    try {
+      final ImagePickerPlatform imagePickerImplementation =
+          ImagePickerPlatform.instance;
+      if (imagePickerImplementation is ImagePickerAndroid) {
+        imagePickerImplementation.useAndroidPhotoPicker = true;
+      }
+      final XFile? pickedFile =
+          await _picker.pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        // Use the picked file
+        setState(() {
+          imageFile = pickedFile;
+        });
+
+        if (context.mounted) {
+          context.goNamed(
+            "image-preview",
+            pathParameters: {
+              "imagePath": imageFile!.path,
+            },
+            extra: imageFile,
+          );
+        }
+      }
+    } catch (e) {
+      // Handle errors or exceptions
+      if (context.mounted) {
+        _showErrorDialog(context, e.toString());
+      }
+    }
+  }
+
   Container buildFloatingButtonContainer(BuildContext context) {
     return Container(
+      width: MediaQuery.of(context).size.width,
+      height: 100,
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: Colors.white10,
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -110,6 +184,7 @@ class _CameraControlState extends State<CameraControl> {
             const Icon(
               Icons.collections,
             ),
+            'gallery',
           ),
           const SizedBox(width: 20),
           returnFloatingActionButton(context),
@@ -119,6 +194,7 @@ class _CameraControlState extends State<CameraControl> {
             const Icon(
               Icons.loop,
             ),
+            'reverse',
           ),
         ],
       ),
@@ -151,30 +227,12 @@ class _CameraControlState extends State<CameraControl> {
   }
 
   void _showErrorDialog(BuildContext context, String errorCode) {
-    String message;
-    switch (errorCode) {
-      case "CameraAccessDenied":
-        message = "Access to the camera is denied";
-        break;
-      case "CameraAccessRestricted":
-        message = "Access to the camera is restricted";
-        break;
-      case "CameraAccessError":
-        message = "An error occurred while accessing the camera";
-        break;
-      case "CameraAccessUnknown":
-        message = "An unknown error occurred while accessing the camera";
-        break;
-      default:
-        message = "An error occurred while taking the picture";
-        break;
-    }
-
     createQuickAlert(
-        context: context,
-        title: "Camera Error",
-        message: message,
-        type: "error");
+      context: context,
+      title: "Camera Error",
+      message: errorCode,
+      type: "error",
+    );
   }
 
   BackButton returnBackButton(BuildContext context) {
@@ -190,7 +248,7 @@ class _CameraControlState extends State<CameraControl> {
     );
   }
 
-  IconButton returnIconButton(BuildContext context, Widget icon) {
+  IconButton returnIconButton(BuildContext context, Widget icon, String type) {
     return IconButton(
       style: IconButton.styleFrom(
         foregroundColor: Theme.of(context).colorScheme.onError,
@@ -200,25 +258,33 @@ class _CameraControlState extends State<CameraControl> {
         elevation: 6,
       ),
       onPressed: () {
-        setState(() {
-          currentCamera = (currentCamera + 1) % widget.cameras.length;
-          controller = CameraController(
-              widget.cameras[currentCamera], ResolutionPreset.max);
-          controller.initialize().then((_) {
-            if (!mounted) {
-              return;
-            }
-            setState(() {});
-          }).catchError((error) {
-            if (error is CameraException) {
-              _showErrorDialog(context, error.code);
-            }
-          });
-        });
+        if (type == 'reverse') {
+          switchCamera(context);
+        } else {
+          openGallery(context);
+        }
       },
       icon: icon,
       iconSize: 30,
     );
+  }
+
+  void switchCamera(BuildContext context) {
+    return setState(() {
+      currentCamera = (currentCamera + 1) % widget.cameras.length;
+      controller =
+          CameraController(widget.cameras[currentCamera], ResolutionPreset.max);
+      controller.initialize().then((_) {
+        if (!mounted) {
+          return;
+        }
+        setState(() {});
+      }).catchError((error) {
+        if (error is CameraException) {
+          _showErrorDialog(context, error.code);
+        }
+      });
+    });
   }
 
   Widget returnFloatingActionButton(BuildContext context) {

@@ -2,10 +2,12 @@ import 'package:camera/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:green_cycle/src/Locate_Vendor/map.dart';
 import 'package:green_cycle/src/Profile/profile.dart';
+import 'package:green_cycle/src/Profile/usage_history.dart';
 import 'package:green_cycle/src/authentication/login.dart';
 import 'package:green_cycle/src/authentication/signup.dart';
 import 'package:green_cycle/src/community/com_goals/community_goals.dart';
@@ -33,9 +35,14 @@ import 'package:permission_handler/permission_handler.dart' as ph;
 late List<CameraDescription> cameras;
 
 Future<void> main() async {
+  await dotenv.load(fileName: ".env");
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  cameras = await availableCameras();
+  try {
+    cameras = await availableCameras();
+  } on CameraException catch (e) {
+    throw Exception('Error: ${e.code}\nError Message: ${e.description}');
+  }
   runApp(const MainApp());
 }
 
@@ -64,254 +71,262 @@ class _MainAppState extends State<MainApp> {
   }
 
   GoRouter buildGoRouter() {
-    return GoRouter(
-      initialLocation: '/home',
-      routes: [
-            GoRoute(
-              path: '/home',
-              builder: (context, state) => const HomePage(),
-              pageBuilder: (context, state) {
-                return returnCustomTransitionPage(
-                  child: const HomePage(),
+    return GoRouter(initialLocation: '/home', routes: [
+      GoRoute(
+        path: '/home',
+        builder: (context, state) => const HomePage(),
+        pageBuilder: (context, state) {
+          return returnCustomTransitionPage(
+            child: const HomePage(),
+            context: context,
+            type: PageTransitionType.bottomToTop,
+          );
+        },
+        routes: [
+          GoRoute(
+            path: "locate-map",
+            pageBuilder: (context, state) => returnCustomTransitionPage(
+              child: LocateMap(
+                locationData: state.extra as LocationData,
+              ),
+              context: context,
+              type: PageTransitionType.leftToRight,
+            ),
+          ),
+          GoRoute(
+            path: "camera-control",
+            name: "camera-control",
+            pageBuilder: (context, state) => returnCustomTransitionPage(
+              child: CameraControl(cameras: cameras),
+              context: context,
+              type: PageTransitionType.size,
+            ),
+          ),
+          GoRoute(
+            path: "image-preview/:imagePath",
+            name: "image-preview",
+            builder: (context, state) => ImagePreview(
+              imagePath: state.pathParameters['imagePath']!,
+              imageFile: state.extra as XFile,
+            ),
+          ),
+          GoRoute(
+            path: "waste-item-list",
+            name: "waste-item-list",
+            pageBuilder: (context, state) => returnCustomTransitionPage(
+              child: const WasteListContainer(),
+              context: context,
+              type: PageTransitionType.bottomToTop,
+            ),
+          ),
+          GoRoute(
+            path: 'calendar',
+            pageBuilder: (context, state) => returnCustomTransitionPage(
+              child: const CommunityCalendar(),
+              context: context,
+              type: PageTransitionType.bottomToTop,
+              durationMillis: 800,
+            ),
+          ),
+          GoRoute(
+            path: 'voucher-redemption',
+            pageBuilder: (context, state) {
+              return returnCustomTransitionPage(
+                child: VoucherRedemptionPage(),
+                context: context,
+                type: PageTransitionType.bottomToTop,
+                durationMillis: 800,
+              );
+            },
+          ),
+          GoRoute(
+            path: "profile",
+            name: "profile",
+            pageBuilder: (context, state) {
+              return returnCustomTransitionPage(
+                child: const Profile(),
+                context: context,
+                type: PageTransitionType.rightToLeft,
+              );
+            },
+            routes: [
+              GoRoute(
+                path: "waste_item_list",
+                name: "waste_item_list",
+                pageBuilder: (context, state) => returnCustomTransitionPage(
+                  child: const WasteListContainer(),
                   context: context,
-                  type: PageTransitionType.bottomToTop,
-                );
-              },
-              routes: [
-                GoRoute(
-                  path: "locate-map",
-                  pageBuilder: (context, state) => returnCustomTransitionPage(
-                    child: LocateMap(
-                      locationData: state.extra as LocationData,
-                    ),
-                    context: context,
-                    type: PageTransitionType.leftToRight,
-                  ),
+                  type: PageTransitionType.rightToLeft,
                 ),
-                GoRoute(
-                  path: "camera-control",
-                  name: "camera-control",
-                  pageBuilder: (context, state) => returnCustomTransitionPage(
-                    child: CameraControl(cameras: cameras),
-                    context: context,
-                    type: PageTransitionType.size,
-                  ),
-                ),
-                GoRoute(
-                  path: "image-preview/:imagePath",
-                  name: "image-preview",
-                  builder: (context, state) => ImagePreview(
-                    imagePath: state.pathParameters['imagePath']!,
-                    imageFile: state.extra as XFile,
-                  ),
-                ),
-                GoRoute(
-                  path: "waste-item-list",
-                  name: "waste-item-list",
-                  pageBuilder: (context, state) => returnCustomTransitionPage(
-                    child: const WasteListContainer(),
-                    context: context,
-                    type: PageTransitionType.bottomToTop,
-                  ),
-                ),
-                GoRoute(
-                  path: 'calendar',
-                  pageBuilder: (context, state) => returnCustomTransitionPage(
+              ),
+              GoRoute(
+                path: "community_calender",
+                name: "community_calender",
+                pageBuilder: (context, state) {
+                  return returnCustomTransitionPage(
                     child: const CommunityCalendar(),
                     context: context,
                     type: PageTransitionType.bottomToTop,
-                    durationMillis: 800,
-                  ),
-                ),
-                GoRoute(
-                  path: 'voucher-redemption',
-                  pageBuilder: (context, state) {
-                    return returnCustomTransitionPage(
-                      child: VoucherPage(),
-                      context: context,
-                      type: PageTransitionType.bottomToTop,
-                      durationMillis: 800,
-                    );
-                  },
-                ),
-                GoRoute(
-                    path: "profile",
-                    name: "profile",
-                    pageBuilder: (context, state) {
-                      return returnCustomTransitionPage(
-                        child: const Profile(),
-                        context: context,
-                        type: PageTransitionType.rightToLeft,
-                      );
-                    },
-                    routes: [
-                      GoRoute(
-                        path: "waste_item_list",
-                        name: "waste_item_list",
-                        pageBuilder: (context, state) =>
-                            returnCustomTransitionPage(
-                          child: const WasteListContainer(),
-                          context: context,
-                          type: PageTransitionType.rightToLeft,
-                        ),
-                      ),
-                      GoRoute(
-                        path: "community_calender",
-                        name: "community_calender",
-                        pageBuilder: (context, state) {
-                          return returnCustomTransitionPage(
-                            child: const CommunityCalendar(),
-                            context: context,
-                            type: PageTransitionType.rightToLeft,
-                          );
-                        },
-                      ),
-                    ]),
-                GoRoute(
-                  path: 'community-explore',
-                  name: 'community-explore',
-                  pageBuilder: (context, state) {
-                    return returnCustomTransitionPage(
-                      child: CommunityExplore(),
-                      context: context,
-                      type: PageTransitionType.rightToLeft,
-                    );
-                  },
-                  routes: [
-                    GoRoute(
-                      path: "explore-communities",
-                      name: "explore-communities",
-                      pageBuilder: (context, state) {
-                        return returnCustomTransitionPage(
-                          child: const CommunitiesNearby(),
-                          context: context,
-                          type: PageTransitionType.rightToLeft,
-                        );
-                      },
-                    ),
-                    GoRoute(
-                      path: 'my_com',
-                      name: 'my_com',
-                      builder: (context, state) => const MyCommunity(),
-                      pageBuilder: (context, state) {
-                        return returnCustomTransitionPage(
-                          child: const MyCommunity(),
-                          context: context,
-                          type: PageTransitionType.rightToLeft,
-                        );
-                      },
-                    ),
-                    GoRoute(
-                      path: "com-goals",
-                      name: "com-goals",
-                      pageBuilder: (context, state) {
-                        return returnCustomTransitionPage(
-                          child: const CommunityGoals(),
-                          context: context,
-                          type: PageTransitionType.bottomToTop,
-                        );
-                      },
-                    ),
-                    GoRoute(
-                      path: "community-calender",
-                      name: "community-calender",
-                      pageBuilder: (context, state) {
-                        return returnCustomTransitionPage(
-                          child: const CommunityCalendar(),
-                          context: context,
-                          type: PageTransitionType.bottomToTop,
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            GoRoute(
-              path: '/level-tracking',
-              name: 'level-tracking',
-              pageBuilder: (context, state) {
-                return returnCustomTransitionPage(
-                  child: LevelTrackingPage(),
-                  context: context,
-                  type: PageTransitionType.rightToLeft,
-                );
-              },
-            ),
-            GoRoute(
-              path: "/games",
-              name: "games",
-              pageBuilder: (context, state) {
-                return returnCustomTransitionPage(
-                  child: const GamesPage(),
-                  context: context,
-                  type: PageTransitionType.leftToRight,
-                );
-              },
-              routes: [
-                GoRoute(
-                  path: "archive",
-                  name: "archive",
-                  pageBuilder: (context, state) {
-                    return returnCustomTransitionPage(
-                      child: ArchiveContainer(),
-                      context: context,
-                      type: PageTransitionType.bottomToTop,
-                    );
-                  },
-                ),
-                GoRoute(
-                  path: "quiz",
-                  pageBuilder: (context, state) {
-                    return returnCustomTransitionPage(
-                      child: const QuizWelcome(),
-                      context: context,
-                      type: PageTransitionType.bottomToTop,
-                    );
-                  },
-                  routes: [
-                    GoRoute(
-                      path: "quiz-question/:questionCategory",
-                      name: "quiz-question",
-                      pageBuilder: (context, state) {
-                        return returnCustomTransitionPage(
-                          child: QuizQuestionHolder(
-                            questionCategory:
-                                state.pathParameters["questionCategory"]!,
-                          ),
-                          context: context,
-                          type: PageTransitionType.rightToLeft,
-                          durationMillis: 500,
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                  );
+                },
+              ),
+              GoRoute(
+                path: "usage_history",
+                name: "usage_history",
+                pageBuilder: (context, state) {
+                  return returnCustomTransitionPage(
+                    child: const UsageHistory(),
+                    context: context,
+                    type: PageTransitionType.rightToLeft,
+                  );
+                },
+              ),
+            ],
+          ),
+          GoRoute(
+            path: 'community-explore',
+            name: 'community-explore',
+            pageBuilder: (context, state) {
+              return returnCustomTransitionPage(
+                child: CommunityExplore(),
+                context: context,
+                type: PageTransitionType.bottomToTop,
+              );
+            },
+            routes: [
+              GoRoute(
+                path: "explore-communities",
+                name: "explore-communities",
+                pageBuilder: (context, state) {
+                  return returnCustomTransitionPage(
+                    child: const CommunitiesNearby(),
+                    context: context,
+                    type: PageTransitionType.rightToLeft,
+                  );
+                },
+              ),
+              GoRoute(
+                path: 'my_com',
+                name: 'my_com',
+                builder: (context, state) => const MyCommunity(),
+                pageBuilder: (context, state) {
+                  return returnCustomTransitionPage(
+                    child: const MyCommunity(),
+                    context: context,
+                    type: PageTransitionType.rightToLeft,
+                  );
+                },
+              ),
+              GoRoute(
+                path: "com-goals",
+                name: "com-goals",
+                pageBuilder: (context, state) {
+                  return returnCustomTransitionPage(
+                    child: const CommunityGoals(),
+                    context: context,
+                    type: PageTransitionType.bottomToTop,
+                  );
+                },
+              ),
+              GoRoute(
+                path: "community-calender",
+                name: "community-calender",
+                pageBuilder: (context, state) {
+                  return returnCustomTransitionPage(
+                    child: const CommunityCalendar(),
+                    context: context,
+                    type: PageTransitionType.bottomToTop,
 
-        GoRoute(
-          path: '/vendor',
-          builder: (context, state) => const VendorPage(),
-        ),
-        GoRoute(
-          path: "/",
-          builder: (context, state) => const WelcomeSplashScreen(),
-        ),
-        GoRoute(
-          path: "/welcome",
-          builder: (context, state) => const WelcomeScreen(),
-        ),
-        GoRoute(
-          path: "/login",
-          builder: (context, state) => const LoginPage(),
-        ),
-        GoRoute(
-          path: "/signup",
-          builder: (context, state) => const SignupPage(),
-        ),
-      ]
-    );
+                  );
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+      GoRoute(
+        path: '/level-tracking',
+        name: 'level-tracking',
+        pageBuilder: (context, state) {
+          return returnCustomTransitionPage(
+            child: LevelTrackingPage(),
+            context: context,
+            type: PageTransitionType.rightToLeft,
+          );
+        },
+      ),
+      GoRoute(
+        path: "/games",
+        name: "games",
+        pageBuilder: (context, state) {
+          return returnCustomTransitionPage(
+            child: const GamesPage(),
+            context: context,
+            type: PageTransitionType.leftToRight,
+          );
+        },
+        routes: [
+          GoRoute(
+            path: "archive",
+            name: "archive",
+            pageBuilder: (context, state) {
+              return returnCustomTransitionPage(
+                child: ArchiveContainer(),
+                context: context,
+                type: PageTransitionType.bottomToTop,
+              );
+            },
+          ),
+          GoRoute(
+            path: "quiz",
+            pageBuilder: (context, state) {
+              return returnCustomTransitionPage(
+                child: const QuizWelcome(),
+                context: context,
+                type: PageTransitionType.bottomToTop,
+              );
+            },
+            routes: [
+              GoRoute(
+                path: "quiz-question/:questionCategory",
+                name: "quiz-question",
+                pageBuilder: (context, state) {
+                  return returnCustomTransitionPage(
+                    child: QuizQuestionHolder(
+                      questionCategory:
+                          state.pathParameters["questionCategory"]!,
+                    ),
+                    context: context,
+                    type: PageTransitionType.rightToLeft,
+                    durationMillis: 500,
+                  );
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+      GoRoute(
+        path: '/vendor',
+        builder: (context, state) => const VendorPage(),
+      ),
+      GoRoute(
+        path: "/",
+        builder: (context, state) => const WelcomeSplashScreen(),
+      ),
+      GoRoute(
+        path: "/welcome",
+        builder: (context, state) => const WelcomeScreen(),
+      ),
+      GoRoute(
+        path: "/login",
+        builder: (context, state) => const LoginPage(),
+      ),
+      GoRoute(
+        path: "/signup",
+        builder: (context, state) => const SignupPage(),
+      ),
+    ]);
   }
 
   ThemeData buildThemeData(BuildContext context) {
@@ -469,9 +484,6 @@ void requestStoragePermission() async {
   if (!kIsWeb) {
     ph.PermissionStatus status = await ph.Permission.storage.status;
     if (status.isPermanentlyDenied) {
-      // The user opted to never again see the permission request dialog for this
-      // app. The only way to change the permission's status now is to let the
-      // user manually enable it in the system settings.
       ph.openAppSettings();
     } else if (!status.isGranted) {
       status = await ph.Permission.storage.request();

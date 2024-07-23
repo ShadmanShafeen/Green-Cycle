@@ -5,6 +5,7 @@ import 'package:green_cycle/src/games/quiz/question_row.dart';
 import 'package:green_cycle/src/games/quiz/quiz_completion_alert.dart';
 import 'package:green_cycle/src/games/quiz/quiz_questions.dart';
 import 'package:green_cycle/src/utils/snackbars_alerts.dart';
+import 'package:green_cycle/src/widgets/app_bar.dart';
 
 class QuizQuestionHolder extends StatefulWidget {
   final String questionCategory;
@@ -34,63 +35,66 @@ class _QuizQuestionHolderState extends State<QuizQuestionHolder> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      key: const PageStorageKey("quiz_question_holder"),
-      child: Container(
-        height: MediaQuery.of(context).size.height,
-        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 35),
-        color: Theme.of(context).colorScheme.surfaceContainerLowest,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            LinearTimer(
-              key: timerKey,
-              maxSeconds: 10,
-              onTimerEnd: () {
-                setState(() {
-                  isAnswered = true;
-                  isCorrect = true;
-                  checkedAnswer = questions?[questionNumber]["correct"];
-                });
+    return Scaffold(
+      appBar: const CustomAppBar(),
+      body: SingleChildScrollView(
+        key: const PageStorageKey("quiz_question_holder"),
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 35),
+          color: Theme.of(context).colorScheme.surfaceContainerLowest,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              LinearTimer(
+                key: timerKey,
+                maxSeconds: 10,
+                onTimerEnd: () {
+                  setState(() {
+                    isAnswered = true;
+                    isCorrect = true;
+                    checkedAnswer = questions?[questionNumber]["correct"];
+                  });
 
-                Future.delayed(const Duration(seconds: 1), () {
-                  if (questionNumber < maxQuestions - 1) {
-                    setState(() {
-                      checkedAnswer = "";
-                      isAnswered = false;
-                      isCorrect = false;
-                      questionNumber++;
-                      timerKey = ValueKey<int>(questionNumber);
-                    });
-                  } else {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return QuizCompletionAlert(
-                          correctAnswersCount: correctAnswersCount,
-                          maxQuestions: maxQuestions,
-                        );
-                      },
-                    );
+                  Future.delayed(const Duration(seconds: 1), () {
+                    if (questionNumber < maxQuestions - 1) {
+                      setState(() {
+                        checkedAnswer = "";
+                        isAnswered = false;
+                        isCorrect = false;
+                        questionNumber++;
+                        timerKey = ValueKey<int>(questionNumber);
+                      });
+                    } else {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return QuizCompletionAlert(
+                            correctAnswersCount: correctAnswersCount,
+                            maxQuestions: maxQuestions,
+                          );
+                        },
+                      );
 
-                    Future.delayed(const Duration(seconds: 1), () {
-                      context.go('/games/quiz');
-                    });
-                  }
-                });
-              },
-            ),
-            const SizedBox(height: 40),
-            QuestionRow(
-              question: questions?[questionNumber]["question"],
-              questionNumber: "Question ${questionNumber + 1}",
-              maxQuestions: maxQuestions,
-            ),
-            const SizedBox(height: 70),
-            buildOptions(context),
-            const SizedBox(height: 30),
-            buildNextButton(context),
-          ],
+                      Future.delayed(const Duration(seconds: 1), () {
+                        context.go('/games/quiz');
+                      });
+                    }
+                  });
+                },
+              ),
+              const SizedBox(height: 40),
+              QuestionRow(
+                question: questions?[questionNumber]["question"],
+                questionNumber: "Question ${questionNumber + 1}",
+                maxQuestions: maxQuestions,
+              ),
+              const SizedBox(height: 70),
+              buildOptions(context),
+              const SizedBox(height: 30),
+              buildNextButton(context),
+            ],
+          ),
         ),
       ),
     );

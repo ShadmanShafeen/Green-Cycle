@@ -1,4 +1,4 @@
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:carousel_slider/carousel_slider.dart' as carousel_slider;
 import 'package:flutter/material.dart';
 
 import 'game_image_card.dart';
@@ -12,7 +12,7 @@ class TopImageCarousel extends StatefulWidget {
 
 class _TopImageCarouselState extends State<TopImageCarousel> {
   int _currentGameCard = 0;
-  late final CarouselController _carouselController;
+  late final carousel_slider.CarouselController _carouselController;
   final List<Map<String, String>> gamesDetails = [
     {
       "title": "GreenQuiz",
@@ -34,7 +34,7 @@ class _TopImageCarouselState extends State<TopImageCarousel> {
   @override
   void initState() {
     super.initState();
-    _carouselController = CarouselController();
+    _carouselController = carousel_slider.CarouselController();
   }
 
   @override
@@ -44,7 +44,7 @@ class _TopImageCarouselState extends State<TopImageCarousel> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CarouselSlider(
+          carousel_slider.CarouselSlider(
             carouselController: _carouselController,
             items: [
               ...gamesDetails.map(
@@ -56,7 +56,7 @@ class _TopImageCarouselState extends State<TopImageCarousel> {
                 ),
               ),
             ],
-            options: CarouselOptions(
+            options: carousel_slider.CarouselOptions(
               autoPlay: true,
               enableInfiniteScroll: true,
               autoPlayInterval: const Duration(seconds: 3),

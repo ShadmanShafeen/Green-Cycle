@@ -36,13 +36,17 @@ dependencies:
   modal_bottom_sheet: ^3.0.0
   latlong2: ^0.9.1
   flutter_map: ^7.0.1
-  location: ^6.0.2
+  location: ^7.0.0
   table_calendar: ^3.1.2
   flutter_switch: ^0.3.2
   dio: ^5.4.3+1
 
   firebase_core: ^3.1.1
   firebase_auth: ^5.1.1
+  flutter_dotenv: ^5.1.0
+  image_picker: ^1.1.2
+  image_picker_android: ^0.8.12+4
+  image_picker_platform_interface: ^2.10.0
   
 dev_dependencies:
   flutter_test:
@@ -60,3 +64,4 @@ flutter:
     - lib/assets/images/
     - lib/assets/videos/
     - lib/assets/animations/
+    - .env

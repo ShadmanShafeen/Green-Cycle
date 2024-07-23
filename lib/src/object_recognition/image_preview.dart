@@ -1,10 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:green_cycle/src/utils/server.dart';
+import 'package:green_cycle/src/utils/snackbars_alerts.dart';
+import 'package:green_cycle/src/widgets/app_bar.dart';
 
 class ImagePreview extends StatefulWidget {
   final String imagePath;
@@ -17,52 +20,71 @@ class ImagePreview extends StatefulWidget {
 }
 
 class _ImagePreviewState extends State<ImagePreview> {
-  bool isLoading = false;
+  bool isLoading = true;
+  String? processedImageBase64;
+  final labels = [];
 
   @override
   void initState() {
     super.initState();
-    isLoading = true;
-    _getDetectedImage().then((_) {
+    _getDetectedImage().then((base64String) {
       setState(() {
         isLoading = false;
+        processedImageBase64 = base64String;
       });
     });
   }
 
   Future<dynamic> _getDetectedImage() async {
-    var dio = Dio();
+    final dio = Dio();
     try {
+      File file = File(widget.imagePath);
+      FormData formData = FormData.fromMap({
+        "image": await MultipartFile.fromFile(file.path, filename: "image.jpg"),
+      });
       final response = await dio.post(
         "$serverURLFlask/object-rec",
-        options: Options(
-          headers: {
-            "Content-Type": "application/json",
-          },
-        ),
-        data: jsonEncode({
-          "image": widget.imagePath,
-        }),
+        data: formData,
       );
 
       if (response.statusCode == 200) {
-        return response.data;
+        return response.data['processed_image'];
       } else {
-        throw Exception('Failed to load data');
+        throw createQuickAlert(
+          context: context.mounted ? context : context,
+          title: "${response.statusCode}",
+          message: response.statusMessage!,
+          type: 'error',
+        );
       }
     } catch (e) {
-      throw Exception('Failed to load data: $e');
+      throw createQuickAlert(
+        context: context.mounted ? context : context,
+        title: "Error",
+        message: e.toString(),
+        type: 'error',
+      );
+      ;
     }
+  }
+
+  Uint8List _base64ToUint8List(String base64String) {
+    return base64Decode(base64String);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const CustomAppBar(),
       body: SingleChildScrollView(
         child: isLoading
-            ? Center(
-                heightFactor: MediaQuery.of(context).size.height,
-                child: const CircularProgressIndicator(),
+            ? SizedBox(
+                height: MediaQuery.of(context).size.height,
+                child: const Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                  ),
+                ),
               )
             : Container(
                 padding: const EdgeInsets.all(20),
@@ -75,9 +97,13 @@ class _ImagePreviewState extends State<ImagePreview> {
                   children: [
                     SizedBox(
                       height: 300,
-                      child: Image.file(
-                        File(widget.imagePath),
-                      ),
+                      child: processedImageBase64 != null
+                          ? Image.memory(
+                              _base64ToUint8List(processedImageBase64!),
+                            )
+                          : Image.file(
+                              File(widget.imagePath),
+                            ),
                     ),
                     const SizedBox(height: 20),
                     Card(
@@ -133,8 +159,9 @@ class _ImagePreviewState extends State<ImagePreview> {
                     Text(
                       "Recycling Details",
                       style: TextStyle(
-                          fontSize: 20,
-                          color: Theme.of(context).colorScheme.onSurface),
+                        fontSize: 20,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
                     ),
                     const SizedBox(height: 20),
                     Card(

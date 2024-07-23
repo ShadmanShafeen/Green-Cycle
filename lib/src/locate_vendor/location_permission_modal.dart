@@ -65,6 +65,7 @@ class LocationPermissionModalState extends State<LocationPermissionModal> {
             },
             child: Text(
               'Allow Location Access',
+              textAlign: TextAlign.center,
               style: TextStyle(
                 color: Color.fromARGB(255, 184, 43, 219),
                 fontSize: 20,
@@ -78,6 +79,7 @@ class LocationPermissionModalState extends State<LocationPermissionModal> {
             },
             child: Text(
               'Deny Location Access',
+              textAlign: TextAlign.center,
               style: TextStyle(
                 color: Color.fromARGB(255, 184, 43, 219),
                 fontSize: 20,

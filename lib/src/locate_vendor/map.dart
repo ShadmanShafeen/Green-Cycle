@@ -1,11 +1,10 @@
-import "dart:convert";
-
 import "package:dio/dio.dart";
 import "package:flutter/material.dart";
-// import "package:flutter_app/src/home_page.dart";
+import "package:flutter_dotenv/flutter_dotenv.dart";
 import "package:flutter_map/flutter_map.dart";
 import "package:green_cycle/src/Locate_Vendor/recents_modal.dart";
 import "package:green_cycle/src/locate_vendor/location_details_modal.dart";
+import "package:green_cycle/src/utils/snackbars_alerts.dart";
 import "package:green_cycle/src/widgets/app_bar.dart";
 import "package:green_cycle/src/widgets/nav_bar.dart";
 import "package:latlong2/latlong.dart";
@@ -20,19 +19,18 @@ class LocateMap extends StatefulWidget {
   State<LocateMap> createState() => _LocateMapState();
 }
 
-const String baseUrl =
-    "https://api.openrouteservice.org/v2/directions/driving-car";
-const String apiKey =
-    "5b3ce3597851110001cf62489920d7719cd04fe98cb6bd743e92061f";
-
+final baseUrl = dotenv.get('BASE_LOCATION_URL');
+final apiKey = dotenv.get('OPEN_ROUTE_API_KEY');
 getRouterUrl(String startPoint, String endPoint) {
   return Uri.parse("$baseUrl?api_key=$apiKey&start=$startPoint&end=$endPoint");
 }
 
 class _LocateMapState extends State<LocateMap> {
+  late final double latitude;
+  late final double longitude;
+  late final LatLng currentLocation;
   final List<LatLng> markerLocation = [
-    const LatLng(8.681495, 49.41461),
-    const LatLng(8.687872, 49.420318),
+    const LatLng(23.837842798083773, 90.35783819850069),
   ];
 
   List listOfPoints = [];
@@ -41,32 +39,45 @@ class _LocateMapState extends State<LocateMap> {
   @override
   void initState() {
     super.initState();
-    getCoordinates(markerLocation[0].toString(), markerLocation[1].toString());
-    print("GHELLOAFAWF");
+    latitude = widget.locationData.latitude!;
+    longitude = widget.locationData.longitude!;
+    currentLocation = LatLng(latitude, longitude);
+    final String startLocation =
+        '${currentLocation.longitude},${currentLocation.latitude}';
+    final String endLocation =
+        '${markerLocation[0].longitude},${markerLocation[0].latitude}';
+    getCoordinates(startLocation, endLocation);
   }
 
   Future<void> getCoordinates(String start, String end) async {
-    var dio = Dio();
-    var response = await dio.get(
-      getRouterUrl(start, end),
-    );
+    final dio = Dio();
+    try {
+      final response = await dio.get(
+        "$baseUrl?api_key=$apiKey&start=$start&end=$end",
+      );
 
-    setState(() {
-      if (response.statusCode == 200) {
-        var data = jsonDecode(response.data);
-        listOfPoints = data['features'][0]['geometry']['coordinates'];
-        points = listOfPoints
-            .map(
-              (p) => LatLng(
-                p[1].toDouble(),
-                p[0].toDouble(),
-              ),
-            )
-            .toList();
-      }
-    });
-
-    print(points);
+      setState(() {
+        if (response.statusCode == 200) {
+          final data = response.data;
+          listOfPoints = data['features'][0]['geometry']['coordinates'];
+          points = listOfPoints
+              .map(
+                (p) => LatLng(
+                  p[1].toDouble(),
+                  p[0].toDouble(),
+                ),
+              )
+              .toList();
+        }
+      });
+    } catch (e) {
+      throw createQuickAlert(
+        context: context.mounted ? context : context,
+        title: "OpenService Error.",
+        message: "$e",
+        type: "error",
+      );
+    }
   }
 
   @override
@@ -93,26 +104,19 @@ class _LocateMapState extends State<LocateMap> {
     ).toList();
 
     return Scaffold(
-      appBar: CustomAppBar(),
-      bottomNavigationBar: NavBar(),
+      extendBodyBehindAppBar: true,
+      appBar: const CustomAppBar(),
+      bottomNavigationBar: const NavBar(),
       body: FlutterMap(
         options: MapOptions(
-          initialCenter: markerLocation[0],
-          initialZoom: 12,
+          keepAlive: true,
+          initialCenter: currentLocation,
+          initialZoom: 15,
         ),
         children: [
           TileLayer(
-            urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            subdomains: const ['a', 'b', 'c'],
-          ),
-          PolylineLayer(
-            polylines: [
-              Polyline(
-                points: points,
-                strokeWidth: 4.0,
-                color: Colors.purple,
-              ),
-            ],
+            urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+            userAgentPackageName: 'dev.leaflet.flutter.map.example',
           ),
           MarkerLayer(
             markers: [
@@ -138,6 +142,15 @@ class _LocateMapState extends State<LocateMap> {
                 ),
               ),
               ...markers,
+            ],
+          ),
+          PolylineLayer(
+            polylines: [
+              Polyline(
+                points: points,
+                strokeWidth: 4.0,
+                color: Colors.purple,
+              ),
             ],
           ),
         ],

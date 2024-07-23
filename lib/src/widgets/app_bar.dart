@@ -27,7 +27,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 Icons.compost,
                 color: Theme.of(context).colorScheme.primary,
               ),
-              onPressed: () {},
+              onPressed: () {
+                context.go('/home');
+              },
             )
           : BackButton(
               color: Theme.of(context).colorScheme.primary,
@@ -63,7 +65,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             : const SizedBox()
       ],
       backgroundColor: Theme.of(context).colorScheme.surfaceContainerLowest,
-      
     );
   }
 

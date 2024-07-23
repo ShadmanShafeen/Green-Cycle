@@ -14,11 +14,7 @@ class DraftItems extends StatefulWidget {
   State<DraftItems> createState() => _DraftItemsState();
 }
 
-class _DraftItemsState extends State<DraftItems>
-    with AutomaticKeepAliveClientMixin {
-  @override
-  bool get wantKeepAlive => true;
-
+class _DraftItemsState extends State<DraftItems> {
   @override
   void initState() {
     super.initState();
@@ -35,7 +31,6 @@ class _DraftItemsState extends State<DraftItems>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return Column(
       children: [
         //TITLE ROW
@@ -74,17 +69,35 @@ class _DraftItemsState extends State<DraftItems>
   Future<List<Map<String, String>>> fetchDraftItems() async {
     final dio = Dio();
     try {
+      draftItems.clear();
       final response = await dio.get(
         "$serverURLExpress/draft-show/shadmanskystar@gmail.com",
       );
 
       if (response.statusCode == 200) {
-        return response.data;
+        for (var item in response.data) {
+          draftItems.add({
+            "name": item['name'].toString(),
+            "description": item['description'].toString(),
+            "Amount": item['Amount'].toString(),
+          });
+        }
+        return draftItems;
       } else {
-        throw Exception('Failed to load data');
+        throw createQuickAlert(
+          context: context.mounted ? context : context,
+          title: "${response.statusMessage}",
+          message: "${response.statusCode}",
+          type: "error",
+        );
       }
     } catch (e) {
-      throw Exception('Failed to load data: $e');
+      throw createQuickAlert(
+        context: context.mounted ? context : context,
+        title: "Failed to load data",
+        message: "$e",
+        type: "error",
+      );
     }
   }
 
@@ -171,10 +184,37 @@ class _DraftItemsState extends State<DraftItems>
         final dio = Dio();
         try {
           final response = await dio.post(
-            "$serverURLExpress/draft-insert/shadmanskystar@gmail.com",
+            "$serverURLExpress/draft-to-recent/shadmanskystar@gmail.com",
           );
+
+          if (response.statusCode == 200) {
+            setState(() {
+              draftItems.clear();
+            });
+            final snackBar = createSnackBar(
+              title: "Draft Items Confirmed",
+              message:
+                  "The items in your draft list have been confirmed and added to your recent list.Thank you.",
+              contentType: "success",
+            );
+            ScaffoldMessenger.of(context.mounted ? context : context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(snackBar);
+          } else {
+            throw createQuickAlert(
+              context: context.mounted ? context : context,
+              title: "${response.statusMessage}",
+              message: "${response.statusCode}",
+              type: "error",
+            );
+          }
         } catch (e) {
-          throw Exception('Failed to load data: $e');
+          throw createQuickAlert(
+            context: context.mounted ? context : context,
+            title: "Failed to save data",
+            message: "$e",
+            type: "error",
+          );
         }
       },
       child: Row(
@@ -201,11 +241,13 @@ class _DraftItemsState extends State<DraftItems>
       style: TextButton.styleFrom(
         overlayColor: Theme.of(context).colorScheme.onSurface,
       ),
-      child: Text("Add New Item",
-          style: TextStyle(
-            fontSize: 16,
-            color: Theme.of(context).colorScheme.primaryFixed,
-          )),
+      child: Text(
+        "Add New Item",
+        style: TextStyle(
+          fontSize: 16,
+          color: Theme.of(context).colorScheme.primaryFixed,
+        ),
+      ),
       onPressed: () {
         showModalBottomSheet(
           showDragHandle: true,
