@@ -15,7 +15,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         'GreenCycle',
         style: TextStyle(letterSpacing: 3),
       );
-    
     }
 
     return AppBar(

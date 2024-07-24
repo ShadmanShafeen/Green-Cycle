@@ -1,14 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:green_cycle/.env';
 import 'package:green_cycle/auth.dart';
 
+import '../utils/server.dart';
+
 class CoinsContainer extends StatefulWidget {
-  const CoinsContainer({
-    super.key,
-  });
-  
+  const CoinsContainer({super.key});
+
   @override
   State<CoinsContainer> createState() => _CoinsContainerState();
 }
@@ -21,7 +20,8 @@ class _CoinsContainerState extends State<CoinsContainer> {
 
   Future<void> getAndUpdateUserCoins() async {
     User? user = _auth.currentUser;
-    final response = await dio.get('${backend_server}user-info/${user?.email}');
+    final response =
+        await dio.get('$serverURLExpress/user-info/${user?.email}');
     coins = response.data['coins'];
   }
 
