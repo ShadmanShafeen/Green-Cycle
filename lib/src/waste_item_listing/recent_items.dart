@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:green_cycle/src/utils/responsive_functions.dart';
 import 'package:green_cycle/src/utils/server.dart';
 import 'package:green_cycle/src/utils/snackbars_alerts.dart';
 import 'package:green_cycle/src/waste_item_listing/details_modal.dart';
+import 'package:grouped_list/grouped_list.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class RecentItems extends StatefulWidget {
@@ -12,9 +14,14 @@ class RecentItems extends StatefulWidget {
   State<RecentItems> createState() => _RecentItemsState();
 }
 
-class _RecentItemsState extends State<RecentItems> {
+class _RecentItemsState extends State<RecentItems>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Column(
       children: [
         Padding(
@@ -32,10 +39,12 @@ class _RecentItemsState extends State<RecentItems> {
               ),
               IconButton(
                 icon: Icon(
-                  Icons.filter_list,
+                  Icons.refresh,
                   color: Theme.of(context).colorScheme.primaryFixed,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  setState(() {});
+                },
               ),
             ],
           ),
@@ -51,9 +60,27 @@ class _RecentItemsState extends State<RecentItems> {
               } else if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
               } else {
-                return ListView.builder(
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (context, index) {
+                return GroupedListView<dynamic, String>(
+                  elements: snapshot.data,
+                  groupBy: (item) => item['confirmedAt']!,
+                  groupComparator: (value1, value2) {
+                    DateTime date1 = parseDate(value1);
+                    DateTime date2 = parseDate(value2);
+                    return date1.compareTo(date2);
+                  },
+                  groupSeparatorBuilder: (String value) => Container(
+                    color: Theme.of(context).colorScheme.surfaceContainerLow,
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      getDateInNormalText(value),
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Theme.of(context).colorScheme.primaryFixed,
+                      ),
+                    ),
+                  ),
+                  useStickyGroupSeparators: true,
+                  indexedItemBuilder: (context, element, index) {
                     return Card(
                       color: Theme.of(context)
                           .colorScheme
@@ -75,6 +102,8 @@ class _RecentItemsState extends State<RecentItems> {
                               child: DetailsModal(
                                 index: index,
                                 snapshot: snapshot,
+                                isRecent: true,
+                                element: element,
                               ),
                             ),
                           );
@@ -85,7 +114,7 @@ class _RecentItemsState extends State<RecentItems> {
                           color: Theme.of(context).colorScheme.primaryFixed,
                         ),
                         title: Text(
-                          snapshot.data[index]['name'],
+                          element['name'],
                         ),
                       ),
                     );
@@ -113,6 +142,8 @@ class _RecentItemsState extends State<RecentItems> {
             "name": item['name'].toString(),
             "description": item['description'].toString(),
             "Amount": item['Amount'].toString(),
+            'createdAt': item['createdAt'].toString(),
+            'confirmedAt': item['confirmedAt'].toString(),
           });
         }
         return data;

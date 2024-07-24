@@ -1,5 +1,6 @@
 import "package:dio/dio.dart";
 import "package:flutter/material.dart";
+import "package:green_cycle/src/utils/responsive_functions.dart";
 import "package:green_cycle/src/utils/server.dart";
 import "package:green_cycle/src/utils/snackbars_alerts.dart";
 
@@ -114,6 +115,8 @@ class _AddNewItemState extends State<AddNewItem> {
                             "name": _itemNameController.text,
                             "description": _itemDescriptionController.text,
                             "Amount": _itemAmountController.text,
+                            'createdAt': getFormattedCurrentDate(),
+                            'confirmedAt': 'Not Confirmed',
                           },
                         );
 

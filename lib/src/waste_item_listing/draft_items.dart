@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -14,7 +16,12 @@ class DraftItems extends StatefulWidget {
   State<DraftItems> createState() => _DraftItemsState();
 }
 
-class _DraftItemsState extends State<DraftItems> {
+class _DraftItemsState extends State<DraftItems>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+  final dio = Dio();
+
   @override
   void initState() {
     super.initState();
@@ -31,43 +38,40 @@ class _DraftItemsState extends State<DraftItems> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        //TITLE ROW
-        _getTitleRow(context),
-        //BUTTON ROW
-        Padding(
-          padding: const EdgeInsets.only(right: 12),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _getConfirmListButton(context),
-              _getAddNewItemButton(context),
-            ],
-          ),
+    super.build(context);
+    return Scaffold(
+      body: Container(
+        color: Theme.of(context).colorScheme.surfaceContainerLow,
+        child: Column(
+          children: [
+            //TITLE ROW
+            _getTitleRow(context),
+            //LIST VIEW
+            Expanded(
+              child: FutureBuilder(
+                future: fetchDraftItems(),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    return _getListView(context, snapshot);
+                  }
+                },
+              ),
+            ),
+          ],
         ),
-        //LIST VIEW
-        Expanded(
-          child: FutureBuilder(
-            future: fetchDraftItems(),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else {
-                return _getListView(context, snapshot);
-              }
-            },
-          ),
-        ),
-      ],
+      ),
+      floatingActionButton: _getAddNewItemButton(context),
+      floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
   List<Map<String, String>> draftItems = [];
   Future<List<Map<String, String>>> fetchDraftItems() async {
-    final dio = Dio();
     try {
       draftItems.clear();
       final response = await dio.get(
@@ -80,6 +84,8 @@ class _DraftItemsState extends State<DraftItems> {
             "name": item['name'].toString(),
             "description": item['description'].toString(),
             "Amount": item['Amount'].toString(),
+            'createdAt': item['createdAt'].toString(),
+            'confirmedAt': item['confirmedAt'].toString(),
           });
         }
         return draftItems;
@@ -101,6 +107,37 @@ class _DraftItemsState extends State<DraftItems> {
     }
   }
 
+  Future<void> deleteItem(int index, AsyncSnapshot snapshot) async {
+    try {
+      final response = await dio.patch(
+        "$serverURLExpress/draft-item-delete/shadmanskystar@gmail.com",
+        data: {
+          "item": snapshot.data[index],
+        },
+      );
+
+      if (response.statusCode == 200) {
+        setState(() {
+          snapshot.data.removeAt(index);
+        });
+      } else {
+        throw createQuickAlert(
+          context: context.mounted ? context : context,
+          title: "${response.statusMessage}",
+          message: "${response.statusCode}",
+          type: "error",
+        );
+      }
+    } catch (e) {
+      throw createQuickAlert(
+        context: context.mounted ? context : context,
+        title: "Failed to delete item",
+        message: "$e",
+        type: "error",
+      );
+    }
+  }
+
   ListView _getListView(BuildContext context, AsyncSnapshot snapshot) {
     return ListView.builder(
       itemCount: snapshot.data.length,
@@ -115,10 +152,21 @@ class _DraftItemsState extends State<DraftItems> {
             borderRadius: BorderRadius.circular(10),
           ),
           child: ListTile(
-            onLongPress: () {
-              setState(() {
-                snapshot.data.removeAt(index);
-              });
+            onLongPress: () async {
+              final NavigatorState navigator = Navigator.of(context);
+              await createQuickAlertConfirm(
+                context: context,
+                title: "Delete item?",
+                message: "This item will be deleted from the list",
+                type: "confirm",
+                onConfirmBtnTap: () {
+                  deleteItem(index, snapshot);
+                  navigator.pop();
+                },
+                onCancelBtnTap: () {
+                  navigator.pop();
+                },
+              );
             },
             onTap: () {
               showModalBottomSheet(
@@ -131,6 +179,7 @@ class _DraftItemsState extends State<DraftItems> {
                   child: DetailsModal(
                     index: index,
                     snapshot: snapshot,
+                    isRecent: false,
                   ),
                 ),
               );
@@ -161,25 +210,14 @@ class _DraftItemsState extends State<DraftItems> {
               color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
-          IconButton(
-            icon: Icon(
-              Icons.filter_list,
-              color: Theme.of(context).colorScheme.primaryFixed,
-            ),
-            onPressed: () {
-              // Implement your filter functionality here
-            },
-          ),
+          _getConfirmListButton(context),
         ],
       ),
     );
   }
 
-  TextButton _getConfirmListButton(BuildContext context) {
-    return TextButton(
-      style: TextButton.styleFrom(
-        overlayColor: Theme.of(context).colorScheme.onSurface,
-      ),
+  IconButton _getConfirmListButton(BuildContext context) {
+    return IconButton(
       onPressed: () async {
         final dio = Dio();
         try {
@@ -217,36 +255,19 @@ class _DraftItemsState extends State<DraftItems> {
           );
         }
       },
-      child: Row(
-        children: [
-          Icon(
-            Icons.save,
-            color: Theme.of(context).colorScheme.secondaryFixed,
-          ),
-          const SizedBox(width: 5),
-          Text(
-            "Confirm list",
-            style: TextStyle(
-              fontSize: 16,
-              color: Theme.of(context).colorScheme.secondaryFixed,
-            ),
-          ),
-        ],
+      icon: Icon(
+        Icons.save,
+        color: Theme.of(context).colorScheme.primaryFixed,
       ),
     );
   }
 
-  TextButton _getAddNewItemButton(BuildContext context) {
-    return TextButton(
-      style: TextButton.styleFrom(
-        overlayColor: Theme.of(context).colorScheme.onSurface,
-      ),
-      child: Text(
-        "Add New Item",
-        style: TextStyle(
-          fontSize: 16,
-          color: Theme.of(context).colorScheme.primaryFixed,
-        ),
+  FloatingActionButton _getAddNewItemButton(BuildContext context) {
+    return FloatingActionButton(
+      backgroundColor: Theme.of(context).colorScheme.primaryFixed,
+      child: Icon(
+        Icons.add,
+        color: Theme.of(context).colorScheme.onPrimaryFixed,
       ),
       onPressed: () {
         showModalBottomSheet(
