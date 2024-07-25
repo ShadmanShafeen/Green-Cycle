@@ -1,18 +1,53 @@
-class Communities {
+class Community {
   final String image;
-  final String com_name;
-  final String location;
+  final String name;
+  final CommunityLocation location;
+  final String leaderEmail;
+  final List<String> members;
+  final List<String> requests;
+  final List<Rank> rank;
+  final List<Schedule> schedule;
 
-  Communities(
+  Community(
     this.image,
-    this.com_name,
+    this.name,
     this.location,
+    this.leaderEmail,
+    this.members,
+    this.requests,
+    this.rank,
+    this.schedule,
   );
 }
 
-List communities = [
-  Communities('lib/assets/img/coms_1.png', 'Shanti Rokkha', 'SHANTINAGAR'),
-  Communities('lib/assets/img/coms_2.png', 'Shamorik exclaim', 'MIRPUR DOHS'),
-  Communities('lib/assets/img/coms_3.png', 'The Crane Point ', 'ECB CHOTTOR'),
-  Communities('lib/assets/img/coms_4.png', 'Gram Bangla', 'UTTARA 6'),
-];
+class CommunityLocation {
+  final double latitude;
+  final double longitude;
+
+  CommunityLocation(
+    this.latitude,
+    this.longitude,
+  );
+}
+
+class Rank {
+  final String memberEmail;
+  final String position;
+  final String coins;
+
+  Rank(
+    this.memberEmail,
+    this.position,
+    this.coins,
+  );
+}
+
+class Schedule {
+  final String date;
+  final String event;
+
+  Schedule(
+    this.date,
+    this.event,
+  );
+}

@@ -46,7 +46,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   Icons.notifications,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  context.go("/home/notification");
+                },
               )
             : const SizedBox(),
         currentPath == '/home' ||

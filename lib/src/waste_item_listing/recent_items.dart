@@ -75,17 +75,31 @@ class _RecentItemsState extends State<RecentItems>
                       getDateInNormalText(value),
                       style: TextStyle(
                         fontSize: 16,
+                        fontWeight: FontWeight.bold,
                         color: Theme.of(context).colorScheme.primaryFixed,
                       ),
                     ),
                   ),
                   useStickyGroupSeparators: true,
+                  groupStickyHeaderBuilder: (dynamic value) => Container(
+                    color: Theme.of(context).colorScheme.surfaceContainerLowest,
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      getDateInNormalText(value['confirmedAt']),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.primaryFixed,
+                      ),
+                    ),
+                  ),
                   indexedItemBuilder: (context, element, index) {
                     return Card(
                       color: Theme.of(context)
                           .colorScheme
                           .surfaceContainerHigh
                           .withOpacity(0.7),
+                      shadowColor: Colors.transparent,
                       elevation: 5,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -150,8 +164,8 @@ class _RecentItemsState extends State<RecentItems>
       } else {
         throw createQuickAlert(
           context: context.mounted ? context : context,
-          title: "${response.statusMessage}",
-          message: "${response.statusCode}",
+          title: "${response.statusCode}",
+          message: "${response.statusMessage}",
           type: "error",
         );
       }

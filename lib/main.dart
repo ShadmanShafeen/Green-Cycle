@@ -21,6 +21,7 @@ import 'package:green_cycle/src/games/quiz/quiz_question_holder.dart';
 import 'package:green_cycle/src/games/quiz/quiz_welcome.dart';
 import 'package:green_cycle/src/home/home_page.dart';
 import 'package:green_cycle/src/leveltracking/level_tracking_page.dart';
+import 'package:green_cycle/src/notification/notification.dart';
 import 'package:green_cycle/src/object_recognition/camera_control.dart';
 import 'package:green_cycle/src/object_recognition/image_preview.dart';
 import 'package:green_cycle/src/vendor/vendor_page.dart';
@@ -31,12 +32,16 @@ import 'package:green_cycle/src/welcome_screen/welcome_screen.dart';
 import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
 
+import 'auth.dart';
+
 late List<CameraDescription> cameras;
+final navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
   await dotenv.load(fileName: ".env");
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await Auth().initNotifications();
   try {
     cameras = await availableCameras();
   } on CameraException catch (e) {
@@ -63,271 +68,285 @@ class _MainAppState extends State<MainApp> {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: "Green Cycle",
-      theme: buildThemeData(context),
+      theme: buildLightThemeData(context),
+      darkTheme: buildDarkThemeData(context),
+      themeMode: ThemeMode.system,
       routerConfig: buildGoRouter(),
       debugShowCheckedModeBanner: false,
     );
   }
 
   GoRouter buildGoRouter() {
-    return GoRouter(initialLocation: '/home', routes: [
-      GoRoute(
-        path: '/home',
-        builder: (context, state) => const HomePage(),
-        pageBuilder: (context, state) {
-          return returnCustomTransitionPage(
-            child: const HomePage(),
-            context: context,
-            type: PageTransitionType.bottomToTop,
-          );
-        },
-        routes: [
-          GoRoute(
-            path: "locate-map",
-            pageBuilder: (context, state) => returnCustomTransitionPage(
-              child: LocateMap(
-                locationData: state.extra as LocationData,
+    return GoRouter(
+      initialLocation: '/home',
+      routes: [
+        GoRoute(
+          path: '/home',
+          builder: (context, state) => const HomePage(),
+          pageBuilder: (context, state) {
+            return returnCustomTransitionPage(
+              child: const HomePage(),
+              context: context,
+              type: PageTransitionType.bottomToTop,
+            );
+          },
+          routes: [
+            GoRoute(
+              path: "notification",
+              name: "notification",
+              pageBuilder: (context, state) => returnCustomTransitionPage(
+                child: const NotificationContainer(),
+                context: context,
+                type: PageTransitionType.topToBottom,
               ),
-              context: context,
-              type: PageTransitionType.leftToRight,
             ),
-          ),
-          GoRoute(
-            path: "camera-control",
-            name: "camera-control",
-            pageBuilder: (context, state) => returnCustomTransitionPage(
-              child: CameraControl(cameras: cameras),
-              context: context,
-              type: PageTransitionType.size,
+            GoRoute(
+              path: "locate-map",
+              pageBuilder: (context, state) => returnCustomTransitionPage(
+                child: LocateMap(
+                  locationData: state.extra as LocationData,
+                ),
+                context: context,
+                type: PageTransitionType.leftToRight,
+              ),
             ),
-          ),
-          GoRoute(
-            path: "image-preview/:imagePath",
-            name: "image-preview",
-            builder: (context, state) => ImagePreview(
-              imagePath: state.pathParameters['imagePath']!,
-              imageFile: state.extra as XFile,
+            GoRoute(
+              path: "camera-control",
+              name: "camera-control",
+              pageBuilder: (context, state) => returnCustomTransitionPage(
+                child: CameraControl(cameras: cameras),
+                context: context,
+                type: PageTransitionType.size,
+              ),
             ),
-          ),
-          GoRoute(
-            path: "waste-item-list",
-            name: "waste-item-list",
-            pageBuilder: (context, state) => returnCustomTransitionPage(
-              child: const WasteListContainer(),
-              context: context,
-              type: PageTransitionType.bottomToTop,
+            GoRoute(
+              path: "image-preview/:imagePath",
+              name: "image-preview",
+              builder: (context, state) => ImagePreview(
+                imagePath: state.pathParameters['imagePath']!,
+                imageFile: state.extra as XFile,
+              ),
             ),
-          ),
-          GoRoute(
-            path: 'calendar',
-            pageBuilder: (context, state) => returnCustomTransitionPage(
-              child: const CommunityCalendar(),
-              context: context,
-              type: PageTransitionType.bottomToTop,
-              durationMillis: 800,
+            GoRoute(
+              path: "waste-item-list",
+              name: "waste-item-list",
+              pageBuilder: (context, state) => returnCustomTransitionPage(
+                child: const WasteListContainer(),
+                context: context,
+                type: PageTransitionType.bottomToTop,
+              ),
             ),
-          ),
-          GoRoute(
-            path: 'voucher-redemption',
-            pageBuilder: (context, state) {
-              return returnCustomTransitionPage(
-                child: const VoucherPage(),
+            GoRoute(
+              path: 'calendar',
+              pageBuilder: (context, state) => returnCustomTransitionPage(
+                child: const CommunityCalendar(),
                 context: context,
                 type: PageTransitionType.bottomToTop,
                 durationMillis: 800,
-              );
-            },
-          ),
-          GoRoute(
-            path: "profile",
-            name: "profile",
-            pageBuilder: (context, state) {
-              return returnCustomTransitionPage(
-                child: const Profile(),
-                context: context,
-                type: PageTransitionType.rightToLeft,
-              );
-            },
-            routes: [
-              GoRoute(
-                path: "waste_item_list",
-                name: "waste_item_list",
-                pageBuilder: (context, state) => returnCustomTransitionPage(
-                  child: const WasteListContainer(),
+              ),
+            ),
+            GoRoute(
+              path: 'voucher-redemption',
+              pageBuilder: (context, state) {
+                return returnCustomTransitionPage(
+                  child: const VoucherPage(),
+                  context: context,
+                  type: PageTransitionType.bottomToTop,
+                  durationMillis: 800,
+                );
+              },
+            ),
+            GoRoute(
+              path: "profile",
+              name: "profile",
+              pageBuilder: (context, state) {
+                return returnCustomTransitionPage(
+                  child: const Profile(),
                   context: context,
                   type: PageTransitionType.rightToLeft,
+                );
+              },
+              routes: [
+                GoRoute(
+                  path: "waste_item_list",
+                  name: "waste_item_list",
+                  pageBuilder: (context, state) => returnCustomTransitionPage(
+                    child: const WasteListContainer(),
+                    context: context,
+                    type: PageTransitionType.rightToLeft,
+                  ),
                 ),
-              ),
-              GoRoute(
-                path: "community_calender",
-                name: "community_calender",
-                pageBuilder: (context, state) {
-                  return returnCustomTransitionPage(
-                    child: const CommunityCalendar(),
-                    context: context,
-                    type: PageTransitionType.bottomToTop,
-                  );
-                },
-              ),
-              GoRoute(
-                path: "usage_history",
-                name: "usage_history",
-                pageBuilder: (context, state) {
-                  return returnCustomTransitionPage(
-                    child: const UsageHistory(),
-                    context: context,
-                    type: PageTransitionType.rightToLeft,
-                  );
-                },
-              ),
-            ],
-          ),
-          GoRoute(
-            path: 'community-explore',
-            name: 'community-explore',
-            pageBuilder: (context, state) {
-              return returnCustomTransitionPage(
-                child: CommunityExplore(),
-                context: context,
-                type: PageTransitionType.bottomToTop,
-              );
-            },
-            routes: [
-              GoRoute(
-                path: "explore-communities",
-                name: "explore-communities",
-                pageBuilder: (context, state) {
-                  return returnCustomTransitionPage(
-                    child: const CommunitiesNearby(),
-                    context: context,
-                    type: PageTransitionType.rightToLeft,
-                  );
-                },
-              ),
-              GoRoute(
-                path: 'my_com',
-                name: 'my_com',
-                builder: (context, state) => const MyCommunity(),
-                pageBuilder: (context, state) {
-                  return returnCustomTransitionPage(
-                    child: const MyCommunity(),
-                    context: context,
-                    type: PageTransitionType.rightToLeft,
-                  );
-                },
-              ),
-              GoRoute(
-                path: "com-goals",
-                name: "com-goals",
-                pageBuilder: (context, state) {
-                  return returnCustomTransitionPage(
-                    child: const CommunityGoals(),
-                    context: context,
-                    type: PageTransitionType.bottomToTop,
-                  );
-                },
-              ),
-              GoRoute(
-                path: "community-calender",
-                name: "community-calender",
-                pageBuilder: (context, state) {
-                  return returnCustomTransitionPage(
-                    child: const CommunityCalendar(),
-                    context: context,
-                    type: PageTransitionType.bottomToTop,
-                  );
-                },
-              ),
-            ],
-          ),
-        ],
-      ),
-      GoRoute(
-        path: '/level-tracking',
-        name: 'level-tracking',
-        pageBuilder: (context, state) {
-          return returnCustomTransitionPage(
-            child: LevelTrackingPage(),
-            context: context,
-            type: PageTransitionType.rightToLeft,
-          );
-        },
-      ),
-      GoRoute(
-        path: "/games",
-        name: "games",
-        pageBuilder: (context, state) {
-          return returnCustomTransitionPage(
-            child: const GamesPage(),
-            context: context,
-            type: PageTransitionType.leftToRight,
-          );
-        },
-        routes: [
-          GoRoute(
-            path: "archive",
-            name: "archive",
-            pageBuilder: (context, state) {
-              return returnCustomTransitionPage(
-                child: ArchiveContainer(),
-                context: context,
-                type: PageTransitionType.bottomToTop,
-              );
-            },
-          ),
-          GoRoute(
-            path: "quiz",
-            pageBuilder: (context, state) {
-              return returnCustomTransitionPage(
-                child: const QuizWelcome(),
-                context: context,
-                type: PageTransitionType.bottomToTop,
-              );
-            },
-            routes: [
-              GoRoute(
-                path: "quiz-question/:questionCategory",
-                name: "quiz-question",
-                pageBuilder: (context, state) {
-                  return returnCustomTransitionPage(
-                    child: QuizQuestionHolder(
-                      questionCategory:
-                          state.pathParameters["questionCategory"]!,
-                    ),
-                    context: context,
-                    type: PageTransitionType.rightToLeft,
-                    durationMillis: 500,
-                  );
-                },
-              ),
-            ],
-          ),
-        ],
-      ),
-      GoRoute(
-        path: '/vendor',
-        builder: (context, state) => const VendorPage(),
-      ),
-      GoRoute(
-        path: "/",
-        builder: (context, state) => const WelcomeSplashScreen(),
-      ),
-      GoRoute(
-        path: "/welcome",
-        builder: (context, state) => const WelcomeScreen(),
-      ),
-      GoRoute(
-        path: "/login",
-        builder: (context, state) => const LoginPage(),
-      ),
-      GoRoute(
-        path: "/signup",
-        builder: (context, state) => const SignupPage(),
-      ),
-    ]);
+                GoRoute(
+                  path: "community_calender",
+                  name: "community_calender",
+                  pageBuilder: (context, state) {
+                    return returnCustomTransitionPage(
+                      child: const CommunityCalendar(),
+                      context: context,
+                      type: PageTransitionType.bottomToTop,
+                    );
+                  },
+                ),
+                GoRoute(
+                  path: "usage_history",
+                  name: "usage_history",
+                  pageBuilder: (context, state) {
+                    return returnCustomTransitionPage(
+                      child: const UsageHistory(),
+                      context: context,
+                      type: PageTransitionType.rightToLeft,
+                    );
+                  },
+                ),
+              ],
+            ),
+            GoRoute(
+              path: 'community-explore',
+              name: 'community-explore',
+              pageBuilder: (context, state) {
+                return returnCustomTransitionPage(
+                  child: CommunityExplore(),
+                  context: context,
+                  type: PageTransitionType.bottomToTop,
+                );
+              },
+              routes: [
+                GoRoute(
+                  path: "explore-communities",
+                  name: "explore-communities",
+                  pageBuilder: (context, state) {
+                    return returnCustomTransitionPage(
+                      child: const CommunitiesNearby(),
+                      context: context,
+                      type: PageTransitionType.rightToLeft,
+                    );
+                  },
+                ),
+                GoRoute(
+                  path: 'my_com',
+                  name: 'my_com',
+                  builder: (context, state) => const MyCommunity(),
+                  pageBuilder: (context, state) {
+                    return returnCustomTransitionPage(
+                      child: const MyCommunity(),
+                      context: context,
+                      type: PageTransitionType.rightToLeft,
+                    );
+                  },
+                ),
+                GoRoute(
+                  path: "com-goals",
+                  name: "com-goals",
+                  pageBuilder: (context, state) {
+                    return returnCustomTransitionPage(
+                      child: const CommunityGoals(),
+                      context: context,
+                      type: PageTransitionType.bottomToTop,
+                    );
+                  },
+                ),
+                GoRoute(
+                  path: "community-calender",
+                  name: "community-calender",
+                  pageBuilder: (context, state) {
+                    return returnCustomTransitionPage(
+                      child: const CommunityCalendar(),
+                      context: context,
+                      type: PageTransitionType.bottomToTop,
+                    );
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+        GoRoute(
+          path: '/level-tracking',
+          name: 'level-tracking',
+          pageBuilder: (context, state) {
+            return returnCustomTransitionPage(
+              child: LevelTrackingPage(),
+              context: context,
+              type: PageTransitionType.rightToLeft,
+            );
+          },
+        ),
+        GoRoute(
+          path: "/games",
+          name: "games",
+          pageBuilder: (context, state) {
+            return returnCustomTransitionPage(
+              child: const GamesPage(),
+              context: context,
+              type: PageTransitionType.leftToRight,
+            );
+          },
+          routes: [
+            GoRoute(
+              path: "archive",
+              name: "archive",
+              pageBuilder: (context, state) {
+                return returnCustomTransitionPage(
+                  child: ArchiveContainer(),
+                  context: context,
+                  type: PageTransitionType.bottomToTop,
+                );
+              },
+            ),
+            GoRoute(
+              path: "quiz",
+              pageBuilder: (context, state) {
+                return returnCustomTransitionPage(
+                  child: const QuizWelcome(),
+                  context: context,
+                  type: PageTransitionType.bottomToTop,
+                );
+              },
+              routes: [
+                GoRoute(
+                  path: "quiz-question/:questionCategory",
+                  name: "quiz-question",
+                  pageBuilder: (context, state) {
+                    return returnCustomTransitionPage(
+                      child: QuizQuestionHolder(
+                        questionCategory:
+                            state.pathParameters["questionCategory"]!,
+                      ),
+                      context: context,
+                      type: PageTransitionType.rightToLeft,
+                      durationMillis: 500,
+                    );
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+        GoRoute(
+          path: '/vendor',
+          builder: (context, state) => const VendorPage(),
+        ),
+        GoRoute(
+          path: "/",
+          builder: (context, state) => const WelcomeSplashScreen(),
+        ),
+        GoRoute(
+          path: "/welcome",
+          builder: (context, state) => const WelcomeScreen(),
+        ),
+        GoRoute(
+          path: "/login",
+          builder: (context, state) => const LoginPage(),
+        ),
+        GoRoute(
+          path: "/signup",
+          builder: (context, state) => const SignupPage(),
+        ),
+      ],
+    );
   }
 
-  ThemeData buildThemeData(BuildContext context) {
+  ThemeData buildDarkThemeData(BuildContext context) {
     return ThemeData(
       useMaterial3: true,
       buttonTheme: const ButtonThemeData(
@@ -377,8 +396,8 @@ class _MainAppState extends State<MainApp> {
         onSurface: Colors.white,
         surfaceDim: Color(0xFF1F1F1F),
         surfaceBright: Color(0xFF333333),
-        surfaceContainerLowest: Colors.black38,
-        surfaceContainerLow: Color(0xFF1B1B1B),
+        surfaceContainerLowest: Colors.black,
+        surfaceContainerLow: Colors.black87,
         surfaceContainer: Colors.white10,
         surfaceContainerHigh: Color(0xFF2C2C2C),
         surfaceContainerHighest: Color(0xFF333333),
@@ -394,6 +413,82 @@ class _MainAppState extends State<MainApp> {
         onInverseSurface: Colors.white,
         inversePrimary: Color(0xFF1F8762), // accent green
         surfaceTint: Color(0xFF40BF58), // Green
+      ),
+    );
+  }
+
+  ThemeData buildLightThemeData(BuildContext context) {
+    return ThemeData(
+      useMaterial3: true,
+      buttonTheme: const ButtonThemeData(
+        buttonColor: Color(0xFFBF5840), // Complementary of Green
+        textTheme: ButtonTextTheme.primary,
+        padding: EdgeInsets.all(0),
+      ),
+      appBarTheme: const AppBarTheme(
+        color: Color(0xFF4A5313), // Complementary of Dark Purple
+        iconTheme: IconThemeData(color: Colors.black, size: 30),
+      ),
+      textTheme: GoogleFonts.ralewayTextTheme(Theme.of(context).textTheme),
+      colorScheme: const ColorScheme(
+        brightness: Brightness.light,
+        primary: Color.fromARGB(255, 80, 241, 223), // Complementary of Purple
+        onPrimary: Colors.black,
+        primaryContainer: Color(0xFF44342E), // Complementary of Space cadet
+        onPrimaryContainer: Colors.black,
+        primaryFixed: Color(0xFFF08844), // Complementary of Dark Purple
+        primaryFixedDim: Color(0xFF4A5313), // Complementary of matt black
+        onPrimaryFixed: Colors.black,
+        onPrimaryFixedVariant: Colors.black,
+
+        secondary:
+            Color.fromARGB(255, 247, 101, 196), // Complementary of accent green
+        onSecondary: Colors.black,
+        secondaryContainer: Color(0xFFBF5840), // Complementary of Green
+        onSecondaryContainer: Colors.black,
+        secondaryFixed:
+            Color.fromARGB(255, 191, 64, 88), // Complementary of Green
+        secondaryFixedDim: Color(0xFF621F87), // Complementary of accent green
+        onSecondaryFixed: Colors.black,
+        onSecondaryFixedVariant: Colors.black,
+
+        tertiary: Color(0xFF62FE70), // Complementary of Coral/Orange-Red
+        onTertiary: Colors.black,
+        tertiaryContainer: Color(0xFF62FE70),
+        onTertiaryContainer: Colors.black,
+        tertiaryFixed: Color(0xFF62FE70),
+        tertiaryFixedDim: Color(0xFF62FE70),
+        onTertiaryFixed: Colors.black,
+        onTertiaryFixedVariant: Colors.black,
+
+        error: Color(0xFF62FE70), // Complementary of Coral/Orange-Red
+        onError: Colors.black,
+        errorContainer: Color(0xFF20B000),
+        onErrorContainer: Colors.black,
+
+        surface: Color(0xFFFFFFFF),
+        onSurface: Colors.black,
+        surfaceDim: Color(0xFFF1F1F1),
+        surfaceBright: Color(0xFFCCCCCC),
+        surfaceContainerLowest: Colors.white70,
+        surfaceContainerLow: Color(0xFFE1E1E1),
+        surfaceContainer: Colors.black12,
+        surfaceContainerHigh: Color(0xFFD3D3D3),
+        surfaceContainerHighest: Color(0xFFCCCCCC), // Complement of 0xFF333333
+        onSurfaceVariant:
+            Color(0xFFABABAB), // Complement of Colors.white54 (0x8AFFFFFF)
+
+        outline: Color(0xFF333333), // Complement of 0xFFCCCCCC
+        outlineVariant: Color(0xFF777777), // Complement of 0xFF888888
+
+        shadow: Colors.white, // Complement of Colors.black
+        scrim: Colors.white, // Complement of Colors.black
+
+        inverseSurface: Color(0xFFCCCCCC), // Complement of 0xFF333333
+        onInverseSurface: Color(0xFF000000), // Complement of Colors.white
+        inversePrimary:
+            Color(0xFFE0789D), // Complement of 0xFF1F8762 (accent green)
+        surfaceTint: Color(0xFFBF5840), // Complement of 0xFF40BF58 (Green)
       ),
     );
   }

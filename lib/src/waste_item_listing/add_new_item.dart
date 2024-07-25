@@ -19,6 +19,7 @@ class _AddNewItemState extends State<AddNewItem> {
   final _itemNameController = TextEditingController();
   final _itemDescriptionController = TextEditingController();
   final _itemAmountController = TextEditingController();
+  bool isAdding = false;
 
   @override
   Widget build(BuildContext context) {
@@ -109,6 +110,9 @@ class _AddNewItemState extends State<AddNewItem> {
                     if (_formKey.currentState!.validate()) {
                       final dio = Dio();
                       try {
+                        setState(() {
+                          isAdding = true;
+                        });
                         final response = await dio.post(
                           "$serverURLExpress/draft-insert/shadmanskystar@gmail.com",
                           data: {
@@ -121,6 +125,9 @@ class _AddNewItemState extends State<AddNewItem> {
                         );
 
                         if (response.statusCode != 200) {
+                          setState(() {
+                            isAdding = false;
+                          });
                           throw createQuickAlert(
                             context: context.mounted ? context : context,
                             title: "${response.statusCode}",
@@ -139,7 +146,7 @@ class _AddNewItemState extends State<AddNewItem> {
                     }
                   },
                   child: Text(
-                    'Add Item',
+                    isAdding ? "Adding..." : "Add Item",
                     style: TextStyle(
                       fontSize: 16,
                       color: Theme.of(context).colorScheme.onSurface,
@@ -179,7 +186,7 @@ class _AddNewItemState extends State<AddNewItem> {
         contentPadding: const EdgeInsets.only(left: 10),
         label: Text(
           labelText,
-          style: const TextStyle(color: Colors.white70),
+          style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
         ),
       ),
       validator: validator,
