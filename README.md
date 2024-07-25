@@ -14,3 +14,12 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+HardCoded Data:
+ - locate vendor
+ - profile
+ - waste item list
+ - add new item
+ - notification
+ - explore community
+ - add new community

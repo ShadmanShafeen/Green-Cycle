@@ -64,132 +64,40 @@ class Profile extends StatelessWidget {
               height: 50,
               width: double.infinity,
             ),
-            Card(
-              color: Theme.of(context)
-                  .colorScheme
-                  .surfaceContainerHigh
-                  .withOpacity(0.7),
-              elevation: 5,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: ListTile(
-                onTap: () {
-                  context.go('/home/profile/waste_item_list');
-                },
-                splashColor: Colors.grey,
-                trailing: Icon(
-                  Icons.arrow_right,
-                  color: Theme.of(context).colorScheme.primaryFixed,
-                ),
-                title: const Text("Recycling History"),
-                leading: const Icon(Icons.history),
-              ),
-            ),
-            Card(
-              color: Theme.of(context)
-                  .colorScheme
-                  .surfaceContainerHigh
-                  .withOpacity(0.7),
-              elevation: 5,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: ListTile(
-                onTap: () {
-                  context.go('/home/profile/community_calender');
-                },
-                splashColor: Colors.grey,
-                trailing: Icon(
-                  Icons.arrow_right,
-                  color: Theme.of(context).colorScheme.primaryFixed,
-                ),
-                title: const Text("Collection Dates"),
-                leading: const Icon(Icons.today),
-              ),
-            ),
-            Card(
-              color: Theme.of(context)
-                  .colorScheme
-                  .surfaceContainerHigh
-                  .withOpacity(0.7),
-              elevation: 5,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: ListTile(
-                onTap: () {},
-                splashColor: Colors.grey,
-                trailing: Icon(
-                  Icons.arrow_right,
-                  color: Theme.of(context).colorScheme.primaryFixed,
-                ),
-                title: const Text("Usage History"),
-                leading: const Icon(Icons.history),
-              ),
-            ),
-            Card(
-              color: Theme.of(context)
-                  .colorScheme
-                  .surfaceContainerHigh
-                  .withOpacity(0.7),
-              elevation: 5,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: ListTile(
-                onTap: () {},
-                splashColor: Colors.grey,
-                trailing: Icon(
-                  Icons.arrow_right,
-                  color: Theme.of(context).colorScheme.primaryFixed,
-                ),
-                title: const Text("Privacy"),
-                leading: const Icon(Icons.privacy_tip),
-              ),
-            ),
-            Card(
-              color: Theme.of(context)
-                  .colorScheme
-                  .surfaceContainerHigh
-                  .withOpacity(0.7),
-              elevation: 5,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: ListTile(
-                onTap: () {},
-                splashColor: Colors.grey,
-                trailing: Icon(
-                  Icons.arrow_right,
-                  color: Theme.of(context).colorScheme.primaryFixed,
-                ),
-                title: const Text("Settings"),
-                leading: const Icon(Icons.settings),
-              ),
-            ),
-            Card(
-              color: Theme.of(context)
-                  .colorScheme
-                  .surfaceContainerHigh
-                  .withOpacity(0.7),
-              elevation: 5,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: ListTile(
-                onTap: () {},
-                splashColor: Colors.grey,
-                trailing: Icon(
-                  Icons.arrow_right,
-                  color: Theme.of(context).colorScheme.primaryFixed,
-                ),
-                title: const Text("Log Out"),
-                leading: const Icon(Icons.logout),
-              ),
-            ),
+            buildOptionCard(context, "Recycling History", Icons.history,
+                "/home/profile/waste_item_list"),
+            buildOptionCard(context, "Collection Dates", Icons.today,
+                "/home/profile/community_calender"),
+            buildOptionCard(context, "Usage History", Icons.history, ""),
+            buildOptionCard(context, "Privacy", Icons.privacy_tip, ""),
+            buildOptionCard(context, "Settings", Icons.settings, ""),
+            buildOptionCard(context, "Log Out", Icons.logout, ""),
           ],
         ),
+      ),
+    );
+  }
+
+  Card buildOptionCard(
+      BuildContext context, String title, IconData leadingIcon, String onTap) {
+    return Card(
+      color:
+          Theme.of(context).colorScheme.surfaceContainerHigh.withOpacity(0.7),
+      elevation: 5,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: ListTile(
+        onTap: () {
+          context.go(onTap);
+        },
+        splashColor: Colors.grey,
+        trailing: Icon(
+          Icons.arrow_right,
+          color: Theme.of(context).colorScheme.primaryFixed,
+        ),
+        title: Text(title),
+        leading: Icon(leadingIcon),
       ),
     );
   }

@@ -64,7 +64,6 @@ class _ImagePreviewState extends State<ImagePreview> {
         message: e.toString(),
         type: 'error',
       );
-      ;
     }
   }
 

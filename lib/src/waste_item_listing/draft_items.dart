@@ -20,6 +20,8 @@ class _DraftItemsState extends State<DraftItems>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
+  bool isMultiSelectMode = false;
+  List<int> selectedItems = [];
   final dio = Dio();
 
   @override
@@ -138,58 +140,102 @@ class _DraftItemsState extends State<DraftItems>
     }
   }
 
+  Future<void> deleteSelectedItems() async {
+    try {
+      for (int index in selectedItems) {
+        await dio.patch(
+          "$serverURLExpress/draft-item-delete/shadmanskystar@gmail.com",
+          data: {
+            "item": draftItems[index],
+          },
+        );
+      }
+      setState(() {
+        for (int index in selectedItems) {
+          draftItems.removeAt(index);
+        }
+        selectedItems.clear();
+        isMultiSelectMode = false;
+      });
+    } catch (e) {
+      throw createQuickAlert(
+        context: context.mounted ? context : context,
+        title: "Failed to delete items",
+        message: "$e",
+        type: "error",
+      );
+    }
+  }
+
   ListView _getListView(BuildContext context, AsyncSnapshot snapshot) {
     return ListView.builder(
       itemCount: snapshot.data.length,
       itemBuilder: (context, index) {
+        final item = snapshot.data[index];
+        final isSelected = selectedItems.contains(index);
+
         return Card(
-          color: Theme.of(context)
-              .colorScheme
-              .surfaceContainerHigh
-              .withOpacity(0.7),
+          color: isSelected
+              ? Theme.of(context).colorScheme.secondaryFixedDim
+              : Theme.of(context)
+                  .colorScheme
+                  .surfaceContainerHigh
+                  .withOpacity(0.7),
+          shadowColor: Colors.transparent,
           elevation: 5,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
           child: ListTile(
-            onLongPress: () async {
-              final NavigatorState navigator = Navigator.of(context);
-              await createQuickAlertConfirm(
-                context: context,
-                title: "Delete item?",
-                message: "This item will be deleted from the list",
-                type: "confirm",
-                onConfirmBtnTap: () {
-                  deleteItem(index, snapshot);
-                  navigator.pop();
-                },
-                onCancelBtnTap: () {
-                  navigator.pop();
-                },
-              );
+            onLongPress: () {
+              setState(() {
+                isMultiSelectMode = true;
+                selectedItems.add(index);
+              });
             },
             onTap: () {
-              showModalBottomSheet(
-                showDragHandle: true,
-                context: context,
-                elevation: 10,
-                useRootNavigator: true,
-                builder: (context) => SingleChildScrollView(
-                  controller: ModalScrollController.of(context),
-                  child: DetailsModal(
-                    index: index,
-                    snapshot: snapshot,
-                    isRecent: false,
+              if (isMultiSelectMode) {
+                setState(() {
+                  if (isSelected) {
+                    selectedItems.remove(index);
+                    if (selectedItems.isEmpty) {
+                      isMultiSelectMode = false;
+                    }
+                  } else {
+                    selectedItems.add(index);
+                  }
+                });
+              } else {
+                showModalBottomSheet(
+                  showDragHandle: true,
+                  context: context,
+                  elevation: 10,
+                  useRootNavigator: true,
+                  builder: (context) => SingleChildScrollView(
+                    controller: ModalScrollController.of(context),
+                    child: DetailsModal(
+                      index: index,
+                      snapshot: snapshot,
+                      isRecent: false,
+                      element: item,
+                    ),
                   ),
-                ),
-              );
+                );
+              }
             },
             splashColor: Colors.grey,
-            trailing: Icon(
-              Icons.delete,
-              color: Theme.of(context).colorScheme.error,
-            ),
-            title: Text(snapshot.data[index]['name']),
+            trailing: isMultiSelectMode
+                ? Icon(
+                    isSelected
+                        ? Icons.check_box
+                        : Icons.check_box_outline_blank,
+                    color: Theme.of(context).colorScheme.onSecondaryFixed,
+                  )
+                : Icon(
+                    Icons.arrow_right,
+                    color: Theme.of(context).colorScheme.primaryFixed,
+                  ),
+            title: Text(item['name']),
           ),
         );
       },
@@ -210,7 +256,22 @@ class _DraftItemsState extends State<DraftItems>
               color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
-          _getConfirmListButton(context),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              if (isMultiSelectMode)
+                IconButton(
+                  onPressed: () async {
+                    await deleteSelectedItems();
+                  },
+                  icon: Icon(
+                    Icons.delete,
+                    color: Theme.of(context).colorScheme.primaryFixed,
+                  ),
+                ),
+              _getConfirmListButton(context),
+            ],
+          ),
         ],
       ),
     );

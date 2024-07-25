@@ -24,7 +24,7 @@ class UsageHistory extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: Image.asset('assets/img/graph.png'),
+                child: Image.asset('lib/assets/img/graph.png'),
               ),
             ],
           ),

@@ -1,8 +1,7 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, must_be_immutable
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:green_cycle/src/Locate_Vendor/location_permission_modal.dart';
+import 'package:green_cycle/src/games/game_image_card.dart';
 import 'package:green_cycle/src/home/action_card.dart';
 import 'package:green_cycle/src/home/carousel.dart';
 import 'package:green_cycle/src/home/search_bar.dart';
@@ -16,8 +15,8 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(),
-      bottomNavigationBar: NavBar(),
+      appBar: const CustomAppBar(),
+      bottomNavigationBar: const NavBar(),
       body: Container(
         color: Theme.of(context).colorScheme.surfaceContainerLowest,
         child: SingleChildScrollView(
@@ -25,15 +24,15 @@ class HomePage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               SizedBox(
                 width: MediaQuery.of(context).size.width,
                 child: Row(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 15),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 15),
                       child: CustomSearchBar(),
                     ),
                     IconButton(
@@ -48,7 +47,7 @@ class HomePage extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
               Padding(
@@ -120,7 +119,7 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 20, left: 20),
+                padding: const EdgeInsets.only(top: 20, left: 20),
                 child: Text(
                   "Play Exciting Games!",
                   style: TextStyle(
@@ -130,17 +129,23 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.all(15),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Image.asset(
-                    "lib/assets/images/quiz.jpg",
+              InkWell(
+                onTap: () {
+                  context.go("/games/quiz");
+                },
+                child: Container(
+                  padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+                  height: 250,
+                  child: GameImageCard(
+                    title: "GreenQuiz",
+                    subtitle: "Test your knowledge on recycling",
+                    image: "lib/assets/images/quiz.jpg",
+                    context: context,
                   ),
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(left: 20),
+                padding: const EdgeInsets.only(left: 20, top: 20),
                 child: Text(
                   "Did You Know...",
                   style: TextStyle(
@@ -150,11 +155,11 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 15, left: 15, right: 15),
+              const Padding(
+                padding: EdgeInsets.only(top: 15, left: 15, right: 15),
                 child: Carousel(),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
             ],
@@ -173,7 +178,7 @@ void showLocationPermission(BuildContext context) async {
       showDragHandle: true,
       context: context,
       builder: (BuildContext context) {
-        return LocationPermissionModal();
+        return const LocationPermissionModal();
       },
     );
     return;

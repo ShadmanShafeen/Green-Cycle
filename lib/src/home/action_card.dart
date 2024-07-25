@@ -28,10 +28,11 @@ class ActionCard extends StatelessWidget {
         width: 100,
         height: 100,
         child: Card(
+          shadowColor: Colors.transparent,
           elevation: 5,
           color: Theme.of(context).colorScheme.surfaceContainer,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(10),
             side: BorderSide(
               color: Theme.of(context).colorScheme.surfaceBright,
             ),
