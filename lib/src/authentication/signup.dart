@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_switch/flutter_switch.dart';
 import 'package:go_router/go_router.dart';
 import 'package:green_cycle/auth.dart';
 import 'package:green_cycle/src/authentication/vendor_signup.dart';
+import 'package:green_cycle/src/utils/server.dart';
 import 'package:green_cycle/src/utils/snackbars_alerts.dart';
 
 class SignupPage extends StatefulWidget {
@@ -24,8 +26,10 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
 
   String? errorMessage = '';
   // bool isLoggedIn = false;
+  bool isSubmitting = false;
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
+  final TextEditingController _controllerContact = TextEditingController();
 
   Future<void> createUserWithEmailAndPassword() async {
     try {
@@ -36,16 +40,56 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
 
       if (_controllerPassword.text.length < 6) {
         createQuickAlert(
-            context: context,
-            title: "Password length must be at least 6 characters",
-            message: "Please add more characters",
-            type: 'error');
+          context: context,
+          title: "Password length must be at least 6 characters",
+          message: "Please add more characters",
+          type: 'error',
+        );
       } else {
+        setState(() {
+          isSubmitting = true;
+        });
         await Auth().createUserWithEmailAndPassword(
-          email: _controllerEmail.text, password: _controllerPassword.text);
+            email: _controllerEmail.text, password: _controllerPassword.text);
+        await Auth().currentUser!.sendEmailVerification();
         errorMessage = '';
+        final dio = Dio();
+        try {
+          final response =
+              await dio.post("$serverURLExpress/user-signup", data: {
+            "email": _controllerEmail.text,
+            "contact": _controllerContact.text,
+            "role": "user",
+          });
+
+          if (response.statusCode == 200) {
+            setState(() {
+              isSubmitting = false;
+            });
+            await createQuickAlert(
+              context: context.mounted ? context : context,
+              title: "User Created",
+              message: "User created successfully",
+              type: "success",
+            );
+            context.push("/login");
+          } else {
+            throw createQuickAlert(
+              context: context.mounted ? context : context,
+              title: "${response.statusCode}",
+              message: "${response.statusMessage}",
+              type: "error",
+            );
+          }
+        } catch (e) {
+          throw createQuickAlert(
+            context: context.mounted ? context : context,
+            title: "Failed to load data",
+            message: "$e",
+            type: "error",
+          );
+        }
       }
-      
     } on FirebaseAuthException catch (e) {
       setState(() {
         errorMessage = e.message;
@@ -128,7 +172,9 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
             ),
           ),
         ),
-        Center(
+        Container(
+          height: MediaQuery.of(context).size.height,
+          padding: const EdgeInsets.all(10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -226,24 +272,41 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
               hintText: 'Enter Password',
             ),
           ),
+          const SizedBox(height: 20.0, width: 20.0),
+          const Text(
+            "Contact no.",
+            style: TextStyle(
+              color: Color.fromARGB(255, 184, 43, 219),
+              fontSize: 15,
+            ),
+          ),
+          TextFormField(
+            style: const TextStyle(color: Colors.white),
+            controller: _controllerContact,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: 'Enter contact number (+880...)',
+            ),
+          ),
           const SizedBox(height: 10.0, width: 10.0),
           const SizedBox(height: 20.0, width: 20.0),
           Align(
             alignment: Alignment.center,
             child: ElevatedButton(
               onPressed: () async {
-                await createUserWithEmailAndPassword();
-                if ( _controllerPassword.text.length >= 6 && errorMessage == '') {
-                  context.go("/login");
+                if (context.mounted &&
+                    _controllerPassword.text.length >= 6 &&
+                    errorMessage == '') {
+                  await createUserWithEmailAndPassword();
                 }
               },
               style: ButtonStyle(
                 backgroundColor: WidgetStateProperty.all<Color>(
                     const Color.fromARGB(255, 224, 156, 236)),
               ),
-              child: const Text(
-                "Sign Up",
-                style: TextStyle(
+              child: Text(
+                isSubmitting ? "Signing Up..." : "Sign Up",
+                style: const TextStyle(
                   color: Color.fromARGB(255, 120, 16, 146),
                   fontSize: 20,
                 ),

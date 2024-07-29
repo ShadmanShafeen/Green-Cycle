@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:green_cycle/auth.dart';
 import 'package:green_cycle/src/utils/responsive_functions.dart';
 import 'package:green_cycle/src/utils/server.dart';
 import 'package:green_cycle/src/utils/snackbars_alerts.dart';
@@ -18,18 +20,18 @@ class NotificationContainer extends StatefulWidget {
 }
 
 class _NotificationState extends State<NotificationContainer> {
+  final Auth _auth = Auth();
+  bool showEnablePushNotification = true;
+
   @override
   void initState() {
     super.initState();
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      // Handle foreground message
-      if (message.notification != null) {
-        createQuickAlert(
-          context: context,
-          title: message.notification!.title ?? 'Notification',
-          message: message.notification!.body ?? '',
-          type: "info",
-        );
+    //check if notification is enabled in firebase messaging
+    FirebaseMessaging.instance.getNotificationSettings().then((settings) {
+      if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+        setState(() {
+          showEnablePushNotification = false;
+        });
       }
     });
   }
@@ -44,7 +46,7 @@ class _NotificationState extends State<NotificationContainer> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            buildTurnOnNotification(context),
+            if (showEnablePushNotification) buildTurnOnNotification(context),
             Expanded(
               child: FutureBuilder(
                 future: fetchNotifications(),
@@ -125,8 +127,9 @@ class _NotificationState extends State<NotificationContainer> {
 
           final dio = Dio();
           try {
+            User? user = _auth.currentUser;
             final response = await dio.patch(
-                "$serverURLExpress/update-notification-status/alice@example.com/${element['time']}");
+                "$serverURLExpress/update-notification-status/${user!.email}/${element['time']}");
             if (response.statusCode == 200) {
               setState(() {});
             } else {
@@ -174,8 +177,9 @@ class _NotificationState extends State<NotificationContainer> {
     final dio = Dio();
     List<Map<String, String>> data = [];
     try {
+      User? user = _auth.currentUser;
       final response = await dio.get(
-        "$serverURLExpress/notifications/alice@example.com",
+        "$serverURLExpress/notifications/${user!.email}",
       );
 
       if (response.statusCode == 200) {
@@ -251,7 +255,8 @@ class _NotificationState extends State<NotificationContainer> {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () async {
-                          await FirebaseMessaging.instance.requestPermission();
+                          Auth auth = Auth();
+                          await auth.initNotifications();
                         },
                         style: ButtonStyle(
                           shape:
@@ -277,7 +282,11 @@ class _NotificationState extends State<NotificationContainer> {
                       width: 10,
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        setState(() {
+                          showEnablePushNotification = false;
+                        });
+                      },
                       child: Text(
                         "Not now",
                         style: TextStyle(

@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:green_cycle/auth.dart';
 import 'package:green_cycle/src/utils/server.dart';
 import 'package:green_cycle/src/utils/snackbars_alerts.dart';
 import 'package:green_cycle/src/waste_item_listing/add_new_item.dart';
@@ -76,8 +78,10 @@ class _DraftItemsState extends State<DraftItems>
   Future<List<Map<String, String>>> fetchDraftItems() async {
     try {
       draftItems.clear();
+      final Auth auth = Auth();
+      User? user = auth.currentUser;
       final response = await dio.get(
-        "$serverURLExpress/draft-show/shadmanskystar@gmail.com",
+        "$serverURLExpress/draft-show/${user!.email}",
       );
 
       if (response.statusCode == 200) {
@@ -111,8 +115,10 @@ class _DraftItemsState extends State<DraftItems>
 
   Future<void> deleteItem(int index, AsyncSnapshot snapshot) async {
     try {
+      final Auth auth = Auth();
+      User? user = auth.currentUser;
       final response = await dio.patch(
-        "$serverURLExpress/draft-item-delete/shadmanskystar@gmail.com",
+        "$serverURLExpress/draft-item-delete/${user!.email}",
         data: {
           "item": snapshot.data[index],
         },
@@ -142,9 +148,11 @@ class _DraftItemsState extends State<DraftItems>
 
   Future<void> deleteSelectedItems() async {
     try {
+      final Auth auth = Auth();
+      User? user = auth.currentUser;
       for (int index in selectedItems) {
         await dio.patch(
-          "$serverURLExpress/draft-item-delete/shadmanskystar@gmail.com",
+          "$serverURLExpress/draft-item-delete/${user!.email}",
           data: {
             "item": draftItems[index],
           },
@@ -282,8 +290,10 @@ class _DraftItemsState extends State<DraftItems>
       onPressed: () async {
         final dio = Dio();
         try {
+          final Auth auth = Auth();
+          User? user = auth.currentUser;
           final response = await dio.post(
-            "$serverURLExpress/draft-to-recent/shadmanskystar@gmail.com",
+            "$serverURLExpress/draft-to-recent/${user!.email}",
           );
 
           if (response.statusCode == 200) {
