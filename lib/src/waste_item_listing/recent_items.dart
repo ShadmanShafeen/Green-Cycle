@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:green_cycle/auth.dart';
 import 'package:green_cycle/src/utils/responsive_functions.dart';
 import 'package:green_cycle/src/utils/server.dart';
 import 'package:green_cycle/src/utils/snackbars_alerts.dart';
@@ -146,8 +148,10 @@ class _RecentItemsState extends State<RecentItems>
     final dio = Dio();
     List<Map<String, String>> data = [];
     try {
+      final Auth auth = Auth();
+      User? user = auth.currentUser;
       final response = await dio.get(
-        "$serverURLExpress/recent-show/shadmanskystar@gmail.com",
+        "$serverURLExpress/recent-show/${user!.email}",
       );
 
       if (response.statusCode == 200) {

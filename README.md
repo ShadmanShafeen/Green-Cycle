@@ -17,9 +17,3 @@ samples, guidance on mobile development, and a full API reference.
 
 HardCoded Data:
  - locate vendor
- - profile
- - waste item list
- - add new item
- - notification
- - explore community
- - add new community

@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:green_cycle/auth.dart';
 import 'package:slide_to_act/slide_to_act.dart';
 import 'package:video_player/video_player.dart';
 
@@ -134,7 +136,13 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                       color: Colors.white,
                     ),
                     onSubmit: () {
-                      context.push('/signup');
+                      final Auth auth = Auth();
+                      User? user = auth.currentUser;
+                      if (user != null) {
+                        context.go('/home');
+                      } else {
+                        context.go('/signup');
+                      }
                       return null;
                     },
                   ),

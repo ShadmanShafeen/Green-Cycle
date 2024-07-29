@@ -3,7 +3,9 @@ import "dart:io";
 
 import "package:dio/dio.dart";
 import "package:dotted_border/dotted_border.dart";
+import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
+import "package:green_cycle/auth.dart";
 import "package:green_cycle/src/models/community.dart";
 import "package:green_cycle/src/utils/responsive_functions.dart";
 import "package:green_cycle/src/utils/server.dart";
@@ -142,7 +144,8 @@ class _AddNewCommunityState extends State<AddNewCommunity> {
 
         if (response.statusCode == 200) {
           final String communityImageURL = response.data["imageUrl"];
-
+          final Auth auth = Auth();
+          User? user = auth.currentUser;
           final response2 =
               await dio.post("$serverURLExpress/add_community", data: {
             "image": communityImageURL,
@@ -153,7 +156,7 @@ class _AddNewCommunityState extends State<AddNewCommunity> {
                 "longitude": widget.communityLocation.longitude.toString(),
               }
             ],
-            "leaderEmail": "shadmanskystar@gmail.com",
+            "leaderEmail": "${user!.email}",
           });
 
           if (response2.statusCode == 201) {
