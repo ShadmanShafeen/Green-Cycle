@@ -1,5 +1,7 @@
 import "package:dio/dio.dart";
+import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
+import "package:green_cycle/auth.dart";
 import "package:green_cycle/src/utils/responsive_functions.dart";
 import "package:green_cycle/src/utils/server.dart";
 import "package:green_cycle/src/utils/snackbars_alerts.dart";
@@ -109,12 +111,14 @@ class _AddNewItemState extends State<AddNewItem> {
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       final dio = Dio();
+                      final Auth auth = Auth();
+                      User? user = auth.currentUser;
                       try {
                         setState(() {
                           isAdding = true;
                         });
                         final response = await dio.post(
-                          "$serverURLExpress/draft-insert/shadmanskystar@gmail.com",
+                          "$serverURLExpress/draft-insert/${user!.email}",
                           data: {
                             "name": _itemNameController.text,
                             "description": _itemDescriptionController.text,

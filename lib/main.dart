@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:green_cycle/auth.dart';
 import 'package:green_cycle/src/Locate_Vendor/map.dart';
 import 'package:green_cycle/src/Profile/profile.dart';
 import 'package:green_cycle/src/Profile/usage_history.dart';
@@ -31,8 +32,6 @@ import 'package:green_cycle/src/welcome_screen/splash_screen.dart';
 import 'package:green_cycle/src/welcome_screen/welcome_screen.dart';
 import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
-
-import 'auth.dart';
 
 late List<CameraDescription> cameras;
 final navigatorKey = GlobalKey<NavigatorState>();
@@ -78,7 +77,7 @@ class _MainAppState extends State<MainApp> {
 
   GoRouter buildGoRouter() {
     return GoRouter(
-      initialLocation: '/home',
+      initialLocation: '/welcome',
       routes: [
         GoRoute(
           path: '/home',
@@ -161,7 +160,7 @@ class _MainAppState extends State<MainApp> {
               name: "profile",
               pageBuilder: (context, state) {
                 return returnCustomTransitionPage(
-                  child: const Profile(),
+                  child: Profile(),
                   context: context,
                   type: PageTransitionType.rightToLeft,
                 );

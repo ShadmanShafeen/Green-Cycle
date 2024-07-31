@@ -53,6 +53,8 @@ dependencies:
   dotted_border: ^2.1.0
   flutter_inset_box_shadow: ^1.0.8
   flutter_speed_dial: ^7.0.0
+  cloud_firestore: ^5.1.0
+  flutter_local_notifications: ^17.2.1+2
   
 dev_dependencies:
   flutter_test:

@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:green_cycle/auth.dart';
 import 'package:green_cycle/src/utils/snackbars_alerts.dart';
+import 'package:quickalert/quickalert.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -39,6 +40,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+
     fadeController = AnimationController(
       duration: const Duration(seconds: 2),
       vsync: this,
@@ -178,7 +180,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                     Align(
                       alignment: Alignment.bottomRight,
                       child: InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          createForgotPassQuickAlert(context);
+                        },
                         child: const Text(
                           'Forgot Password?',
                           style: TextStyle(
@@ -199,8 +203,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                           } else {
                             createQuickAlert(
                               context: context,
-                              title: "Login Failed",
-                              message: "Please try again",
+                              title: "Error",
+                              message: errorMessage!,
                               type: 'error',
                             );
                           }
@@ -225,6 +229,50 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           ),
         ),
       ],
+    );
+  }
+
+  Future<void> createForgotPassQuickAlert(BuildContext context) async {
+    String message = '';
+    await QuickAlert.show(
+      context: context,
+      type: QuickAlertType.custom,
+      barrierDismissible: true,
+      confirmBtnText: 'Send',
+      customAsset: 'lib/assets/images/reset.gif',
+      widget: TextFormField(
+        decoration: const InputDecoration(
+          alignLabelWithHint: true,
+          hintText: 'Enter email address',
+          prefixIcon: Icon(
+            Icons.mail_lock,
+          ),
+        ),
+        textInputAction: TextInputAction.next,
+        keyboardType: TextInputType.text,
+        onChanged: (value) => message = value,
+      ),
+      onConfirmBtnTap: () async {
+        //check if valid email
+        if (message.isNotEmpty) {
+          await Auth().resetPassword(message);
+          Navigator.pop(context);
+          await QuickAlert.show(
+            context: context,
+            type: QuickAlertType.success,
+            text: "Password reset link has been sent to $message",
+          );
+        } else {
+          Navigator.pop(context);
+          await QuickAlert.show(
+            context: context,
+            type: QuickAlertType.error,
+            text: "Please enter a valid email address",
+          );
+        }
+      },
+      title: 'Forgot Password',
+      text: 'Enter your email address to reset your password',
     );
   }
 }

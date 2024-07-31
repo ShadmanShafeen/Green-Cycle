@@ -1,16 +1,18 @@
 // import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:green_cycle/auth.dart';
 import 'package:green_cycle/src/widgets/app_bar.dart';
 
 class Profile extends StatelessWidget {
-  const Profile({super.key});
+  Profile({super.key});
+  final Auth auth = Auth();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(),
       extendBodyBehindAppBar: true,
+      appBar: const CustomAppBar(),
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
@@ -26,8 +28,11 @@ class Profile extends StatelessWidget {
               children: [
                 Stack(
                   children: [
-                    const CircleAvatar(
-                      backgroundImage: AssetImage("lib/assets/img/loki.png"),
+                    CircleAvatar(
+                      backgroundImage: auth.currentUser!.photoURL != null
+                          ? NetworkImage(auth.currentUser!.photoURL!)
+                          : const AssetImage('lib/assets/img/loki.png')
+                              as ImageProvider,
                       radius: 50,
                     ),
                     Positioned(
@@ -44,16 +49,17 @@ class Profile extends StatelessWidget {
                   height: 10,
                 ),
                 Text(
-                  'Loki Laufeyson',
+                  auth.currentUser!.email!,
                   style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSurface,
-                      fontWeight: FontWeight.bold),
+                    color: Theme.of(context).colorScheme.onSurface,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(
                   height: 5,
                 ),
                 Text(
-                  'lokilaufeyson1050@sylvie.com',
+                  auth.currentUser!.email!,
                   style: TextStyle(
                       color: Theme.of(context).colorScheme.onSurface,
                       fontWeight: FontWeight.bold),
@@ -71,7 +77,14 @@ class Profile extends StatelessWidget {
             buildOptionCard(context, "Usage History", Icons.history, ""),
             buildOptionCard(context, "Privacy", Icons.privacy_tip, ""),
             buildOptionCard(context, "Settings", Icons.settings, ""),
-            buildOptionCard(context, "Log Out", Icons.logout, ""),
+            buildOptionCard(context, "Log Out", Icons.logout, "",
+                onTapMethod: () async {
+              final Auth auth = Auth();
+              await auth.signOut();
+              if (context.mounted) {
+                context.go('/login');
+              }
+            }),
           ],
         ),
       ),
@@ -79,7 +92,8 @@ class Profile extends StatelessWidget {
   }
 
   Card buildOptionCard(
-      BuildContext context, String title, IconData leadingIcon, String onTap) {
+      BuildContext context, String title, IconData leadingIcon, String onTap,
+      {Function()? onTapMethod}) {
     return Card(
       color:
           Theme.of(context).colorScheme.surfaceContainerHigh.withOpacity(0.7),
@@ -89,7 +103,7 @@ class Profile extends StatelessWidget {
       ),
       child: ListTile(
         onTap: () {
-          context.go(onTap);
+          onTapMethod != null ? onTapMethod() : context.go(onTap);
         },
         splashColor: Colors.grey,
         trailing: Icon(

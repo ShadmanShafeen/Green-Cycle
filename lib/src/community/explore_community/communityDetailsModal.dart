@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:green_cycle/auth.dart';
 import 'package:green_cycle/src/models/community.dart';
 import 'package:green_cycle/src/utils/responsive_functions.dart';
 import 'package:green_cycle/src/utils/server.dart';
@@ -25,8 +27,10 @@ class _CommunityDetailsModalState extends State<CommunityDetailsModal> {
   }
 
   void checkIfAlreadyRequested() {
-    if (widget.community.requests.contains("shadmanskystar@gmail.com") ||
-        widget.community.members.contains("shadmanskystar@gmail.com")) {
+    final Auth auth = Auth();
+    User? user = auth.currentUser;
+    if (widget.community.requests.contains("${user!.email}") ||
+        widget.community.members.contains("${user.email}")) {
       setState(() {
         alreadyRequested = true;
       });
@@ -132,9 +136,11 @@ class _CommunityDetailsModalState extends State<CommunityDetailsModal> {
       setState(() {
         isRequesting = true;
       });
+      final Auth auth = Auth();
+      User? user = auth.currentUser;
       final response = await dio.post(
           "$serverURLExpress/request-community/${widget.community.name}",
-          data: {"email": "shadmanskystar@gmail.com"});
+          data: {"email": "${user!.email}"});
 
       if (response.statusCode == 200) {
         setState(() {
