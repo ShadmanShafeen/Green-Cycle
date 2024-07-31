@@ -82,10 +82,10 @@ class _MainAppState extends State<MainApp> {
       routes: [
         GoRoute(
           path: '/home',
-          builder: (context, state) => const HomePage(),
+          builder: (context, state) => HomePage(),
           pageBuilder: (context, state) {
             return returnCustomTransitionPage(
-              child: const HomePage(),
+              child: HomePage(),
               context: context,
               type: PageTransitionType.bottomToTop,
             );
@@ -392,7 +392,7 @@ class _MainAppState extends State<MainApp> {
         errorContainer: Color(0xFFB00020),
         onErrorContainer: Colors.white,
 
-        surface: Color(0xFF222222),
+        surface: Color(0xFF121212),
         onSurface: Colors.white,
         surfaceDim: Color(0xFF1F1F1F),
         surfaceBright: Color(0xFF333333),

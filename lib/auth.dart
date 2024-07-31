@@ -52,9 +52,9 @@ class Auth {
       handleMessageTapOnMobile(message);
     });
 
-    FirebaseMessaging.onBackgroundMessage((message) async {
-      await Firebase.initializeApp();
-      handleMessageTapOnMobile(message);
-    });
+    // FirebaseMessaging.onBackgroundMessage((message) async {
+    //   await Firebase.initializeApp();
+    //   handleMessageTapOnMobile(message);
+    // });
   }
 }
