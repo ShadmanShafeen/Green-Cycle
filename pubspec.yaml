@@ -51,6 +51,8 @@ dependencies:
   intl: ^0.19.0
   firebase_messaging: ^15.0.3
   dotted_border: ^2.1.0
+  flutter_inset_box_shadow: ^1.0.8
+  flutter_speed_dial: ^7.0.0
   cloud_firestore: ^5.1.0
   flutter_local_notifications: ^17.2.1+2
   
@@ -68,6 +70,7 @@ flutter:
     - lib/assets/images/icons/
     - lib/assets/images/companyIcons/
     - lib/assets/images/
+    - lib/assets/images/recycle_items/
     - lib/assets/videos/
     - lib/assets/animations/
     - .env

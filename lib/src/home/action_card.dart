@@ -1,8 +1,9 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide BoxDecoration,BoxShadow;
 import 'package:go_router/go_router.dart';
 import 'package:green_cycle/src/home/home_page.dart';
+import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 
 class ActionCard extends StatelessWidget {
   const ActionCard(
@@ -24,36 +25,38 @@ class ActionCard extends StatelessWidget {
           context.go(path);
         }
       },
-      child: SizedBox(
-        width: 100,
-        height: 100,
-        child: Card(
-          shadowColor: Colors.transparent,
-          elevation: 5,
-          color: Theme.of(context).colorScheme.surfaceContainer,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-            side: BorderSide(
-              color: Theme.of(context).colorScheme.surfaceBright,
-            ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.only(top: 8, bottom: 5),
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  animatedIcon,
-                  SizedBox(height: 5),
-                  Text(
-                    label,
-                    textScaler: TextScaler.linear(1.00),
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSurface,
-                    ),
-                  )
-                ],
-              ),
+      child: Container(
+        decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                  inset: true,
+                  blurRadius: 5,
+                  offset: Offset(-5, -5),
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest),
+              BoxShadow(
+                  inset: true,
+                  blurRadius: 5,
+                  offset: Offset(5, 5),
+                  color: Theme.of(context).colorScheme.surfaceContainerLowest),
+            ]),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 8, bottom: 5),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                animatedIcon,
+                SizedBox(height: 5),
+                Text(
+                  label,
+                  textScaler: TextScaler.linear(1.00),
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                )
+              ],
             ),
           ),
         ),
