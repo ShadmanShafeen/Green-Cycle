@@ -155,6 +155,12 @@ class Auth {
       );
     });
 
+<<<<<<< HEAD
+    // FirebaseMessaging.onBackgroundMessage((message) async {
+    //   await Firebase.initializeApp();
+    //   handleMessageTapOnMobile(message);
+    // });
+=======
     FirebaseMessaging.onBackgroundMessage((message) async {
       handleMessage(message);
     });
@@ -196,5 +202,6 @@ class Auth {
             AndroidFlutterLocalNotificationsPlugin>();
 
     await platform?.createNotificationChannel(_androidNotificationChannel);
+>>>>>>> ced5b65939010cf02cc2e666b1bea47ab35b3b0f
   }
 }

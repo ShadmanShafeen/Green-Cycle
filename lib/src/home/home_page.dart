@@ -5,47 +5,29 @@ import 'package:green_cycle/src/games/game_image_card.dart';
 import 'package:green_cycle/src/home/action_card.dart';
 import 'package:green_cycle/src/home/carousel.dart';
 import 'package:green_cycle/src/home/search_bar.dart';
+import 'package:green_cycle/src/home/waste_items_wheel.dart';
 import 'package:green_cycle/src/widgets/app_bar.dart';
 import 'package:green_cycle/src/widgets/nav_bar.dart';
 import 'package:location/location.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-
+  HomePage({super.key});
+  final ScrollController scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: const CustomAppBar(),
       bottomNavigationBar: const NavBar(),
       body: Container(
-        color: Theme.of(context).colorScheme.surfaceContainerLowest,
         child: SingleChildScrollView(
+          controller: scrollController,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(
                 height: 20,
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: Row(
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(left: 15),
-                      child: CustomSearchBar(),
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.photo_camera,
-                        color: Theme.of(context).colorScheme.error,
-                      ),
-                      onPressed: () {
-                        context.go("/home/camera-control");
-                      },
-                    ),
-                  ],
-                ),
               ),
               const SizedBox(
                 height: 15,
@@ -56,8 +38,8 @@ class HomePage extends StatelessWidget {
                   height: MediaQuery.of(context).size.height * 0.30,
                   child: GridView.count(
                     crossAxisCount: 3,
-                    crossAxisSpacing: 5,
-                    mainAxisSpacing: 5,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
                     childAspectRatio: 1,
                     children: [
                       ActionCard(
@@ -119,6 +101,58 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               Padding(
+                padding: const EdgeInsets.only(top: 20, left: 20, bottom: 20),
+                child: Text(
+                  "Gain Recycling Knowledge",
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    WasteItemsWheel(scrollController: scrollController),
+                    ElevatedButton(
+                      style: ButtonStyle(
+                          shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30))),
+                          backgroundColor: WidgetStatePropertyAll(
+                              Theme.of(context).colorScheme.tertiary)),
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            top: 15, bottom: 15, left: 5, right: 5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Icon(
+                              Icons.photo_camera,
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              'Scan',
+                              style: TextStyle(
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface),
+                            )
+                          ],
+                        ),
+                      ),
+                      onPressed: () {
+                        context.go("/home/camera-control");
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
                 padding: const EdgeInsets.only(top: 20, left: 20),
                 child: Text(
                   "Play Exciting Games!",
@@ -131,10 +165,10 @@ class HomePage extends StatelessWidget {
               ),
               InkWell(
                 onTap: () {
-                  context.go("/games/quiz");
+                  context.push("/games");
                 },
                 child: Container(
-                  padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+                  padding: const EdgeInsets.only(left: 10, right: 10, top: 20),
                   height: 250,
                   child: GameImageCard(
                     title: "GreenQuiz",
