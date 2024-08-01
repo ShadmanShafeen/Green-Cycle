@@ -5,7 +5,7 @@ import 'package:green_cycle/src/utils/snackbars_alerts.dart';
 import 'package:slide_to_act/slide_to_act.dart';
 
 class VoucherCard extends StatefulWidget {
-  VoucherCard({
+  const VoucherCard({
     super.key,
     required this.voucher,
     required this.redeemed,

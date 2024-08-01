@@ -21,7 +21,7 @@ class _TaskState extends State<Task> {
       title: Text(
         widget.task,
         style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
-        textScaler: TextScaler.linear(1.1),
+        textScaler: const TextScaler.linear(1.1),
       ),
       trailing: Transform.scale(
         scale: 1.5,

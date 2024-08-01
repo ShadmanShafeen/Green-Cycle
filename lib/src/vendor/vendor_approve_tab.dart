@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:green_cycle/src/vendor/vendor_widgets/vendor_requests_list.dart';
 
 class VendorApproveTab extends StatelessWidget {
+  const VendorApproveTab({super.key});
+
   
 
   @override
@@ -16,12 +18,12 @@ class VendorApproveTab extends StatelessWidget {
           Text(
             "Your Requests",
             style: TextStyle(color: Theme.of(context).colorScheme.secondary),
-            textScaler: TextScaler.linear(1.5),
+            textScaler: const TextScaler.linear(1.5),
           ),
           Divider(
             color: Theme.of(context).colorScheme.secondary,
           ),
-          Expanded(flex: 5,child: VendorRequestsList())
+          const Expanded(flex: 5,child: VendorRequestsList())
         ]),
       ),
     );

@@ -40,7 +40,7 @@ class VoucherPage extends StatelessWidget {
             ],
           ),
         ),
-        body: TabBarView(
+        body: const TabBarView(
           children: [AllVoucherTab(), YourVoucherTab()],
         ),
         bottomNavigationBar: const NavBar(),

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:green_cycle/src/models/vendor_request.dart';
 
 class VendorRequestsList extends StatefulWidget {
+  const VendorRequestsList({super.key});
+
   @override
   State<VendorRequestsList> createState() => _VendorRequestsListState();
 }

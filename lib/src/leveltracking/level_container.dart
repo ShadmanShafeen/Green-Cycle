@@ -30,7 +30,7 @@ class _LevelContainerState extends State<LevelContainer> {
           });
         },
         child: AnimatedContainer(
-          duration: Duration(seconds: 1),
+          duration: const Duration(seconds: 1),
           curve: Curves.easeInOut,
           color: widget.levelReached
               ? Theme.of(context).colorScheme.primary

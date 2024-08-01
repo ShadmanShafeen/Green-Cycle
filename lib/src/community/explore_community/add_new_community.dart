@@ -31,7 +31,7 @@ class AddNewCommunity extends StatefulWidget {
 
 class _AddNewCommunityState extends State<AddNewCommunity> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  late XFile? communityImage = null;
+  late XFile? communityImage;
   final ImagePicker _picker = ImagePicker();
   final _communityNameController = TextEditingController();
   bool isSubmitting = false;
