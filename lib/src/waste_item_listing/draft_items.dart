@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:green_cycle/auth.dart';
+import 'package:green_cycle/src/notification/notification_service.dart';
 import 'package:green_cycle/src/utils/server.dart';
 import 'package:green_cycle/src/utils/snackbars_alerts.dart';
 import 'package:green_cycle/src/waste_item_listing/add_new_item.dart';
@@ -215,6 +216,7 @@ class _DraftItemsState extends State<DraftItems>
                 });
               } else {
                 showModalBottomSheet(
+                  backgroundColor: Theme.of(context).colorScheme.surface,
                   showDragHandle: true,
                   context: context,
                   elevation: 10,
@@ -288,6 +290,18 @@ class _DraftItemsState extends State<DraftItems>
   IconButton _getConfirmListButton(BuildContext context) {
     return IconButton(
       onPressed: () async {
+        if (draftItems.isEmpty) {
+          final snackBar = createSnackBar(
+            title: "Draft List Empty",
+            message: "Please add items to the draft list before confirming",
+            contentType: "error",
+          );
+          ScaffoldMessenger.of(context.mounted ? context : context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(snackBar);
+          return;
+        }
+
         final dio = Dio();
         try {
           final Auth auth = Auth();
@@ -300,6 +314,18 @@ class _DraftItemsState extends State<DraftItems>
             setState(() {
               draftItems.clear();
             });
+
+            Auth auth = Auth();
+            String? token = await auth.firebaseMessaging.getToken();
+            if (token != null) {
+              await NotificationService().sendNotification(
+                "Draft items confirmed",
+                "The items in your draft list have been confirmed and added to your recent list",
+                token,
+                context.mounted ? context : context,
+              );
+            }
+
             final snackBar = createSnackBar(
               title: "Draft Items Confirmed",
               message:
@@ -342,6 +368,7 @@ class _DraftItemsState extends State<DraftItems>
       ),
       onPressed: () {
         showModalBottomSheet(
+          backgroundColor: Theme.of(context).colorScheme.surface,
           showDragHandle: true,
           isScrollControlled: true,
           elevation: 10,

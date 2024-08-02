@@ -72,6 +72,7 @@ class _NotificationState extends State<NotificationContainer> {
   GroupedListView<dynamic, String> buildGroupedListView(
       AsyncSnapshot<dynamic> snapshot, BuildContext context) {
     return GroupedListView<dynamic, String>(
+      order: GroupedListOrder.DESC,
       elements: snapshot.data,
       groupBy: (item) =>
           DateFormat('dd-MM-yyyy').format(DateTime.parse(item['time'])),

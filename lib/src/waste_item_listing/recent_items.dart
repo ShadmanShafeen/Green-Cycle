@@ -95,6 +95,7 @@ class _RecentItemsState extends State<RecentItems>
                       ),
                     ),
                   ),
+                  order: GroupedListOrder.DESC,
                   indexedItemBuilder: (context, element, index) {
                     return Card(
                       color: Theme.of(context)
@@ -109,6 +110,8 @@ class _RecentItemsState extends State<RecentItems>
                       child: ListTile(
                         onTap: () {
                           showModalBottomSheet(
+                            backgroundColor:
+                                Theme.of(context).colorScheme.surface,
                             showDragHandle: true,
                             context: context,
                             elevation: 10,

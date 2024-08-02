@@ -1,9 +1,7 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
-import 'package:flutter/material.dart' hide BoxDecoration,BoxShadow;
+import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
+import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:go_router/go_router.dart';
 import 'package:green_cycle/src/home/home_page.dart';
-import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 
 class ActionCard extends StatelessWidget {
   const ActionCard(
@@ -27,20 +25,23 @@ class ActionCard extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                  inset: true,
-                  blurRadius: 5,
-                  offset: Offset(-5, -5),
-                  color: Theme.of(context).colorScheme.surfaceContainerHighest),
-              BoxShadow(
-                  inset: true,
-                  blurRadius: 5,
-                  offset: Offset(5, 5),
-                  color: Theme.of(context).colorScheme.surfaceContainerLowest),
-            ]),
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              inset: true,
+              blurRadius: 5,
+              offset: const Offset(-1, -1),
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
+            ),
+            BoxShadow(
+              inset: true,
+              blurRadius: 5,
+              offset: const Offset(3, 3),
+              color: Theme.of(context).colorScheme.surfaceContainerLowest,
+            ),
+          ],
+        ),
         child: Padding(
           padding: const EdgeInsets.only(top: 8, bottom: 5),
           child: Center(
@@ -48,10 +49,10 @@ class ActionCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 animatedIcon,
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Text(
                   label,
-                  textScaler: TextScaler.linear(1.00),
+                  textScaler: const TextScaler.linear(1.00),
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onSurface,
                   ),

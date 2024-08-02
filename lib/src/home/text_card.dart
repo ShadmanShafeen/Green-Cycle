@@ -7,6 +7,7 @@ class TextCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 10,
+      shadowColor: Colors.transparent,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
           side: BorderSide(color: Theme.of(context).colorScheme.surfaceBright)),
