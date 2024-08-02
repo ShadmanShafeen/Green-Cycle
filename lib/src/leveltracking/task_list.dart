@@ -1,11 +1,12 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:green_cycle/src/leveltracking/task.dart';
 
 class TaskList extends StatefulWidget {
+  const TaskList({super.key});
+
   @override
   State<TaskList> createState() => _TaskListState();
 }

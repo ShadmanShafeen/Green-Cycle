@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 
 double dynamicFontSize(BuildContext context, double baseFontSize) {
@@ -30,7 +31,9 @@ DateTime parseDate(String dateString) {
     return date;
   } catch (e) {
     // Handle the error if the date string is invalid
-    print('Invalid date format: $dateString');
+    if (kDebugMode) {
+      print('Invalid date format: $dateString');
+    }
     return DateTime.now();
   }
 }

@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors, must_be_immutable
 
 import 'package:flutter/material.dart';
-import 'package:green_cycle/src/leveltracking/coins_earned_container.dart';
 import 'package:green_cycle/src/leveltracking/level_list.dart';
 import 'package:green_cycle/src/leveltracking/task_list.dart';
 import 'package:green_cycle/src/widgets/app_bar.dart';
@@ -23,7 +22,7 @@ class LevelTrackingPage extends StatelessWidget {
         bottomNavigationBar: NavBar(),
         backgroundColor: Colors.transparent,
         body:  Stack(
-          children: [
+          children: const [
             LevelList(currentLevel: 5),
             Positioned(top: 10, right: 10,child: CoinsContainer()),
           ]),
@@ -49,7 +48,7 @@ class LevelTrackingPage extends StatelessWidget {
         context: context, 
         showDragHandle: true,
         barrierColor: Colors.black.withOpacity(0.25),
-        builder: (context) => Container(
+        builder: (context) => SizedBox(
           height: MediaQuery.of(context).size.height/2,
           child: TaskList(),
           ));

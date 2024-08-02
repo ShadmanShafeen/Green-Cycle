@@ -3,13 +3,14 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:green_cycle/main.dart';
 import 'package:green_cycle/src/utils/server.dart';
 
 class Auth {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
   final _androidNotificationChannel = const AndroidNotificationChannel(
     'high_importance_channel',
     'High Importance Notifications',
@@ -49,7 +50,7 @@ class Auth {
 
   //init notifications
   Future<void> initNotifications() async {
-    NotificationSettings settings = await _firebaseMessaging.requestPermission(
+    NotificationSettings settings = await firebaseMessaging.requestPermission(
       alert: true,
       badge: true,
       provisional: false,
@@ -59,16 +60,18 @@ class Auth {
       sendNotificationTokenToServer();
       initPushNotifications();
       initLocalNotifications();
-      await _firebaseMessaging.subscribeToTopic('all');
+      await firebaseMessaging.subscribeToTopic('all');
     } else {
-      print('User declined permissions');
+      if (kDebugMode) {
+        print('User declined permissions');
+      }
     }
   }
 
   Future<void> sendNotificationTokenToServer() async {
-    String? token = await _firebaseMessaging.getToken();
+    String? token = await firebaseMessaging.getToken();
     if (token != null) {
-      await _firebaseAuth.currentUser!.updateProfile(displayName: token);
+      deviceToken = token;
       final Dio dio = Dio();
       try {
         await dio.post(
@@ -85,7 +88,9 @@ class Auth {
           ),
         );
       } catch (e) {
-        print('Error sending notification token to server: $e');
+        if (kDebugMode) {
+          print('Error sending notification token to server: $e');
+        }
       }
     }
   }
@@ -113,7 +118,9 @@ class Auth {
         ),
       );
     } catch (e) {
-      print('Error sending notification token to server: $e');
+      if (kDebugMode) {
+        print('Error sending notification token to server: $e');
+      }
     }
   }
 
@@ -155,21 +162,19 @@ class Auth {
       );
     });
 
-<<<<<<< HEAD
-    // FirebaseMessaging.onBackgroundMessage((message) async {
-    //   await Firebase.initializeApp();
-    //   handleMessageTapOnMobile(message);
-    // });
-=======
     FirebaseMessaging.onBackgroundMessage((message) async {
       handleMessage(message);
     });
 
-    _firebaseMessaging.setForegroundNotificationPresentationOptions(
+    firebaseMessaging.setForegroundNotificationPresentationOptions(
       alert: true,
       badge: true,
       sound: true,
     );
+
+    firebaseMessaging.onTokenRefresh.listen((token) {
+      sendNotificationTokenToServer();
+    });
   }
 
   Future<void> initLocalNotifications() async {
@@ -202,6 +207,5 @@ class Auth {
             AndroidFlutterLocalNotificationsPlugin>();
 
     await platform?.createNotificationChannel(_androidNotificationChannel);
->>>>>>> ced5b65939010cf02cc2e666b1bea47ab35b3b0f
   }
 }

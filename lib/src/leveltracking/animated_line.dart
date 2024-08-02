@@ -18,7 +18,7 @@ class _AnimatedLineState extends State<AnimatedLine>
     super.initState();
     _controller = AnimationController(
       vsync: this, // Synchronize animation with this widget
-      duration: Duration(seconds: 2),
+      duration: const Duration(seconds: 2),
       value: widget.value
       // Animation duration
     )..forward(); // Repeat the animation back and forth
@@ -56,7 +56,7 @@ class LinePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Color.fromARGB(255, 223, 80, 241) // Line color
+      ..color = const Color.fromARGB(255, 223, 80, 241) // Line color
       ..style = PaintingStyle.stroke // Stroke style
       ..strokeWidth = 7
       ..strokeCap = StrokeCap.square; // Stroke width

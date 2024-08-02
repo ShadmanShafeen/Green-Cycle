@@ -55,10 +55,10 @@ class _VendorPageState extends State<VendorPage> {
         ),
         body: TabBarView(
           children: [
-            VendorApproveTab(),
-            VendorCommunitiesTab(),
+            const VendorApproveTab(),
+            const VendorCommunitiesTab(),
             VendorMapTab(),
-            VendorProfileTab(),
+            const VendorProfileTab(),
           ],
         ),
       ),

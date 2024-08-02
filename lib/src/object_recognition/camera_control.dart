@@ -2,6 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:green_cycle/src/utils/snackbars_alerts.dart';
+import 'package:green_cycle/src/widgets/nav_bar.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_picker_android/image_picker_android.dart';
 import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
@@ -46,6 +47,7 @@ class _CameraControlState extends State<CameraControl> {
     return SafeArea(
       child: Scaffold(
         appBar: buildAppBar(context),
+        bottomNavigationBar: const NavBar(),
         body: (!controller.value.isInitialized)
             ? Container(
                 alignment: Alignment.center,
@@ -56,7 +58,6 @@ class _CameraControlState extends State<CameraControl> {
                 color: Theme.of(context).colorScheme.surfaceContainerLowest,
                 child: Column(
                   children: [
-                    buildTipsSection(),
                     Expanded(
                       child: GestureDetector(
                         onScaleStart: (details) {
@@ -88,47 +89,7 @@ class _CameraControlState extends State<CameraControl> {
                 ),
               ),
         floatingActionButton: buildFloatingButtonContainer(context),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      ),
-    );
-  }
-
-  Padding buildTipsSection() {
-    return const Padding(
-      padding: EdgeInsets.all(10.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Icon(
-                Icons.lightbulb,
-                color: Colors.amber,
-              ),
-              SizedBox(width: 10),
-              Text(
-                "Tips",
-                style: TextStyle(
-                  color: Colors.white24,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 10),
-          Text(
-            "Make sure the object is in focus. Take a clear picture otherwise it may lead to some mislabeling.",
-            style: TextStyle(
-              color: Colors.white24,
-              fontSize: 16,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
     );
   }
@@ -169,32 +130,39 @@ class _CameraControlState extends State<CameraControl> {
   Container buildFloatingButtonContainer(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: 100,
+      height: MediaQuery.of(context).size.height * 0.18,
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: Colors.white10,
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          returnIconButton(
-            context,
-            const Icon(
-              Icons.collections,
-            ),
-            'gallery',
-          ),
-          const SizedBox(width: 20),
-          returnFloatingActionButton(context),
-          const SizedBox(width: 20),
-          returnIconButton(
-            context,
-            const Icon(
-              Icons.loop,
-            ),
-            'reverse',
+          buildFlashAndZoomButtons(context),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              returnIconButton(
+                context,
+                const Icon(
+                  Icons.collections,
+                ),
+                'gallery',
+              ),
+              const SizedBox(width: 20),
+              returnFloatingActionButton(context),
+              const SizedBox(width: 20),
+              returnIconButton(
+                context,
+                const Icon(
+                  Icons.loop,
+                ),
+                'reverse',
+              ),
+            ],
           ),
         ],
       ),
@@ -314,6 +282,40 @@ class _CameraControlState extends State<CameraControl> {
         }
       },
       child: const Icon(Icons.camera_alt, size: 30, color: Colors.black),
+    );
+  }
+
+  Row buildFlashAndZoomButtons(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        IconButton(
+          icon: const Icon(Icons.flash_off),
+          onPressed: () {
+            controller.setFlashMode(FlashMode.off);
+          },
+        ),
+        IconButton(
+          icon: const Icon(Icons.flash_on),
+          onPressed: () {
+            controller.setFlashMode(FlashMode.torch);
+          },
+        ),
+        IconButton(
+          icon: const Icon(Icons.zoom_in),
+          onPressed: () {
+            _currentScale = _currentScale + 0.1;
+            controller.setZoomLevel(_currentScale);
+          },
+        ),
+        IconButton(
+          icon: const Icon(Icons.zoom_out),
+          onPressed: () {
+            _currentScale = _currentScale - 0.1;
+            controller.setZoomLevel(_currentScale);
+          },
+        ),
+      ],
     );
   }
 }

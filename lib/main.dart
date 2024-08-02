@@ -35,6 +35,7 @@ import 'package:permission_handler/permission_handler.dart' as ph;
 
 late List<CameraDescription> cameras;
 final navigatorKey = GlobalKey<NavigatorState>();
+String deviceToken = "";
 
 Future<void> main() async {
   await dotenv.load(fileName: ".env");
@@ -77,7 +78,7 @@ class _MainAppState extends State<MainApp> {
 
   GoRouter buildGoRouter() {
     return GoRouter(
-      initialLocation: '/welcome',
+      initialLocation: '/home',
       routes: [
         GoRoute(
           path: '/home',

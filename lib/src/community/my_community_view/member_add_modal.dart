@@ -83,7 +83,7 @@ class _MemberAddModalState extends State<MemberAddModal> {
                                             .colorScheme
                                             .secondaryFixedDim,
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         width: 10,
                                       ),
                                       Text(
@@ -123,7 +123,7 @@ class _MemberAddModalState extends State<MemberAddModal> {
                                             .colorScheme
                                             .tertiaryFixedDim,
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         width: 10,
                                       ),
                                       Text(

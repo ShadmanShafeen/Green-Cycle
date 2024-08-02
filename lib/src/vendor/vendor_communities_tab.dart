@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:green_cycle/src/vendor/vendor_widgets/vendor_community_card.dart';
 
 class VendorCommunitiesTab extends StatelessWidget {
+  const VendorCommunitiesTab({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Padding(
