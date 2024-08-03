@@ -205,7 +205,7 @@ class _ImagePreviewState extends State<ImagePreview> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "Accuracy\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020: $accuracy%",
+                      "Accuracy\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020: ${accuracy.toStringAsFixed(2)}%",
                       style: TextStyle(
                         color: accuracy > 70
                             ? Theme.of(context).colorScheme.secondaryFixedDim
@@ -213,7 +213,7 @@ class _ImagePreviewState extends State<ImagePreview> {
                         fontSize: 16,
                       ),
                     ),
-                    // retake photo iconbutton
+                    // retake photo icon-button
                     IconButton(
                       onPressed: () {
                         context.go('/home/camera-control');
