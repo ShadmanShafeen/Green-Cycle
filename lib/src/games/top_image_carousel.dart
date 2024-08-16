@@ -22,13 +22,23 @@ class _TopImageCarouselState extends State<TopImageCarousel> {
     {
       "title": "TrashMania",
       "subtitle": "Sort the waste into the correct bins",
-      "image": "lib/assets/images/trash.png",
+      "image": "lib/assets/images/trashmania.png",
     },
     {
       "title": "Archive",
       "subtitle": "Know before you throw",
       "image": "lib/assets/images/archive.jpeg",
     },
+    {
+      "title": "Snake Run",
+      "subtitle": "Eat the waste and grow",
+      "image": "lib/assets/images/snake.jpg",
+    },
+    {
+      "title": "Minesweeper",
+      "subtitle": "Clear the waste from the field",
+      "image": "lib/assets/images/mine.png",
+    }
   ];
 
   @override

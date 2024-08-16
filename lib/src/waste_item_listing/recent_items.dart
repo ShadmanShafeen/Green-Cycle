@@ -71,7 +71,7 @@ class _RecentItemsState extends State<RecentItems>
                     return date1.compareTo(date2);
                   },
                   groupSeparatorBuilder: (String value) => Container(
-                    color: Theme.of(context).colorScheme.surfaceContainerLow,
+                    color: Theme.of(context).colorScheme.surface,
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       getDateInNormalText(value),
@@ -84,7 +84,7 @@ class _RecentItemsState extends State<RecentItems>
                   ),
                   useStickyGroupSeparators: true,
                   groupStickyHeaderBuilder: (dynamic value) => Container(
-                    color: Theme.of(context).colorScheme.surfaceContainerLowest,
+                    color: Theme.of(context).colorScheme.surface,
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       getDateInNormalText(value['confirmedAt']),
