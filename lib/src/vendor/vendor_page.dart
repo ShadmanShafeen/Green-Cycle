@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:green_cycle/src/vendor/vendor_approve_tab.dart';
-import 'package:green_cycle/src/vendor/vendor_communities_tab.dart';
+import 'package:green_cycle/src/vendor/vendor_communities_tab(old).dart';
+import 'package:green_cycle/src/vendor/vendor_community_tab.dart';
 import 'package:green_cycle/src/vendor/vendor_map_tab.dart';
 import 'package:green_cycle/src/vendor/vendor_profile_tab.dart';
 
@@ -39,7 +40,7 @@ class _VendorPageState extends State<VendorPage> {
             splashBorderRadius: BorderRadius.circular(30),
             tabs: const [
               Tab(
-                icon: Icon(Icons.home),
+                icon: Icon(Icons.recycling),
               ),
               Tab(
                 icon: Icon(Icons.diversity_1),
@@ -56,7 +57,7 @@ class _VendorPageState extends State<VendorPage> {
         body: TabBarView(
           children: [
             const VendorApproveTab(),
-            const VendorCommunitiesTab(),
+            const VendorCommunityTab(),
             VendorMapTab(),
             const VendorProfileTab(),
           ],

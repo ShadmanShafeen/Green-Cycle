@@ -7,8 +7,8 @@ import 'package:green_cycle/src/community/my_community_view/member_add_modal.dar
 import 'package:green_cycle/src/models/members.dart';
 import 'package:green_cycle/src/widgets/app_bar.dart';
 
-class MyCommunity extends StatelessWidget {
-  const MyCommunity({super.key});
+class VendorCommunityTab extends StatelessWidget {
+  const VendorCommunityTab({super.key});
   bool isUser(String name) {
     if (name == 'You') {
       return true;
@@ -18,50 +18,32 @@ class MyCommunity extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const CustomAppBar(),
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(
-              'lib/assets/img/my_com_bg.jpg',
-            ),
-            fit: BoxFit.cover,
-            opacity: .5,
+    return Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(
+            'lib/assets/img/my_com_bg.jpg',
           ),
-        ),
-        // padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            SizedBox(height: 350, child: topCard(context)),
-            const SizedBox(
-              height: 10,
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: members.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return viewListItem(index, context);
-                },
-              ),
-            ),
-          ],
+          fit: BoxFit.cover,
+          opacity: .5,
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showModalBottomSheet(
-            backgroundColor: Colors.transparent,
-            showDragHandle: true,
-            context: context,
-            builder: (ctx) => const MemberAddModal(),
-          );
-        },
-        backgroundColor: Theme.of(context).colorScheme.primaryFixed,
-        child: const Icon(
-          Icons.person_add,
-          color: Colors.white,
-        ),
+      // padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: [
+          SizedBox(height: 350, child: topCard(context)),
+          const SizedBox(
+            height: 10,
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: members.length,
+              itemBuilder: (BuildContext context, int index) {
+                return viewListItem(index, context);
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -111,8 +93,7 @@ class MyCommunity extends StatelessWidget {
         trailing: Text(
           '${index + 4}',
           style: TextStyle(
-              color: Theme.of(context).colorScheme.tertiary,
-              fontSize: 18),
+              color: Theme.of(context).colorScheme.tertiary, fontSize: 18),
         ),
       ),
     );
@@ -139,29 +120,29 @@ class MyCommunity extends StatelessWidget {
           Column(
             children: [
               Row(
-            children: [
-              Expanded(
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    'My Community Members',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontSize: 18,
+                children: [
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        'My Community Members',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 18,
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                  // IconButton(
+                  //   icon: const Icon(
+                  //     Icons.logout,
+                  //     color: Colors.white,
+                  //   ),
+                  //   onPressed: () {},
+                  // ),
+                ],
               ),
-              // IconButton(
-              //   icon: const Icon(
-              //     Icons.logout,
-              //     color: Colors.white,
-              //   ),
-              //   onPressed: () {},
-              // ),
-            ],
-          ),
               MemberCircle(
                 imageUrl: 'lib/assets/img/avatar1.png',
                 name: 'Bryan Wolf',
@@ -178,7 +159,9 @@ class MyCommunity extends StatelessWidget {
                     points: '450 coins',
                     rank: 2,
                   ),
-                  SizedBox(width: 70,),
+                  SizedBox(
+                    width: 70,
+                  ),
                   MemberCircle(
                     imageUrl: 'lib/assets/img/avatar3.png',
                     name: 'Nick Burg',
@@ -219,7 +202,8 @@ class MyCommunity extends StatelessWidget {
                     width: 150,
                     child: FilledButton(
                       onPressed: () {
-                        context.go('/home/community-explore/community-calender');
+                        context
+                            .go('/home/community-explore/community-calender');
                       },
                       style: const ButtonStyle(
                         backgroundColor: WidgetStatePropertyAll<Color>(
