@@ -36,7 +36,7 @@ ThemeData buildLightThemeData(BuildContext context) {
       onSecondaryFixed: Colors.black,
       onSecondaryFixedVariant: Colors.black,
 
-      tertiary: Colors.white,
+      tertiary: Colors.grey.shade400,
       onTertiary: Colors.black,
       tertiaryContainer: const Color(0xFF62FE70),
       onTertiaryContainer: Colors.black,

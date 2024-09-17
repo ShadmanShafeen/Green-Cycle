@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:green_cycle/src/community/my_community_view/member-circle.dart';
-import 'package:green_cycle/src/community/my_community_view/member_add_modal.dart';
 import 'package:green_cycle/src/models/members.dart';
+import 'package:green_cycle/src/vendor/vendor_widgets/member_add_modal.dart';
 import 'package:green_cycle/src/widgets/app_bar.dart';
 
 class VendorCommunityTab extends StatelessWidget {
@@ -18,32 +18,49 @@ class VendorCommunityTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(
-            'lib/assets/img/my_com_bg.jpg',
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(
+              'lib/assets/img/my_com_bg.jpg',
+            ),
+            fit: BoxFit.cover,
+            opacity: .5,
           ),
-          fit: BoxFit.cover,
-          opacity: .5,
+        ),
+        // padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            SizedBox(height: 350, child: topCard(context)),
+            const SizedBox(
+              height: 10,
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: members.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return viewListItem(index, context);
+                },
+              ),
+            ),
+          ],
         ),
       ),
-      // padding: const EdgeInsets.all(16.0),
-      child: Column(
-        children: [
-          SizedBox(height: 350, child: topCard(context)),
-          const SizedBox(
-            height: 10,
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: members.length,
-              itemBuilder: (BuildContext context, int index) {
-                return viewListItem(index, context);
-              },
-            ),
-          ),
-        ],
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showModalBottomSheet(
+            backgroundColor: Colors.transparent,
+            showDragHandle: true,
+            context: context,
+            builder: (ctx) => const MemberAddModal(),
+          );
+        },
+        backgroundColor: Theme.of(context).colorScheme.primaryFixed,
+        child: const Icon(
+          Icons.person_add,
+          color: Colors.white,
+        ),
       ),
     );
   }

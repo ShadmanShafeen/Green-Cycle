@@ -15,7 +15,9 @@ class GamesPage extends StatelessWidget {
       bottomNavigationBar: const NavBar(),
       body: Container(
         height: MediaQuery.of(context).size.height,
-        color: Theme.of(context).colorScheme.surfaceContainerLowest,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+        ),
         child: SingleChildScrollView(
           child: Column(
             children: [
