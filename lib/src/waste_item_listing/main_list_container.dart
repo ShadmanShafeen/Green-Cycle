@@ -21,7 +21,7 @@ class _WasteListContainerState extends State<WasteListContainer> {
         bottomNavigationBar: const NavBar(),
         resizeToAvoidBottomInset: true,
         body: Container(
-          color: Theme.of(context).colorScheme.surfaceContainerLow,
+          color: Theme.of(context).colorScheme.surface,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [

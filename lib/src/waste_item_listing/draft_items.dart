@@ -46,7 +46,7 @@ class _DraftItemsState extends State<DraftItems>
     super.build(context);
     return Scaffold(
       body: Container(
-        color: Theme.of(context).colorScheme.surfaceContainerLow,
+        color: Theme.of(context).colorScheme.surface,
         child: Column(
           children: [
             //TITLE ROW
