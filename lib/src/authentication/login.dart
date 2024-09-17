@@ -1,11 +1,15 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:green_cycle/auth.dart';
+import 'package:green_cycle/src/utils/server.dart';
 import 'package:green_cycle/src/utils/snackbars_alerts.dart';
 import 'package:quickalert/quickalert.dart';
 
@@ -31,6 +35,22 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       setState(() {
         errorMessage = e.message;
       });
+    }
+  }
+
+  Future<void> navigateToUserOrVendor() async {
+    try {
+      final email = _controllerEmail.text;
+      final dio = Dio();
+      final userInfo = await dio.get("$serverURLExpress/user-info/$email");
+      String role = userInfo.data['role'];
+      if (role.toLowerCase() == "user") {
+        context.go("/home");
+      } else {
+        context.go("/vendor");
+      }
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -133,7 +153,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                     "Log Into Your Account",
                     style: TextStyle(
                       color: Color.fromARGB(255, 184, 43, 219),
-                      fontSize: 30,
+                      fontSize: 25,
                     ),
                   ),
                 ],
@@ -192,14 +212,16 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 20.0, width: 20.0),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     Align(
                       alignment: Alignment.center,
                       child: ElevatedButton(
                         onPressed: () async {
                           await signInWithEmailAndPassword();
                           if (errorMessage == '') {
-                            context.go('/home');
+                            await navigateToUserOrVendor();
                           } else {
                             createQuickAlert(
                               context: context,
@@ -222,6 +244,22 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                         ),
                       ),
                     ),
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      Text(
+                        "Don't have an account?",
+                        style: TextStyle(color: Colors.white.withOpacity(0.9)),
+                      ),
+                      TextButton(
+                          onPressed: () {
+                            context.go('/signup');
+                          },
+                          child: Text("Signup",
+                              style: TextStyle(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  decoration: TextDecoration.underline,
+                                  decorationColor:
+                                      Theme.of(context).colorScheme.primary)))
+                    ]),
                   ],
                 ),
               ),

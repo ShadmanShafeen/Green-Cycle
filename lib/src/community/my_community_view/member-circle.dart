@@ -23,7 +23,7 @@ class MemberCircle extends StatelessWidget {
         Stack(
           children: [
             CircleAvatar(
-              radius: isTopMember ? 50 : 40,
+              radius: isTopMember ? 30 : 25,
               backgroundImage: AssetImage(imageUrl),
             ),
             Positioned(
@@ -72,8 +72,8 @@ class MemberCircle extends StatelessWidget {
             ),
             Text(
               points,
-              style: const TextStyle(
-                color: Color(0xFF40BF58),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.primary,
                 fontWeight: FontWeight.bold,
               ),
             ),

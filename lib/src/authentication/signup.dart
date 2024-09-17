@@ -28,6 +28,7 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
   // bool isLoggedIn = false;
   bool isSubmitting = false;
   final TextEditingController _controllerEmail = TextEditingController();
+  final TextEditingController _controllerName = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
   final TextEditingController _controllerContact = TextEditingController();
 
@@ -51,12 +52,13 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
         });
         await Auth().createUserWithEmailAndPassword(
             email: _controllerEmail.text, password: _controllerPassword.text);
-        await Auth().currentUser!.sendEmailVerification();
+        // await Auth().currentUser!.sendEmailVerification();
         errorMessage = '';
         final dio = Dio();
         try {
           final response =
               await dio.post("$serverURLExpress/user-signup", data: {
+            "name" : _controllerName.text,
             "email": _controllerEmail.text,
             "contact": _controllerContact.text,
             "role": "user",
@@ -173,7 +175,7 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
           ),
         ),
         Container(
-          height: MediaQuery.of(context).size.height,
+          // height: MediaQuery.of(context).size.height,
           padding: const EdgeInsets.all(10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -189,7 +191,7 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
                       width: 200,
                       padding: const EdgeInsets.all(8.0),
                       child: FlutterSwitch(
-                        width: isToggle ? 100 : 80,
+                        width: isToggle ? 120 : 100,
                         showOnOff: true,
                         value: isToggle,
                         onToggle: (val) {
@@ -212,7 +214,7 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
                     "Welcome",
                     style: TextStyle(
                       color: Color.fromARGB(255, 184, 43, 219),
-                      fontSize: 50,
+                      fontSize: 30,
                     ),
                   ),
                   const Text(
@@ -220,7 +222,7 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 30,
+                      fontSize: 17,
                     ),
                   ),
                 ],
@@ -240,6 +242,22 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+           const Text(
+            "Name",
+            style: TextStyle(
+              color: Color.fromARGB(255, 184, 43, 219),
+              fontSize: 15,
+            ),
+          ),
+          TextFormField(
+            style: const TextStyle(color: Colors.white),
+            controller: _controllerName,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: 'Enter Name',
+            ),
+          ),
+          const SizedBox(height: 20.0, width: 20.0),
           const Text(
             "Email",
             style: TextStyle(
@@ -314,30 +332,31 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
             ),
           ),
           const SizedBox(height: 15.0, width: 10.0),
-          const Align(
-            alignment: Alignment.bottomRight,
-            child: Text(
-              "Already Have an Account?",
-              style: TextStyle(
-                color: Color.fromARGB(255, 184, 43, 219),
-                fontSize: 15,
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: InkWell(
-              onTap: () {
-                context.push("/login");
-              },
-              child: const Text(
-                'Log In',
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                "Already Have an Account?",
                 style: TextStyle(
-                  color: Color.fromRGBO(31, 216, 139, 1),
-                  fontSize: 15,
+                  color: Colors.white,
+                  fontSize: 13
                 ),
               ),
-            ),
+              TextButton(
+                  onPressed: () {
+                    context.go("/login");
+                  },
+                  child: Text(
+                    'Log In',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                      decoration: TextDecoration.underline,
+                      decorationColor: Theme.of(context).colorScheme.primary,
+                      fontSize: 13
+                    ),
+                    
+                  )),
+            ],
           ),
         ],
       ),

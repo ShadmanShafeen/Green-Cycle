@@ -90,7 +90,7 @@ class CommunityExplore extends StatelessWidget {
                       style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
-                        fontSize: dynamicFontSize(context, 13),
+                        fontSize: 12
                       ),
                     ),
                     const Icon(

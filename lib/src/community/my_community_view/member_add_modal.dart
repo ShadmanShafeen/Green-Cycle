@@ -59,86 +59,56 @@ class _MemberAddModalState extends State<MemberAddModal> {
                       Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            SizedBox(
-                              height: 30,
-                              width: 150,
-                              child: FilledButton(
-                                onPressed: () {},
-                                style: const ButtonStyle(
-                                  backgroundColor:
-                                      WidgetStatePropertyAll<Color>(
-                                    Color.fromARGB(50, 136, 68, 240),
+                            ElevatedButton(
+                              onPressed: () {},
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    WidgetStatePropertyAll<Color>(
+                                  Theme.of(context).colorScheme.primary.withOpacity(0.75))
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.check,
+                                    color: Theme.of(context).colorScheme.secondary,
                                   ),
-                                  fixedSize: WidgetStatePropertyAll<Size>(
-                                    Size.fromWidth(200),
-                                  ),
-                                ),
-                                child: Center(
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.check,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .secondaryFixedDim,
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text(
-                                        'Accept',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onSurface),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                                 Text(
+                                      'Accept',
+                                      style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface),
+                                    ),
+                                ],
                               ),
                             ),
                             const SizedBox(width: 40),
-                            SizedBox(
-                              height: 30,
-                              width: 150,
-                              child: FilledButton(
-                                onPressed: () {},
-                                style: const ButtonStyle(
-                                  backgroundColor:
-                                      WidgetStatePropertyAll<Color>(
-                                    Color.fromARGB(50, 136, 68, 240),
-                                  ),
-                                  fixedSize: WidgetStatePropertyAll<Size>(
-                                    Size.fromWidth(200),
-                                  ),
-                                ),
-                                child: Center(
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.delete,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .tertiaryFixedDim,
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text(
-                                        'Reject',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onSurface),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                            ElevatedButton(
+                              onPressed: () {},
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    WidgetStatePropertyAll<Color>(
+                                  Theme.of(context).colorScheme.primary.withOpacity(0.75))
                               ),
-                            )
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.delete,
+                                    color: Theme.of(context).colorScheme.tertiary,
+                                  ),
+                                 SizedBox(width: 5,),
+                                 Text(
+                                      'Reject',
+                                      style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface),
+                                    ),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       ),
