@@ -61,8 +61,7 @@ class TopPlayersList extends StatelessWidget {
   Card buildTopPlayerCard(
       BuildContext context, String s, String t, int i, int j) {
     return Card(
-      color:
-          Theme.of(context).colorScheme.surfaceContainerHigh.withOpacity(0.7),
+      color: Theme.of(context).colorScheme.surfaceDim,
       child: ListTile(
         leading: CircleAvatar(
           backgroundImage: AssetImage(topPlayersDetails[i]["image"]!),
