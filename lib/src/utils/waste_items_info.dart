@@ -54,15 +54,26 @@ const Map<String, String> metal = {
       "Do not mix different types of metals in one recycling bin; keep them separate if required by your local recycling facility."
 };
 
-const Map<String, String> electronics = {
+const Map<String, String> biodegradable = {
   "Example Items":
-      "cell phones, laptops, tablets, printers, televisions, batteries",
-  "Data Security":
-      "Before recycling, make sure to erase all personal data from devices and back up important information.",
-  "Check Local Regulations":
-      "Different areas have specific rules and facilities for electronic waste. Verify local e-waste recycling programs and drop-off locations.",
-  "Remove Accessories":
-      "Take out any batteries or removable parts, such as SIM cards or memory cards, as these may need to be recycled separately.",
-  "Avoid Regular Trash":
-      "Do not dispose of electronics in regular trash as they contain hazardous materials that can harm the environment."
+      "food scraps, coffee grounds, tea bags, yard waste, paper towels",
+  "Composting":
+      "Biodegradable items can be composted to create nutrient-rich soil. Use a compost bin or pile to break down these materials naturally.",
+  "Avoid Contaminants":
+      "Do not include non-biodegradable items like plastic, metal, or glass in your compost. These can contaminate the compost and hinder the decomposition process.",
+  "Proper Balance":
+      "Maintain a proper balance of green (nitrogen-rich) and brown (carbon-rich) materials in your compost. Green materials include food scraps and yard waste, while brown materials include paper towels and dry leaves.",
+  "Aeration":
+      "Turn your compost regularly to provide aeration, which helps speed up the decomposition process. This also prevents the compost from becoming too compacted.",
+  "Moisture Control":
+      "Keep your compost moist but not too wet. The ideal moisture level is similar to a damp sponge. Too much moisture can lead to odor problems and slow down decomposition."
+};
+
+const Map<String, Map<String, String>> WASTE_ITEM_INFO = {
+  "PAPER": paper,
+  "CARDBOARD": cardboard,
+  "GLASS": glass,
+  "PLASTIC": plastic,
+  "METAL": metal,
+  "BIODEGRADABLE": biodegradable,
 };
