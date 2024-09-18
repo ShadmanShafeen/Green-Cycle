@@ -206,17 +206,18 @@ class _VendorSignupPageState extends State<VendorSignupPage> {
                 style: TextStyle(color: Colors.white, fontSize: 13),
               ),
               TextButton(
-                  onPressed: () {
-                    context.go("/login");
-                  },
-                  child: Text(
-                    'Log In',
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
-                        decoration: TextDecoration.underline,
-                        decorationColor: Theme.of(context).colorScheme.primary,
-                        fontSize: 13),
-                  )),
+                onPressed: () {
+                  context.go("/login");
+                },
+                child: Text(
+                  'Log In',
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                      decoration: TextDecoration.underline,
+                      decorationColor: Theme.of(context).colorScheme.primary,
+                      fontSize: 13),
+                ),
+              ),
             ],
           ),
         ],

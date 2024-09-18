@@ -320,7 +320,7 @@ class _DraftItemsState extends State<DraftItems>
             if (token != null) {
               await NotificationService().sendNotification(
                 "Draft items confirmed",
-                "The items in your draft list have been confirmed and added to your recent list",
+                "The items in your draft list have been confirmed and added to your recent list.Please wait for the vedor to confirm the items.",
                 token,
                 context.mounted ? context : context,
               );
@@ -329,7 +329,7 @@ class _DraftItemsState extends State<DraftItems>
             final snackBar = createSnackBar(
               title: "Draft Items Confirmed",
               message:
-                  "The items in your draft list have been confirmed and added to your recent list.Thank you.",
+                  "The items in your draft list have been confirmed and added to your recent list.Please wait for the vedor to confirm the items.Thank you.",
               contentType: "success",
             );
             ScaffoldMessenger.of(context.mounted ? context : context)
