@@ -12,13 +12,15 @@ class MemberAddModal extends StatefulWidget {
 }
 
 class _MemberAddModalState extends State<MemberAddModal> {
+  
+  late final List joinRequests;
   Future<void> getJoinRequests() async {
     try {
       final dio = Dio();
       final email = Auth().currentUser?.email;
-      print (email);
-      final joinRequests =
-          await dio.get("$serverURLExpress/vendor/join-requests/:email");
+      final response =
+          await dio.get("$serverURLExpress/vendor/join-requests/$email");
+      joinRequests = response.data[0]['join_requests'];
     } catch (e) {
       print(e);
     }
@@ -26,6 +28,7 @@ class _MemberAddModalState extends State<MemberAddModal> {
 
   @override
   Widget build(BuildContext context) {
+    getJoinRequests();
     return Container(
       decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
@@ -50,97 +53,30 @@ class _MemberAddModalState extends State<MemberAddModal> {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: newmem.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Card(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .primaryFixedDim
-                      .withOpacity(0.7),
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: ExpansionTile(
-                    expandedCrossAxisAlignment: CrossAxisAlignment.start,
-                    title: Text(
-                      newmem[index].name,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
-                    ),
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () {},
-                              style: ButtonStyle(
-                                  backgroundColor:
-                                      WidgetStatePropertyAll<Color>(
-                                          Theme.of(context)
-                                              .colorScheme
-                                              .primary
-                                              .withOpacity(0.75))),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.check,
-                                    color:
-                                        Theme.of(context).colorScheme.secondary,
-                                  ),
-                                  Text(
-                                    'Accept',
-                                    style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onSurface),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(width: 40),
-                            ElevatedButton(
-                              onPressed: () {},
-                              style: ButtonStyle(
-                                  backgroundColor:
-                                      WidgetStatePropertyAll<Color>(
-                                          Theme.of(context)
-                                              .colorScheme
-                                              .primary
-                                              .withOpacity(0.75))),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.delete,
-                                    color:
-                                        Theme.of(context).colorScheme.tertiary,
-                                  ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Text(
-                                    'Reject',
-                                    style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onSurface),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ),
+              child: FutureBuilder(
+                  future: getJoinRequests(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return LinearProgressIndicator(
+                        color: Theme.of(context).colorScheme.surface,
+                      );
+                    }
+                    else if (snapshot.hasError) {
+                      return const Center(
+                          child: Text(
+                            'Error Fetching Data :(',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                      );
+                    }
+                    else {
+                      return ListView(
+                        children: [
+                          ...joinRequests.map(toElement)
+                        ],
+                      )
+                    }
+                  })),
         ],
       ),
     );
