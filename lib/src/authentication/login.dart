@@ -3,9 +3,7 @@ import 'dart:ui';
 
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:green_cycle/auth.dart';
@@ -244,22 +242,27 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                         ),
                       ),
                     ),
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      Text(
-                        "Don't have an account?",
-                        style: TextStyle(color: Colors.white.withOpacity(0.9)),
-                      ),
-                      TextButton(
-                          onPressed: () {
-                            context.go('/signup');
-                          },
-                          child: Text("Signup",
-                              style: TextStyle(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  decoration: TextDecoration.underline,
-                                  decorationColor:
-                                      Theme.of(context).colorScheme.primary)))
-                    ]),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Don't have an account?",
+                          style:
+                              TextStyle(color: Colors.white.withOpacity(0.9)),
+                        ),
+                        TextButton(
+                            onPressed: () {
+                              context.go('/signup');
+                            },
+                            child: Text("Signup",
+                                style: TextStyle(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    decoration: TextDecoration.underline,
+                                    decorationColor:
+                                        Theme.of(context).colorScheme.primary)))
+                      ],
+                    ),
                   ],
                 ),
               ),

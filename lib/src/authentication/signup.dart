@@ -58,7 +58,7 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
         try {
           final response =
               await dio.post("$serverURLExpress/user-signup", data: {
-            "name" : _controllerName.text,
+            "name": _controllerName.text,
             "email": _controllerEmail.text,
             "contact": _controllerContact.text,
             "role": "user",
@@ -175,61 +175,63 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
           ),
         ),
         Container(
-          // height: MediaQuery.of(context).size.height,
+          height: MediaQuery.of(context).size.height,
           padding: const EdgeInsets.all(10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(height: 90.0, width: 100.0),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 500),
-                      width: 200,
-                      padding: const EdgeInsets.all(8.0),
-                      child: FlutterSwitch(
-                        width: isToggle ? 120 : 100,
-                        showOnOff: true,
-                        value: isToggle,
-                        onToggle: (val) {
-                          setState(() {
-                            isToggle = val;
-                          });
-                        },
-                        activeColor: Theme.of(context).colorScheme.primary,
-                        activeText: "Vendor",
-                        inactiveText: "User",
-                        inactiveColor: Colors.grey,
-                        activeTextColor:
-                            Theme.of(context).colorScheme.onSurface,
-                        inactiveTextColor:
-                            Theme.of(context).colorScheme.onSurfaceVariant,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(height: 90.0, width: 100.0),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 500),
+                        width: 200,
+                        padding: const EdgeInsets.all(8.0),
+                        child: FlutterSwitch(
+                          width: isToggle ? 120 : 100,
+                          showOnOff: true,
+                          value: isToggle,
+                          onToggle: (val) {
+                            setState(() {
+                              isToggle = val;
+                            });
+                          },
+                          activeColor: Theme.of(context).colorScheme.primary,
+                          activeText: "Vendor",
+                          inactiveText: "User",
+                          inactiveColor: Colors.grey,
+                          activeTextColor:
+                              Theme.of(context).colorScheme.onSurface,
+                          inactiveTextColor:
+                              Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
                       ),
                     ),
-                  ),
-                  const Text(
-                    "Welcome",
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 184, 43, 219),
-                      fontSize: 30,
+                    const Text(
+                      "Welcome",
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 184, 43, 219),
+                        fontSize: 30,
+                      ),
                     ),
-                  ),
-                  const Text(
-                    "Sign Up For A New Account",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 17,
+                    const Text(
+                      "Sign Up For A New Account",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 17,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              !isToggle ? userForm(context) : const VendorSignupPage(),
-            ],
+                  ],
+                ),
+                const SizedBox(height: 10),
+                !isToggle ? userForm(context) : const VendorSignupPage(),
+              ],
+            ),
           ),
         ),
       ],
@@ -242,7 +244,7 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-           const Text(
+          const Text(
             "Name",
             style: TextStyle(
               color: Color.fromARGB(255, 184, 43, 219),
@@ -337,25 +339,21 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
             children: [
               const Text(
                 "Already Have an Account?",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 13
-                ),
+                style: TextStyle(color: Colors.white, fontSize: 13),
               ),
               TextButton(
-                  onPressed: () {
-                    context.go("/login");
-                  },
-                  child: Text(
-                    'Log In',
-                    style: TextStyle(
+                onPressed: () {
+                  context.go("/login");
+                },
+                child: Text(
+                  'Log In',
+                  style: TextStyle(
                       color: Theme.of(context).colorScheme.primary,
                       decoration: TextDecoration.underline,
                       decorationColor: Theme.of(context).colorScheme.primary,
-                      fontSize: 13
-                    ),
-                    
-                  )),
+                      fontSize: 13),
+                ),
+              ),
             ],
           ),
         ],

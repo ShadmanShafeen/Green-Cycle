@@ -12,6 +12,7 @@ import 'package:green_cycle/src/notification/notification_service.dart';
 import 'package:green_cycle/src/utils/responsive_functions.dart';
 import 'package:green_cycle/src/utils/server.dart';
 import 'package:green_cycle/src/utils/snackbars_alerts.dart';
+import 'package:green_cycle/src/utils/waste_items_info.dart';
 import 'package:green_cycle/src/widgets/app_bar.dart';
 import 'package:green_cycle/src/widgets/nav_bar.dart';
 
@@ -277,18 +278,47 @@ class _ImagePreviewState extends State<ImagePreview> {
                   ),
                 ),
               )
-            : ListTile(
-                title: Text(
-                  "This is details about the recyclable item and how it can be recycled. "
-                  "This is details about the recyclable item and how it can be recycled. "
-                  "This is details about the recyclable item and how it can be recycled. "
-                  "This is details about the recyclable item and how it can be recycled.",
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurface,
-                    fontSize: 16,
-                  ),
+            : RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: "Example Items: ",
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    TextSpan(
+                      text: WASTE_ITEM_INFO[category]!['Example Items'],
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const TextSpan(text: "\n"),
+                  ],
                 ),
               ),
+        // listing instructions
+        for (final entry in WASTE_ITEM_INFO[category]!.entries.skip(1))
+          ListTile(
+            title: Text(
+              entry.key,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            subtitle: Text(
+              entry.value,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
+                fontSize: 16,
+              ),
+            ),
+          ),
       ],
     );
   }
