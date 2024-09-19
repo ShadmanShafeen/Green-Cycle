@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:green_cycle/src/vendor/vendor_approve_tab.dart';
 import 'package:green_cycle/src/vendor/vendor_communities_tab(old).dart';
 import 'package:green_cycle/src/vendor/vendor_community_tab.dart';
-import 'package:green_cycle/src/vendor/vendor_map_tab.dart';
+import 'package:green_cycle/src/vendor/vendor_schedule_tab.dart';
 import 'package:green_cycle/src/vendor/vendor_profile_tab.dart';
 
 class VendorPage extends StatefulWidget {
@@ -46,7 +46,7 @@ class _VendorPageState extends State<VendorPage> {
                 icon: Icon(Icons.diversity_1),
               ),
               Tab(
-                icon: Icon(Icons.location_on),
+                icon: Icon(Icons.event),
               ),
               Tab(
                 icon: Icon(Icons.person),
@@ -56,9 +56,9 @@ class _VendorPageState extends State<VendorPage> {
         ),
         body: TabBarView(
           children: [
-            const VendorApproveTab(),
-            const VendorCommunityTab(),
-            VendorMapTab(),
+            VendorApproveTab(),
+            VendorCommunityTab(),
+            VendorScheduleTab(),
             const VendorProfileTab(),
           ],
         ),
