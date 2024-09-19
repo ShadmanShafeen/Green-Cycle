@@ -12,15 +12,35 @@ class MemberAddModal extends StatefulWidget {
 }
 
 class _MemberAddModalState extends State<MemberAddModal> {
-  late final List<String> joinRequests;
+  late List joinRequests = [];
+  final dio = Dio();
+  final vendor_email = Auth().currentUser?.email;
   Future<void> getJoinRequests() async {
     try {
-      final dio = Dio();
-      final email = Auth().currentUser?.email;
       final response =
-          await dio.get("$serverURLExpress/vendor/join-requests/$email");
+          await dio.get("$serverURLExpress/vendor/join-requests/$vendor_email");
       joinRequests = response.data[0]['join_requests'];
       print(joinRequests);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> acceptJoinRequest(email) async {
+    try {
+      await dio.patch(
+          "$serverURLExpress/vendor/accept-join-request/$vendor_email/$email");
+      await getJoinRequests();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> rejectJoinRequest(email) async {
+    try {
+      await dio.patch(
+          "$serverURLExpress/vendor/reject-join-request/$vendor_email/$email");
+      await getJoinRequests();
     } catch (e) {
       print(e);
     }
@@ -57,8 +77,14 @@ class _MemberAddModalState extends State<MemberAddModal> {
                   future: getJoinRequests(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return LinearProgressIndicator(
-                        color: Theme.of(context).colorScheme.surface,
+                      return SizedBox(
+                        height: 30,
+                        width: 30,
+                        child: LinearProgressIndicator(
+                          backgroundColor:
+                              Theme.of(context).colorScheme.surfaceContainerLow,
+                          color: Theme.of(context).colorScheme.surfaceBright,
+                        ),
                       );
                     } else if (snapshot.hasError) {
                       return const Center(
@@ -85,10 +111,10 @@ class _MemberAddModalState extends State<MemberAddModal> {
                                   title: Text(
                                     email.toString(),
                                     style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface,
-                                    ),
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface,
+                                        fontSize: 12),
                                   ),
                                   children: [
                                     Padding(
@@ -98,7 +124,9 @@ class _MemberAddModalState extends State<MemberAddModal> {
                                             MainAxisAlignment.center,
                                         children: [
                                           ElevatedButton(
-                                            onPressed: () {},
+                                            onPressed: () async {
+                                              await acceptJoinRequest(email);
+                                            },
                                             style: ButtonStyle(
                                                 backgroundColor:
                                                     WidgetStatePropertyAll<
@@ -127,7 +155,9 @@ class _MemberAddModalState extends State<MemberAddModal> {
                                           ),
                                           const SizedBox(width: 40),
                                           ElevatedButton(
-                                            onPressed: () {},
+                                            onPressed: () async {
+                                              await rejectJoinRequest(email);
+                                            },
                                             style: ButtonStyle(
                                                 backgroundColor:
                                                     WidgetStatePropertyAll<

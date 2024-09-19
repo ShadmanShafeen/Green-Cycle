@@ -1,7 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:green_cycle/src/models/vendor_request.dart';
+import 'package:green_cycle/src/utils/server.dart';
 
 class VendorRequestsList extends StatefulWidget {
   const VendorRequestsList({super.key});
@@ -27,7 +29,11 @@ class _VendorRequestsListState extends State<VendorRequestsList> {
     VendorRequest(
         userID: '257',
         userName: 'Waliza Chowdhury',
-        items: {'cardboard box': 4, 'plastic bottles': 10, 'aluminium cans': 12},
+        items: {
+          'cardboard box': 4,
+          'plastic bottles': 10,
+          'aluminium cans': 12
+        },
         contactNo: '01711839019',
         imagePath: ''),
     VendorRequest(
@@ -37,10 +43,22 @@ class _VendorRequestsListState extends State<VendorRequestsList> {
         contactNo: '01711839019',
         imagePath: ''),
   ];
+  Future<void> getRecycleRequests() async {
+    try {
+      final dio = Dio();
+      final response = await dio
+          .get("$serverURLExpress/vendor/fetch-recycle-requests/:email");
+      print(response.data);
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    List<VendorRequest> pendingVendorRequests = vendorRequests.where((request) => !request.isAccepted).toList();
+    // getRecycleRequests();
+    List<VendorRequest> pendingVendorRequests =
+        vendorRequests.where((request) => !request.isAccepted).toList();
     return ListView(children: [
       ...pendingVendorRequests.map((VendorRequest request) => Card(
             elevation: 10,
@@ -126,22 +144,42 @@ class _VendorRequestsListState extends State<VendorRequestsList> {
                   alignment: Alignment.bottomCenter,
                   child: Padding(
                     padding: const EdgeInsets.all(10),
-                    child: ElevatedButton.icon(
-                        style: ButtonStyle(
-                            backgroundColor: WidgetStatePropertyAll(
-                                Theme.of(context).colorScheme.primary)),
-                        icon: Icon(Icons.handshake,
-                            color: Theme.of(context).colorScheme.onSurface),
-                        onPressed: () {
-                          setState(() {
-                            request.isAccepted = !request.isAccepted;
-                          });
-                        },
-                        label: Text(
-                          'Confirm',
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurface),
-                        )),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton.icon(
+                            style: ButtonStyle(
+                                backgroundColor: WidgetStatePropertyAll(
+                                    Theme.of(context).colorScheme.primary)),
+                            icon: Icon(Icons.handshake,
+                                color: Theme.of(context).colorScheme.onSurface),
+                            onPressed: () {
+                              setState(() {
+                                request.isAccepted = !request.isAccepted;
+                              });
+                            },
+                            label: Text(
+                              'Confirm',
+                              style: TextStyle(
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface),
+                            )),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        ElevatedButton.icon(
+                            icon: Icon(
+                              Icons.delete,
+                              color: Colors.redAccent,
+                            ),
+                            onPressed: () {},
+                            label: Text(
+                              "Reject",
+                              style:
+                                  TextStyle(color: Colors.redAccent.shade200),
+                            ))
+                      ],
+                    ),
                   ),
                 )
               ],

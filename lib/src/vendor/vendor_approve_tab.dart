@@ -4,8 +4,6 @@ import 'package:green_cycle/src/vendor/vendor_widgets/vendor_requests_list.dart'
 class VendorApproveTab extends StatelessWidget {
   const VendorApproveTab({super.key});
 
-  
-
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -16,7 +14,7 @@ class VendorApproveTab extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
           Text(
-            "Your Requests",
+            "Your Recycle Requests",
             style: TextStyle(color: Theme.of(context).colorScheme.secondary),
             textScaler: const TextScaler.linear(1.5),
           ),
