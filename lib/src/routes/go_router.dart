@@ -12,6 +12,7 @@ import '../welcome_screen/welcome_screen.dart';
 
 final goRouter = GoRouter(
   initialLocation: '/',
+
   routes: [
     homeRouter,
     GoRoute(

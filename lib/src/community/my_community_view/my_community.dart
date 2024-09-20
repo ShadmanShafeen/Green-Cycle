@@ -163,6 +163,7 @@ class MyCommunity extends StatelessWidget {
             ],
           ),
               MemberCircle(
+                isVisible: true,
                 imageUrl: 'lib/assets/img/avatar1.png',
                 name: 'Bryan Wolf',
                 points: '542 coins',
@@ -173,6 +174,7 @@ class MyCommunity extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   MemberCircle(
+                    isVisible: true,
                     imageUrl: 'lib/assets/img/avatar2.png',
                     name: 'Alex Turner',
                     points: '450 coins',
@@ -180,6 +182,7 @@ class MyCommunity extends StatelessWidget {
                   ),
                   SizedBox(width: 70,),
                   MemberCircle(
+                    isVisible: true,
                     imageUrl: 'lib/assets/img/avatar3.png',
                     name: 'Nick Burg',
                     points: '312 coins',
