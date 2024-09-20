@@ -289,36 +289,38 @@ class _ImagePreviewState extends State<ImagePreview> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    TextSpan(
-                      text: WASTE_ITEM_INFO[category]!['Example Items'],
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSurface,
-                        fontSize: 16,
+                    if (!isLoading)
+                      TextSpan(
+                        text: WASTE_ITEM_INFO[category]!['Example Items'],
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface,
+                          fontSize: 16,
+                        ),
                       ),
-                    ),
                     const TextSpan(text: "\n"),
                   ],
                 ),
               ),
         // listing instructions
-        for (final entry in WASTE_ITEM_INFO[category]!.entries.skip(1))
-          ListTile(
-            title: Text(
-              entry.key,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onSurface,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+        if (!isLoading)
+          for (final entry in WASTE_ITEM_INFO[category]!.entries.skip(1))
+            ListTile(
+              title: Text(
+                entry.key,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              subtitle: Text(
+                entry.value,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontSize: 16,
+                ),
               ),
             ),
-            subtitle: Text(
-              entry.value,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onSurface,
-                fontSize: 16,
-              ),
-            ),
-          ),
       ],
     );
   }

@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:green_cycle/auth.dart';
 import 'package:green_cycle/src/utils/server.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 void showtoast() {
   Fluttertoast.showToast(
@@ -28,7 +28,8 @@ void showtoast1() {
 }
 
 class DetailsModal1 extends StatelessWidget {
-  DetailsModal1({super.key});
+  const DetailsModal1({super.key});
+  
   void insertData() async {
     final dio = Dio();
     final Auth auth = Auth();
