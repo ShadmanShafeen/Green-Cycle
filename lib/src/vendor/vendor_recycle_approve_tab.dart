@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:green_cycle/src/vendor/vendor_widgets/vendor_requests_list.dart';
+import 'package:green_cycle/src/vendor/vendor_widgets/recycle_requests_list.dart';
 
-class VendorApproveTab extends StatelessWidget {
-  const VendorApproveTab({super.key});
+class VendorRecycleApproveTab extends StatelessWidget {
+  const VendorRecycleApproveTab({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class VendorApproveTab extends StatelessWidget {
           Divider(
             color: Theme.of(context).colorScheme.secondary,
           ),
-          const Expanded(flex: 5,child: VendorRequestsList())
+          const Expanded(flex: 5,child: RecycleRequestsList())
         ]),
       ),
     );
