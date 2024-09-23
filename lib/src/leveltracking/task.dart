@@ -29,7 +29,7 @@ class _TaskState extends State<Task> {
             value: isDone,
             onChanged: (bool? value) {
               setState(() {
-                isDone = value;
+                // isDone = value;
               });
             },
             shape:

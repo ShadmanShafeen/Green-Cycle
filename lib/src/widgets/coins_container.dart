@@ -13,15 +13,13 @@ class CoinsContainer extends StatefulWidget {
 }
 
 class _CoinsContainerState extends State<CoinsContainer> {
-  late var coins = -1;
-
-  final Auth _auth = Auth();
-  final dio = Dio();
-
+  late var coins = 0;
+  
   Future<void> getAndUpdateUserCoins() async {
-    User? user = _auth.currentUser;
+    final dio = Dio();
+    final email = Auth().currentUser?.email;
     final response =
-        await dio.get('$serverURLExpress/user-info/${user?.email}');
+        await dio.get('$serverURLExpress/user-info/$email');
     coins = response.data['coins'];
   }
 

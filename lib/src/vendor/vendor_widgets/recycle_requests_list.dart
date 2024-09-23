@@ -42,7 +42,9 @@ class _RecycleRequestsListState extends State<RecycleRequestsList> {
               backgroundColor: Theme.of(context).colorScheme.surface,
             );
           } else if (snapshot.hasError) {
-            return Center();
+            return Center(
+              child: Text("Error Loading Data"),
+            );
           } else {
             return ListView(children: [
               ...recycleRequests.map((request) =>
