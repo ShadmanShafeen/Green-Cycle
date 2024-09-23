@@ -1,15 +1,16 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:green_cycle/src/leveltracking/animated_line.dart';
 import 'package:green_cycle/src/leveltracking/coins_earned_container.dart';
 import 'package:green_cycle/src/leveltracking/level_container.dart';
+import 'package:green_cycle/src/utils/server.dart';
 
 class LevelList extends StatefulWidget {
-  const LevelList({super.key, required this.currentLevel});
-
+  LevelList({super.key, required this.currentLevel, required this.coinsEarned});
   final int currentLevel;
-
+  final int coinsEarned;
   @override
   State<LevelList> createState() => _LevelListState();
 }
@@ -73,19 +74,24 @@ class _LevelListState extends State<LevelList> {
                 ),
               ] else if (i == widget.currentLevel) ...[
                 Stack(
+                  alignment: Alignment.center,
                   children: [
                     Align(
                         alignment: Alignment.center,
                         child: LevelContainer(
-                            size: 75,
+                            size: 90,
                             level: i,
                             levelReached: currentLevelReached)),
                     Visibility(
                       visible: coinsEarnedContainerVisible,
-                      child: Positioned(
-                        top: 20,
-                        right: MediaQuery.of(context).size.width * 0.04,
-                        child: CoinsEarnedContainer(),
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        // right: MediaQuery.of(context).size.width * 0.02,
+                        child: Padding(
+                          padding: EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.01),
+                          child: CoinsEarnedContainer(
+                              coinsEarned: widget.coinsEarned),
+                        ),
                       ),
                     )
                   ],

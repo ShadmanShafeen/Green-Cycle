@@ -2,9 +2,8 @@
 import 'package:flutter/material.dart';
 
 class CoinsEarnedContainer extends StatelessWidget{
-  final int coinsEarned = 100;
-
-  const CoinsEarnedContainer({super.key});
+  CoinsEarnedContainer({super.key , required this.coinsEarned});
+  int coinsEarned;
   @override
   Widget build(BuildContext context) {
     return Padding(

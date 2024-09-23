@@ -2,72 +2,122 @@
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:green_cycle/src/models/vendor_request.dart';
+import 'package:green_cycle/auth.dart';
 import 'package:green_cycle/src/utils/server.dart';
 
-class VendorRequestsList extends StatefulWidget {
-  const VendorRequestsList({super.key});
+class RecycleRequestsList extends StatefulWidget {
+  const RecycleRequestsList({super.key});
 
   @override
-  State<VendorRequestsList> createState() => _VendorRequestsListState();
+  State<RecycleRequestsList> createState() => _RecycleRequestsListState();
 }
 
-class _VendorRequestsListState extends State<VendorRequestsList> {
-  List<VendorRequest> vendorRequests = [
-    VendorRequest(
-        userID: '123',
-        userName: 'Shadman Shafeen',
-        items: {'blankets': 3, 'glass bottles': 10, 'books': 12},
-        contactNo: '01677188999',
-        imagePath: ''),
-    VendorRequest(
-        userID: '113',
-        userName: 'Abrar Mahir Esam',
-        items: {'books': 5, 'plastic cups': 9, 'glass jars': 12},
-        contactNo: '01715145333',
-        imagePath: ''),
-    VendorRequest(
-        userID: '257',
-        userName: 'Waliza Chowdhury',
-        items: {
-          'cardboard box': 4,
-          'plastic bottles': 10,
-          'aluminium cans': 12
-        },
-        contactNo: '01711839019',
-        imagePath: ''),
-    VendorRequest(
-        userID: '462',
-        userName: 'Nishat Tabassum',
-        items: {'newspapers': 20, 'plastic items': 3, 'jute basket': 7},
-        contactNo: '01711839019',
-        imagePath: ''),
-  ];
+class _RecycleRequestsListState extends State<RecycleRequestsList> {
+  List recycleRequests = [];
   Future<void> getRecycleRequests() async {
     try {
       final dio = Dio();
+      final vendor_email = Auth().currentUser?.email;
       final response = await dio
-          .get("$serverURLExpress/vendor/fetch-recycle-requests/:email");
-      print(response.data);
+          .get("$serverURLExpress/vendor/fetch-recycle-requests/$vendor_email");
+      recycleRequests = response.data;
+      
+    } catch (e) {
+      print(e);
+    }
+  }
+  @override
+  void initState() {
+    super.initState();
+    getRecycleRequests(); // Fetch requests when the widget is first built
+  }
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+        future: getRecycleRequests(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return LinearProgressIndicator(
+              color: Theme.of(context).colorScheme.surfaceBright,
+              backgroundColor: Theme.of(context).colorScheme.surface,
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text("Error Loading Data"),
+            );
+          } else {
+            return ListView(children: [
+              ...recycleRequests.map((request) =>
+                  RecycleRequest(context, request, getRecycleRequests))
+            ]);
+          }
+        });
+  }
+}
+
+Widget RecycleRequest(context, request, getRecycleRequests) {
+  String name = '';
+  String contact = '';
+  Future<void> getUserInfo() async {
+    try {
+      final dio = Dio();
+      final email = request['email'];
+      final response = await dio.get("$serverURLExpress/user-info/$email");
+      name = response.data['name'];
+      contact = response.data['contact'];
     } catch (e) {
       print(e);
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    // getRecycleRequests();
-    List<VendorRequest> pendingVendorRequests =
-        vendorRequests.where((request) => !request.isAccepted).toList();
-    return ListView(children: [
-      ...pendingVendorRequests.map((VendorRequest request) => Card(
+  Future<void> acceptRecycleRequest() async {
+    try {
+      final dio = Dio();
+      final vendor_email = Auth().currentUser?.email;
+      final request_id = request['_id'];
+      await dio.patch(
+          "$serverURLExpress/vendor/accept-recycle-request/$vendor_email/$request_id");
+      await getRecycleRequests();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> rejectRecycleRequest() async {
+    try {
+      final dio = Dio();
+      final vendor_email = Auth().currentUser?.email;
+      final request_id = request['_id'];
+      await dio.patch(
+          "$serverURLExpress/vendor/reject-recycle-request/$vendor_email/$request_id");
+      await getRecycleRequests();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  return FutureBuilder(
+      future: getUserInfo(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return LinearProgressIndicator(
+            color: Theme.of(context).colorScheme.surfaceBright,
+            backgroundColor: Theme.of(context).colorScheme.surface,
+          );
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text("Error Fetching Data."),
+          );
+        } else {
+          return Card(
             elevation: 10,
             color: Theme.of(context).colorScheme.surfaceContainer,
             child: ExpansionTile(
-              title: Text(request.userName),
+              title: Text(name),
               subtitle: Text(
-                'User ID : ${request.userID}',
+                '${request["email"]}',
                 style: TextStyle(
+                    fontSize: 12,
                     color: Theme.of(context)
                         .colorScheme
                         .onSurface
@@ -93,7 +143,7 @@ class _VendorRequestsListState extends State<VendorRequestsList> {
                     child: Padding(
                       padding: EdgeInsets.all(10),
                       child: Text(
-                        'Contact No: ${request.contactNo}',
+                        'Contact No: $contact',
                         style: TextStyle(
                             color: Theme.of(context).colorScheme.onSurface),
                       ),
@@ -112,7 +162,7 @@ class _VendorRequestsListState extends State<VendorRequestsList> {
                     ),
                   ),
                 ),
-                ...request.items.entries.map((item) => SizedBox(
+                ...request['items'].map((item) => SizedBox(
                       width: MediaQuery.of(context).size.width * 0.8,
                       child: Card(
                         elevation: 5,
@@ -129,7 +179,7 @@ class _VendorRequestsListState extends State<VendorRequestsList> {
                                 width: 10,
                               ),
                               Text(
-                                '${item.value} ${item.key}',
+                                '${item["amount"]} ${item["item_name"]}',
                                 style: TextStyle(
                                     color: Theme.of(context)
                                         .colorScheme
@@ -153,10 +203,8 @@ class _VendorRequestsListState extends State<VendorRequestsList> {
                                     Theme.of(context).colorScheme.primary)),
                             icon: Icon(Icons.handshake,
                                 color: Theme.of(context).colorScheme.onSurface),
-                            onPressed: () {
-                              setState(() {
-                                request.isAccepted = !request.isAccepted;
-                              });
+                            onPressed: () async {
+                              await acceptRecycleRequest();
                             },
                             label: Text(
                               'Confirm',
@@ -172,7 +220,9 @@ class _VendorRequestsListState extends State<VendorRequestsList> {
                               Icons.delete,
                               color: Colors.redAccent,
                             ),
-                            onPressed: () {},
+                            onPressed: () async {
+                              await rejectRecycleRequest();
+                            },
                             label: Text(
                               "Reject",
                               style:
@@ -184,7 +234,7 @@ class _VendorRequestsListState extends State<VendorRequestsList> {
                 )
               ],
             ),
-          ))
-    ]);
-  }
+          );
+        }
+      });
 }

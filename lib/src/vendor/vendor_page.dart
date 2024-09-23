@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:green_cycle/src/vendor/vendor_approve_tab.dart';
+import 'package:green_cycle/src/vendor/vendor_recycle_approve_tab.dart';
 import 'package:green_cycle/src/vendor/vendor_communities_tab(old).dart';
 import 'package:green_cycle/src/vendor/vendor_community_tab.dart';
 import 'package:green_cycle/src/vendor/vendor_schedule_tab.dart';
@@ -56,7 +56,7 @@ class _VendorPageState extends State<VendorPage> {
         ),
         body: TabBarView(
           children: [
-            VendorApproveTab(),
+            VendorRecycleApproveTab(),
             VendorCommunityTab(),
             VendorScheduleTab(),
             const VendorProfileTab(),
