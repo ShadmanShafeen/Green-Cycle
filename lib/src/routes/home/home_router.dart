@@ -18,10 +18,10 @@ import '../../waste_item_listing/main_list_container.dart';
 
 final homeRouter = GoRoute(
   path: '/home',
-  builder: (context, state) => HomePage(),
+  builder: (context, state) => const HomePage(),
   pageBuilder: (context, state) {
     return returnCustomTransitionPage(
-      child: HomePage(),
+      child: const HomePage(),
       context: context,
       type: PageTransitionType.bottomToTop,
     );
@@ -95,9 +95,11 @@ final homeRouter = GoRoute(
     GoRoute(
         path: 'search-waste',
         pageBuilder: (context, state) {
-          final wasteType = state.extra as String; 
+          final wasteType = state.extra as String;
           return returnCustomTransitionPage(
-            child: SearchWastePage(category: wasteType,),
+            child: SearchWastePage(
+              category: wasteType,
+            ),
             context: context,
             type: PageTransitionType.bottomToTop,
             durationMillis: 800,
