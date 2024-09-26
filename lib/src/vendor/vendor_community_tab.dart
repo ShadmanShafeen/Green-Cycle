@@ -9,8 +9,15 @@ import 'package:green_cycle/src/utils/server.dart';
 import 'package:green_cycle/src/vendor/vendor_widgets/member_add_modal.dart';
 import 'package:green_cycle/src/widgets/app_bar.dart';
 
-class VendorCommunityTab extends StatelessWidget {
+class VendorCommunityTab extends StatefulWidget {
   VendorCommunityTab({super.key});
+  late List ranked_members = [];
+  late List members = [];
+  @override
+  State<VendorCommunityTab> createState() => _VendorCommunityTabState();
+}
+
+class _VendorCommunityTabState extends State<VendorCommunityTab> {
   bool isUser(String name) {
     if (name == 'You') {
       return true;
@@ -18,19 +25,19 @@ class VendorCommunityTab extends StatelessWidget {
     return false;
   }
 
-  late final community;
+  late var community;
   final dio = Dio();
   final vendor_email = Auth().currentUser?.email;
-  late var ranked_members = [];
-  late var members = [];
+
   Future<void> getCommunity() async {
     try {
       await dio.patch("$serverURLExpress/community/rank-members/$vendor_email");
       community = await dio
           .get("$serverURLExpress/vendor/fetch-community/$vendor_email");
-      ranked_members = community.data["rank"];
-      members = community.data['members'];
-      print(members);
+     
+      widget.ranked_members = community.data["rank"];
+      widget.members = community.data['members'];
+     
     } catch (e) {
       print(e);
     }
@@ -73,7 +80,7 @@ class VendorCommunityTab extends StatelessWidget {
                       } else {
                         return ListView(
                           children: [
-                            ...members.asMap().entries.map((entry) {
+                            ...widget.members.asMap().entries.map((entry) {
                               int index =
                                   entry.key; // Get the index of the member
                               var member = entry.value; // Get the member itself
@@ -109,7 +116,7 @@ class VendorCommunityTab extends StatelessWidget {
             backgroundColor: Colors.transparent,
             showDragHandle: true,
             context: context,
-            builder: (ctx) => const MemberAddModal(),
+            builder: (ctx) => MemberAddModal(),
           );
         },
         backgroundColor: Theme.of(context).colorScheme.primaryFixed,
@@ -122,56 +129,6 @@ class VendorCommunityTab extends StatelessWidget {
   }
 
   // Widget viewListItem(BuildContext context) {
-  //   return Card(
-  //     color: const Color(0xFF2C2C2C).withOpacity(0.7),
-  //     elevation: 5,
-  //     shape: RoundedRectangleBorder(
-  //       borderRadius: BorderRadius.circular(8),
-  //     ),
-  //     child: ListTile(
-  //       tileColor: isUser(members[index]['email'])
-  //           ? Theme.of(context).colorScheme.onInverseSurface.withOpacity(0.8)
-  //           : Theme.of(context)
-  //               .colorScheme
-  //               .surfaceContainerHigh
-  //               .withOpacity(0.7),
-  //       leading: CircleAvatar(
-  //         radius: 30,
-  //         backgroundImage: AssetImage(members[index].image),
-  //       ),
-  //       title: Text(
-  //         members[index].name,
-  //         style: isUser(members[index].name)
-  //             ? TextStyle(
-  //                 color: Theme.of(context).colorScheme.tertiary,
-  //                 fontWeight: FontWeight.bold,
-  //               )
-  //             : TextStyle(
-  //                 color: Theme.of(context).colorScheme.primary,
-  //                 fontWeight: FontWeight.bold,
-  //               ),
-  //       ),
-  //       subtitle: Text(
-  //         '${members[index].points} coins',
-  //         style: isUser(members[index].name)
-  //             ? TextStyle(
-  //                 color: Theme.of(context).colorScheme.surfaceContainerLowest,
-  //                 fontWeight: FontWeight.bold,
-  //               )
-  //             : TextStyle(
-  //                 color: Theme.of(context).colorScheme.onSurface,
-  //                 fontWeight: FontWeight.bold,
-  //               ),
-  //       ),
-  //       trailing: Text(
-  //         '${index + 4}',
-  //         style: TextStyle(
-  //             color: Theme.of(context).colorScheme.tertiary, fontSize: 18),
-  //       ),
-  //     ),
-  //   );
-  // }
-
   Widget topCard(BuildContext context) {
     return FutureBuilder(
         future: getCommunity(),
@@ -231,13 +188,14 @@ class VendorCommunityTab extends StatelessWidget {
                         ],
                       ),
                       MemberCircle(
-                        isVisible: ranked_members.length == 0 ? false : true,
+                        isVisible:
+                            widget.ranked_members.length == 0 ? false : true,
                         imageUrl: 'lib/assets/img/avatar1.png',
-                        name: ranked_members.length > 0
-                            ? ranked_members[0]['name']
+                        name: widget.ranked_members.length > 0
+                            ? widget.ranked_members[0]['name']
                             : "",
-                        points: ranked_members.length > 0
-                            ? ranked_members[0]['coins'].toString()
+                        points: widget.ranked_members.length > 0
+                            ? widget.ranked_members[0]['coins'].toString()
                             : "",
                         rank: 1,
                         isTopMember: true,
@@ -246,14 +204,15 @@ class VendorCommunityTab extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           MemberCircle(
-                            isVisible:
-                                ranked_members.length <= 1 ? false : true,
+                            isVisible: widget.ranked_members.length <= 1
+                                ? false
+                                : true,
                             imageUrl: 'lib/assets/img/avatar2.png',
-                            name: ranked_members.length > 1
-                                ? ranked_members[1]['name']
+                            name: widget.ranked_members.length > 1
+                                ? widget.ranked_members[1]['name']
                                 : "",
-                            points: ranked_members.length > 1
-                                ? ranked_members[1]['coins'].toString()
+                            points: widget.ranked_members.length > 1
+                                ? widget.ranked_members[1]['coins'].toString()
                                 : "",
                             rank: 2,
                           ),
@@ -261,14 +220,15 @@ class VendorCommunityTab extends StatelessWidget {
                             width: 70,
                           ),
                           MemberCircle(
-                            isVisible:
-                                ranked_members.length <= 2 ? false : true,
+                            isVisible: widget.ranked_members.length <= 2
+                                ? false
+                                : true,
                             imageUrl: 'lib/assets/img/avatar3.png',
-                            name: ranked_members.length > 2
-                                ? ranked_members[2]['name']
+                            name: widget.ranked_members.length > 2
+                                ? widget.ranked_members[2]['name']
                                 : "",
-                            points: ranked_members.length > 2
-                                ? ranked_members[2]['coins'].toString()
+                            points: widget.ranked_members.length > 2
+                                ? widget.ranked_members[2]['coins'].toString()
                                 : "",
                             rank: 3,
                           ),

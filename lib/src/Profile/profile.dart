@@ -74,10 +74,10 @@ class Profile extends StatelessWidget {
                 "/home/profile/waste_item_list"),
             buildOptionCard(context, "Collection Dates", Icons.today,
                 "/home/profile/community_calender"),
-            buildOptionCard(context, "Usage History", Icons.history, ""),
-            buildOptionCard(context, "Privacy", Icons.privacy_tip, ""),
-            buildOptionCard(context, "Settings", Icons.settings, ""),
-            buildOptionCard(context, "Log Out", Icons.logout, "",
+            // buildOptionCard(context, "Usage History", Icons.history, ""),
+            // buildOptionCard(context, "Privacy", Icons.privacy_tip, ""),
+            // buildOptionCard(context, "Settings", Icons.settings, ""),
+            buildOptionCard(context, "Log Out", Icons.logout, "/login",
                 onTapMethod: () async {
               final Auth auth = Auth();
               await auth.signOut();
@@ -103,6 +103,7 @@ class Profile extends StatelessWidget {
       ),
       child: ListTile(
         onTap: () {
+          
           onTapMethod != null ? onTapMethod() : context.go(onTap);
         },
         splashColor: Colors.grey,

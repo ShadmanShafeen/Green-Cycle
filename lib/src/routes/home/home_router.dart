@@ -4,6 +4,7 @@ import 'package:green_cycle/src/home/home_page.dart';
 import 'package:green_cycle/src/notification/notification.dart';
 import 'package:green_cycle/src/routes/home/community_router.dart';
 import 'package:green_cycle/src/routes/home/profile_router.dart';
+import 'package:green_cycle/src/search_waste/search_waste.dart';
 import 'package:green_cycle/src/widgets/transitions.dart';
 import 'package:location/location.dart';
 
@@ -91,6 +92,17 @@ final homeRouter = GoRoute(
         );
       },
     ),
+    GoRoute(
+        path: 'search-waste',
+        pageBuilder: (context, state) {
+          final wasteType = state.extra as String; 
+          return returnCustomTransitionPage(
+            child: SearchWastePage(category: wasteType,),
+            context: context,
+            type: PageTransitionType.bottomToTop,
+            durationMillis: 800,
+          );
+        }),
     profileRouter,
     communityRouter,
   ],

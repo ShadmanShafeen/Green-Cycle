@@ -38,12 +38,11 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
         print(_controllerEmail.text);
         print(_controllerPassword.text);
       }
-
       if (_controllerPassword.text.length < 6) {
         createQuickAlert(
           context: context,
-          title: "Password length must be at least 6 characters",
-          message: "Please add more characters",
+          title: "Invalid Email and Password",
+          message: "Please check input and try again",
           type: 'error',
         );
       } else {
@@ -343,7 +342,17 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
               ),
               TextButton(
                 onPressed: () {
-                  context.go("/login");
+                  if(errorMessage == "") {
+                    context.go("/login");
+                  }
+                  else {
+                    createQuickAlert(
+          context: context,
+          title: "Invalid Email or Password",
+          message: "",
+          type: 'error',
+        );
+                  }
                 },
                 child: Text(
                   'Log In',

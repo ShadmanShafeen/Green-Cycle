@@ -3,34 +3,53 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:green_cycle/auth.dart';
+import 'package:green_cycle/src/notification/notification_service.dart';
 import 'package:green_cycle/src/utils/server.dart';
+import 'package:green_cycle/src/utils/snackbars_alerts.dart';
 
 class RecycleRequestsList extends StatefulWidget {
-  const RecycleRequestsList({super.key});
-
+  RecycleRequestsList({super.key});
+  List recycleRequests = [];
   @override
   State<RecycleRequestsList> createState() => _RecycleRequestsListState();
 }
 
 class _RecycleRequestsListState extends State<RecycleRequestsList> {
-  List recycleRequests = [];
   Future<void> getRecycleRequests() async {
     try {
       final dio = Dio();
       final vendor_email = Auth().currentUser?.email;
       final response = await dio
           .get("$serverURLExpress/vendor/fetch-recycle-requests/$vendor_email");
-      recycleRequests = response.data;
-      
+      widget.recycleRequests = response.data;
     } catch (e) {
       print(e);
     }
   }
+
+  Future<void> refreshRecycleRequests() async {
+    try {
+      final dio = Dio();
+      final vendor_email = Auth().currentUser?.email;
+      final response = await dio
+          .get("$serverURLExpress/vendor/fetch-recycle-requests/$vendor_email");
+
+      if (mounted) {
+        setState(() {
+          widget.recycleRequests = response.data;
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     getRecycleRequests(); // Fetch requests when the widget is first built
   }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -47,21 +66,21 @@ class _RecycleRequestsListState extends State<RecycleRequestsList> {
             );
           } else {
             return ListView(children: [
-              ...recycleRequests.map((request) =>
-                  RecycleRequest(context, request, getRecycleRequests))
+              ...widget.recycleRequests.map((request) =>
+                  RecycleRequest(context, request, refreshRecycleRequests))
             ]);
           }
         });
   }
 }
 
-Widget RecycleRequest(context, request, getRecycleRequests) {
+Widget RecycleRequest(context, request, refreshRecycleRequests) {
   String name = '';
   String contact = '';
+  final email = request['email'];
   Future<void> getUserInfo() async {
     try {
       final dio = Dio();
-      final email = request['email'];
       final response = await dio.get("$serverURLExpress/user-info/$email");
       name = response.data['name'];
       contact = response.data['contact'];
@@ -75,9 +94,27 @@ Widget RecycleRequest(context, request, getRecycleRequests) {
       final dio = Dio();
       final vendor_email = Auth().currentUser?.email;
       final request_id = request['_id'];
+      print(request_id);
       await dio.patch(
           "$serverURLExpress/vendor/accept-recycle-request/$vendor_email/$request_id");
-      await getRecycleRequests();
+      final userInfo = await dio.get("$serverURLExpress/user-info/$email");
+
+      if (userInfo.data['items_recycled'] >= 5 &&
+          userInfo.data['current_level'] == 3) {
+        await dio.patch("$serverURLExpress/level-up/$email");
+        final token = userInfo.data['device_id'];
+        await NotificationService().sendNotification(
+            "You Leveled Up!",
+            "Visit your levels page to view rewards",
+            token,
+            context.mounted ? context : context);
+      }
+      createQuickAlert(
+          context: context,
+          title: "Items Recycled",
+          message: "Recycle Request Accepted",
+          type: "success");
+      await refreshRecycleRequests();
     } catch (e) {
       print(e);
     }
@@ -90,7 +127,12 @@ Widget RecycleRequest(context, request, getRecycleRequests) {
       final request_id = request['_id'];
       await dio.patch(
           "$serverURLExpress/vendor/reject-recycle-request/$vendor_email/$request_id");
-      await getRecycleRequests();
+      createQuickAlert(
+          context: context,
+          title: "Items Rejected",
+          message: "Recycle Request Deleted",
+          type: "error");
+      await refreshRecycleRequests();
     } catch (e) {
       print(e);
     }
