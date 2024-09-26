@@ -1,23 +1,47 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:green_cycle/auth.dart';
 import 'package:green_cycle/src/Locate_Vendor/location_permission_modal.dart';
 import 'package:green_cycle/src/games/game_image_card.dart';
 import 'package:green_cycle/src/home/action_card.dart';
 import 'package:green_cycle/src/home/carousel.dart';
 import 'package:green_cycle/src/home/waste_items_wheel.dart';
+import 'package:green_cycle/src/utils/server.dart';
+import 'package:green_cycle/src/utils/snackbars_alerts.dart';
 import 'package:green_cycle/src/widgets/app_bar.dart';
 import 'package:green_cycle/src/widgets/nav_bar.dart';
 import 'package:location/location.dart';
 
-class HomePage extends StatelessWidget {
-  HomePage({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   final ScrollController scrollController = ScrollController();
+  Map<String, dynamic>? userInfo;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserInfo();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: const CustomAppBar(),
-      bottomNavigationBar: const NavBar(),
+      bottomNavigationBar: userInfo != null
+          ? NavBar(
+              showGame: userInfo?["current_level"] >= 3,
+            )
+          : const NavBar(
+              showGame: false,
+            ),
       body: SingleChildScrollView(
         controller: scrollController,
         child: Column(
@@ -30,74 +54,77 @@ class HomePage extends StatelessWidget {
             const SizedBox(
               height: 15,
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 15, right: 15),
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.30,
-                child: GridView.count(
-                  crossAxisCount: 3,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  childAspectRatio: 1,
-                  children: [
-                    ActionCard(
-                      label: "Locate",
-                      animatedIcon: Image.asset(
-                        "lib/assets/animations/Locate.gif",
-                        width: 50,
-                        height: 50,
+            if (userInfo != null)
+              Padding(
+                padding: const EdgeInsets.only(left: 15, right: 15),
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.30,
+                  child: GridView.count(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    childAspectRatio: 1,
+                    children: [
+                      ActionCard(
+                        label: "Locate",
+                        animatedIcon: Image.asset(
+                          "lib/assets/animations/Locate.gif",
+                          width: 50,
+                          height: 50,
+                        ),
+                        path: '/home/locate-map',
                       ),
-                      path: '/home/locate-map',
-                    ),
-                    ActionCard(
-                      label: "Schedule",
-                      animatedIcon: Image.asset(
-                        "lib/assets/animations/Schedule.gif",
-                        width: 50,
-                        height: 50,
+                      ActionCard(
+                        label: "Schedule",
+                        animatedIcon: Image.asset(
+                          "lib/assets/animations/Schedule.gif",
+                          width: 50,
+                          height: 50,
+                        ),
+                        path: '/home/calendar',
                       ),
-                      path: '/home/calendar',
-                    ),
-                    ActionCard(
-                      label: "List",
-                      animatedIcon: Image.asset(
-                        "lib/assets/animations/List.gif",
-                        width: 50,
-                        height: 50,
+                      ActionCard(
+                        label: "List",
+                        animatedIcon: Image.asset(
+                          "lib/assets/animations/List.gif",
+                          width: 50,
+                          height: 50,
+                        ),
+                        path: '/home/waste-item-list',
                       ),
-                      path: '/home/waste-item-list',
-                    ),
-                    ActionCard(
-                      label: "Voucher",
-                      animatedIcon: Image.asset(
-                        "lib/assets/animations/Vouchers.gif",
-                        width: 50,
-                        height: 50,
+                      ActionCard(
+                        label: "Voucher",
+                        animatedIcon: Image.asset(
+                          "lib/assets/animations/Vouchers.gif",
+                          width: 50,
+                          height: 50,
+                        ),
+                        path: '/home/voucher-redemption',
                       ),
-                      path: '/home/voucher-redemption',
-                    ),
-                    ActionCard(
-                      label: "Stories",
-                      animatedIcon: Image.asset(
-                        "lib/assets/animations/Stories.gif",
-                        width: 50,
-                        height: 50,
+                      ActionCard(
+                        label: "Stories",
+                        animatedIcon: Image.asset(
+                          "lib/assets/animations/Stories.gif",
+                          width: 50,
+                          height: 50,
+                        ),
+                        path: '/home',
                       ),
-                      path: '/home',
-                    ),
-                    ActionCard(
-                      label: "Community",
-                      animatedIcon: Image.asset(
-                        "lib/assets/animations/Community.gif",
-                        width: 50,
-                        height: 50,
+                      ActionCard(
+                        label: "Community",
+                        animatedIcon: Image.asset(
+                          "lib/assets/animations/Community.gif",
+                          width: 50,
+                          height: 50,
+                        ),
+                        path: '/home/community-explore',
+                        disabled: userInfo?["current_level"] < 2,
+                        disabledMessage: "Unlocks at level 4",
                       ),
-                      path: '/home/community-explore',
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
             Padding(
               padding: const EdgeInsets.only(top: 20, left: 20, bottom: 20),
               child: Text(
@@ -201,6 +228,27 @@ class HomePage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> fetchUserInfo() async {
+    try {
+      final dio = Dio();
+      final email = Auth().currentUser?.email;
+      final response = await dio.get('$serverURLExpress/user-info/$email');
+      if (response.statusCode == 200) {
+        userInfo = response.data;
+        if (context.mounted) {
+          setState(() {});
+        }
+      }
+    } catch (e) {
+      return createQuickAlert(
+        context: context.mounted ? context : context,
+        title: "Error",
+        message: "An error occurred while updating user coins",
+        type: "error",
+      );
+    }
   }
 }
 

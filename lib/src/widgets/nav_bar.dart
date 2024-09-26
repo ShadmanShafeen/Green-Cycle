@@ -2,9 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:green_cycle/src/utils/snackbars_alerts.dart';
 
 class NavBar extends StatefulWidget implements PreferredSizeWidget {
-  const NavBar({super.key});
+  const NavBar({super.key, this.showGame = true});
+  final bool showGame;
 
   @override
   State<NavBar> createState() => _NavBarState();
@@ -27,7 +29,6 @@ class _NavBarState extends State<NavBar> {
     } else if (currentPath == '/level-tracking') {
       curIndex = 2;
     }
-    print(currentPath);
 
     return BottomNavigationBar(
       currentIndex: curIndex,
@@ -43,25 +44,26 @@ class _NavBarState extends State<NavBar> {
       selectedIconTheme: IconThemeData(size: 30),
       onTap: (index) {
         setState(() {
+          final previousIndex = curIndex;
           curIndex = index;
           if (curIndex == 1) {
             context.go('/home');
           } else if (curIndex == 2) {
             context.go('/level-tracking');
+          } else if (curIndex == 0) {
+            if (widget.showGame) {
+              context.go('/games');
+            } else {
+              curIndex = previousIndex;
+              createQuickAlert(
+                context: context,
+                title: "Games not available",
+                message: "Unlocks at level 3",
+                type: "info",
+              );
+            }
           }
         });
-
-        switch (index) {
-          case 0:
-            context.go('/games');
-            break;
-          case 1:
-            context.go('/home');
-            break;
-          case 2:
-            context.go('/level-tracking');
-            break;
-        }
       },
       items: [
         BottomNavigationBarItem(

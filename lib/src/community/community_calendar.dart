@@ -1,5 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:green_cycle/src/widgets/app_bar.dart';
+import 'package:green_cycle/auth.dart';
+import 'package:green_cycle/src/utils/server.dart';
+import 'package:green_cycle/src/utils/snackbars_alerts.dart';
 import 'package:green_cycle/src/widgets/nav_bar.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -15,19 +18,21 @@ class CalendarScreenState extends State<CommunityCalendar> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   late final ValueNotifier<List<String>> _selectedEvents;
-  Map<DateTime, List<String>> events = {
-    DateTime.utc(2024, 6, 17): ['Event A0', 'Event B0'],
-    DateTime.utc(2024, 6, 18): ['Event A1', 'Event B1'],
-  };
+  Map<DateTime, List<String>> events = {};
 
   @override
   void initState() {
     super.initState();
+    fetchEvents();
 
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier(
       getEventsForDay(
-        _selectedDay,
+        DateTime.parse('${DateTime(
+          _selectedDay!.year,
+          _selectedDay!.month,
+          _selectedDay!.day,
+        ).toIso8601String()}Z'),
       ),
     );
   }
@@ -41,7 +46,17 @@ class CalendarScreenState extends State<CommunityCalendar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(),
+      appBar: AppBar(
+        title: const Text(
+          "Community Schedule",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+          ),
+        ),
+        backgroundColor: Theme.of(context).colorScheme.surfaceContainerLow,
+        centerTitle: true,
+      ),
       bottomNavigationBar: const NavBar(),
       body: Container(
         color: Theme.of(context).colorScheme.surfaceContainerLowest,
@@ -118,11 +133,41 @@ class CalendarScreenState extends State<CommunityCalendar> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: addEvent,
-        child: const Icon(Icons.add),
-      ),
     );
+  }
+
+  void fetchEvents() async {
+    final Dio dio = Dio();
+    try {
+      final Auth auth = Auth();
+      final response = await dio.get(
+        '$serverURLExpress/community-events/${auth.currentUser?.email}',
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.data as List<dynamic>;
+        for (final event in data) {
+          final DateTime date = DateTime.parse(event['date']);
+          setState(() {
+            events[date] = events[date] ?? [];
+            events[date]!.add(event['event']);
+          });
+          _selectedEvents.value = getEventsForDay(DateTime.parse('${DateTime(
+            _selectedDay!.year,
+            _selectedDay!.month,
+            _selectedDay!.day,
+          ).toIso8601String()}Z'));
+        }
+      }
+    } catch (e) {
+      // quick alert
+      createQuickAlert(
+        context: context.mounted ? context : context,
+        title: "Error fetching events",
+        message: "$e",
+        type: "error",
+      );
+    }
   }
 
   final CalendarStyle calendarStyle = const CalendarStyle(
@@ -166,14 +211,5 @@ class CalendarScreenState extends State<CommunityCalendar> {
         title: Text(event),
       ),
     );
-  }
-
-  void addEvent() {
-    if (_selectedDay != null) {
-      setState(() {
-        events[_selectedDay!] = events[_selectedDay!] ?? [];
-        events[_selectedDay!]!.add('Event at ${_selectedDay!.toLocal()}');
-      });
-    }
   }
 }

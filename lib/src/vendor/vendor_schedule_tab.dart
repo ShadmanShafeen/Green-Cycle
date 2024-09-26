@@ -1,6 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:green_cycle/src/widgets/app_bar.dart';
-import 'package:green_cycle/src/widgets/nav_bar.dart';
+import 'package:green_cycle/auth.dart';
+import 'package:green_cycle/src/utils/server.dart';
+import 'package:green_cycle/src/utils/snackbars_alerts.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class VendorScheduleTab extends StatefulWidget {
@@ -15,10 +17,7 @@ class CalendarScreenState extends State<VendorScheduleTab> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   late final ValueNotifier<List<String>> _selectedEvents;
-  Map<DateTime, List<String>> events = {
-    DateTime.utc(2024, 6, 17): ['Event A0', 'Event B0'],
-    DateTime.utc(2024, 6, 18): ['Event A1', 'Event B1'],
-  };
+  Map<DateTime, List<String>> events = {};
 
   @override
   void initState() {
@@ -27,9 +26,15 @@ class CalendarScreenState extends State<VendorScheduleTab> {
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier(
       getEventsForDay(
-        _selectedDay,
+        DateTime.parse('${DateTime(
+          _selectedDay!.year,
+          _selectedDay!.month,
+          _selectedDay!.day,
+        ).toIso8601String()}Z'),
       ),
     );
+
+    fetchEvents();
   }
 
   @override
@@ -69,9 +74,8 @@ class CalendarScreenState extends State<VendorScheduleTab> {
                 if (!isSameDay(_selectedDay, selectedDay)) {
                   setState(() {
                     _selectedDay = selectedDay;
+                    _selectedEvents.value = getEventsForDay(selectedDay);
                   });
-
-                  _selectedEvents.value = getEventsForDay(selectedDay);
                 }
               },
               onFormatChanged: (format) {
@@ -117,7 +121,9 @@ class CalendarScreenState extends State<VendorScheduleTab> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: addEvent,
+        onPressed: () {
+          addEvent(context);
+        },
         child: const Icon(Icons.add),
       ),
     );
@@ -166,12 +172,121 @@ class CalendarScreenState extends State<VendorScheduleTab> {
     );
   }
 
-  void addEvent() {
+  void fetchEvents() async {
+    final Dio dio = Dio();
+    try {
+      final Auth auth = Auth();
+      final response = await dio.get(
+        '$serverURLExpress/community-events/${auth.currentUser?.email}',
+      );
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.data as List<dynamic>;
+        for (final event in data) {
+          final DateTime date = DateTime.parse(event['date']);
+          setState(() {
+            events[date] = events[date] ?? [];
+            events[date]!.add(event['event']);
+          });
+
+          _selectedEvents.value = getEventsForDay(DateTime.parse('${DateTime(
+            _selectedDay!.year,
+            _selectedDay!.month,
+            _selectedDay!.day,
+          ).toIso8601String()}Z'));
+        }
+      }
+    } catch (e) {
+      // quick alert
+      createQuickAlert(
+        context: context.mounted ? context : context,
+        title: "Error fetching events",
+        message: "$e",
+        type: "error",
+      );
+    }
+  }
+
+  void addEvent(BuildContext context) async {
     if (_selectedDay != null) {
-      setState(() {
-        events[_selectedDay!] = events[_selectedDay!] ?? [];
-        events[_selectedDay!]!.add('Event at ${_selectedDay!.toLocal()}');
-      });
+      if (_selectedDay!.isBefore(_focusedDay)) {
+        ScaffoldMessenger.of(context.mounted ? context : context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              "You can't add events to past days.",
+            ),
+          ),
+        );
+
+        return;
+      }
+
+      final Dio dio = Dio();
+      try {
+        final tempDate = DateTime.parse('${DateTime(
+          _selectedDay!.year,
+          _selectedDay!.month,
+          _selectedDay!.day,
+        ).toIso8601String()}Z');
+
+        final Auth auth = Auth();
+        final response = await dio.post(
+          '$serverURLExpress/add-community-event/${auth.currentUser?.email}',
+          data: {
+            'date': tempDate.toIso8601String(),
+            'event': 'Recycle item pickup',
+          },
+        );
+
+        if (response.statusCode == 200) {
+          setState(() {
+            events[tempDate] = events[tempDate] ?? [];
+            if (events[tempDate]!.isEmpty) {
+              events[tempDate]!.add('Recycle item pickup');
+              _selectedEvents.value = getEventsForDay(
+                DateTime.parse('${DateTime(
+                  _selectedDay!.year,
+                  _selectedDay!.month,
+                  _selectedDay!.day,
+                ).toIso8601String()}Z'),
+              );
+
+              ScaffoldMessenger.of(context.mounted ? context : context)
+                  .showSnackBar(
+                const SnackBar(
+                  content: Text(
+                    "Event added successfully.",
+                  ),
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context.mounted ? context : context)
+                  .showSnackBar(
+                const SnackBar(
+                  content: Text(
+                    "You can only add 1 event per day.",
+                  ),
+                ),
+              );
+              return;
+            }
+          });
+        } else {
+          throw ScaffoldMessenger.of(context.mounted ? context : context)
+              .showSnackBar(
+            const SnackBar(
+              content: Text(
+                "Failed to add event.",
+              ),
+            ),
+          );
+        }
+      } catch (e) {
+        createQuickAlert(
+            context: context.mounted ? context : context,
+            title: "Error adding event",
+            message: "$e",
+            type: "error");
+      }
     }
   }
 }
