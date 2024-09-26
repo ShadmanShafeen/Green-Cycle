@@ -352,9 +352,21 @@ class _DraftItemsState extends State<DraftItems>
           );
         }
       },
-      icon: Icon(
-        Icons.save,
-        color: Theme.of(context).colorScheme.primaryFixed,
+      icon: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            "Confirm",
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onPrimaryFixed,
+            ),
+          ),
+          const SizedBox(width: 5),
+          Icon(
+            Icons.save,
+            color: Theme.of(context).colorScheme.primaryFixed,
+          ),
+        ],
       ),
     );
   }

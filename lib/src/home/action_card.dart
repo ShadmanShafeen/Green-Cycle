@@ -3,20 +3,35 @@ import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:go_router/go_router.dart';
 import 'package:green_cycle/src/home/home_page.dart';
 
+import '../utils/snackbars_alerts.dart';
+
 class ActionCard extends StatelessWidget {
   const ActionCard(
       {super.key,
       required this.label,
       required this.animatedIcon,
-      required this.path});
+      required this.path,
+      this.disabled = false,
+      this.disabledMessage = "Unlock this feature by leveling up"});
   final Widget animatedIcon;
   final String label;
   final String path;
+  final bool disabled;
+  final String disabledMessage;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        if (disabled) {
+          createQuickAlert(
+              context: context,
+              title: "Feature Not Available",
+              message: disabledMessage,
+              type: "info");
+          return;
+        }
+
         if (path == "/home/locate-map") {
           showLocationPermission(context);
         } else {
