@@ -92,7 +92,7 @@ class _RequestModalState extends State<RequestModal> {
           const SizedBox(height: 20),
           ListTile(
             title: const Text("Name"),
-            subtitle: Text(widget.community['name']),
+            subtitle: Text(widget.community['community_name']),
           ),
           ListTile(
             title: const Text("Vendor Email"),
@@ -112,7 +112,7 @@ class _RequestModalState extends State<RequestModal> {
       final Auth auth = Auth();
       User? user = auth.currentUser;
       final response = await dio.post(
-          "$serverURLExpress/request-community/${widget.community['name']}",
+          "$serverURLExpress/request-community/${widget.community['community_name']}",
           data: {"email": "${user!.email}"});
 
       if (response.statusCode == 200) {
