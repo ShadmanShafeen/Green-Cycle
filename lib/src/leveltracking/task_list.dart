@@ -6,9 +6,9 @@ import 'package:green_cycle/src/leveltracking/task.dart';
 import 'package:green_cycle/src/utils/server.dart';
 
 class TaskList extends StatefulWidget {
-  TaskList({super.key, required this.tasks});
+  TaskList({super.key, required this.tasks , required this.levelNumber});
   List tasks;
-
+  int levelNumber;
   @override
   State<TaskList> createState() => _TaskListState();
 }
@@ -44,12 +44,10 @@ class _TaskListState extends State<TaskList> {
           SizedBox(
             height: 5,
           ),
-          ...widget.tasks.map((task) => Task(task: task)),
-          
+          ...widget.tasks.map((task) => Task(task: task , levelNumber: widget.levelNumber,)),
           SizedBox(
             height: 10,
           ),
-          
         ],
       ),
     );
