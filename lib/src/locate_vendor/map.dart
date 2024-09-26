@@ -216,7 +216,7 @@ class _LocateMapState extends State<LocateMap> {
           }
 
           final Map<String, dynamic> community = {
-            "name": item['name'].toString(),
+            "community_name": item['community_name'].toString(),
             "location": LatLng(
               double.parse(item['location'][0]['latitude']),
               double.parse(item['location'][0]['longitude']),
