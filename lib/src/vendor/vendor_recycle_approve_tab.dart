@@ -21,7 +21,7 @@ class VendorRecycleApproveTab extends StatelessWidget {
           Divider(
             color: Theme.of(context).colorScheme.secondary,
           ),
-          const Expanded(flex: 5,child: RecycleRequestsList())
+          Expanded(flex: 5,child: RecycleRequestsList())
         ]),
       ),
     );

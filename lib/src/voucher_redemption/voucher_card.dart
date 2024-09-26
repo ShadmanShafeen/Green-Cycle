@@ -19,7 +19,7 @@ class VoucherCard extends StatefulWidget {
   final int voucherCost;
   final String userEmail;
   final int userCoins;
-  late final bool redeemed;
+  late bool redeemed;
   @override
   State<VoucherCard> createState() => _VoucherCardState();
 }

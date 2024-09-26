@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:go_router/go_router.dart';
+import 'package:green_cycle/src/authentication/login.dart';
 
 class WasteItemsWheel extends StatelessWidget {
   WasteItemsWheel({super.key, required this.scrollController});
@@ -54,7 +56,9 @@ class WasteItemsWheel extends StatelessWidget {
             ),
           ),
           child: Image.asset('lib/assets/images/recycle_items/glass.png'),
-          onTap: () {},
+          onTap: () {
+            context.go("/home/search-waste" , extra: "GLASS");
+          },
         ),
         SpeedDialChild(
           shape: RoundedRectangleBorder(
@@ -78,7 +82,9 @@ class WasteItemsWheel extends StatelessWidget {
             ),
           ),
           child: Image.asset('lib/assets/images/recycle_items/paper.png'),
-          onTap: () {},
+          onTap: () {
+            context.go("/home/search-waste" , extra: "PAPER");
+          },
         ),
         SpeedDialChild(
           shape: RoundedRectangleBorder(
@@ -102,7 +108,9 @@ class WasteItemsWheel extends StatelessWidget {
                 ),
               )),
           child: Image.asset('lib/assets/images/recycle_items/metal.png'),
-          onTap: () {},
+          onTap: () {
+            context.go("/home/search-waste" , extra: "METAL");
+          },
         ),
         SpeedDialChild(
           shape: RoundedRectangleBorder(
@@ -125,7 +133,9 @@ class WasteItemsWheel extends StatelessWidget {
             ),
           ),
           child: Image.asset('lib/assets/images/recycle_items/plastic.png'),
-          onTap: () {},
+          onTap: () {
+            context.go("/home/search-waste" , extra: "PLASTIC");
+          },
         ),
         SpeedDialChild(
           shape: RoundedRectangleBorder(
@@ -149,7 +159,9 @@ class WasteItemsWheel extends StatelessWidget {
             ),
           ),
           child: Image.asset('lib/assets/images/recycle_items/cardboard.png'),
-          onTap: () {},
+          onTap: () {
+            context.go("/home/search-waste" , extra: "CARDBOARD");
+          },
         ),
       ],
     );

@@ -77,3 +77,11 @@ const Map<String, Map<String, String>> WASTE_ITEM_INFO = {
   "METAL": metal,
   "BIODEGRADABLE": biodegradable,
 };
+
+const Map<String, String> WASTE_ITEM_ICONS = {
+  "PAPER": "lib/assets/images/recycle_items/paper.png",
+  "CARDBOARD": "lib/assets/images/recycle_items/cardboard.png",
+  "GLASS": "lib/assets/images/recycle_items/glass.png",
+  "PLASTIC": "lib/assets/images/recycle_items/plastic.png",
+  "METAL": "lib/assets/images/recycle_items/metal.png",
+};

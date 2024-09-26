@@ -15,8 +15,8 @@ class VoucherList extends StatefulWidget {
 class _VoucherListState extends State<VoucherList> {
   final Auth _auth = Auth();
   final dio = Dio();
-  late final Map<String, List<dynamic>> voucherData;
-  late final dynamic userEmail;
+  late Map<String, List<dynamic>> voucherData;
+  dynamic userEmail = "";
   late int userCoins;
 
   Future<void> getAllVouchers() async {
@@ -74,7 +74,8 @@ class _VoucherListState extends State<VoucherList> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return LinearProgressIndicator(
-              color: Theme.of(context).colorScheme.surface,
+              color: Theme.of(context).colorScheme.surfaceContainerLowest,
+              backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
             );
           } else if (snapshot.hasError) {
             return const Text(
