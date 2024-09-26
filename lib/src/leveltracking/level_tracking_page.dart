@@ -2,7 +2,9 @@
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:green_cycle/auth.dart';
+import 'package:green_cycle/src/authentication/login.dart';
 import 'package:green_cycle/src/leveltracking/level_list.dart';
 import 'package:green_cycle/src/leveltracking/task_list.dart';
 import 'package:green_cycle/src/utils/server.dart';
@@ -115,6 +117,7 @@ class _LevelTrackingPageState extends State<LevelTrackingPage> {
               height: MediaQuery.of(context).size.height / 2,
               child: TaskList(
                 tasks: objectives,
+                levelNumber: currentLevel,
               ),
             ));
   }
