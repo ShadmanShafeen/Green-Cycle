@@ -1,5 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:green_cycle/auth.dart';
+import 'package:green_cycle/src/utils/server.dart';
+import 'package:green_cycle/src/utils/snackbars_alerts.dart';
 
 class GameDetails extends StatefulWidget {
   final Map<String, String> gameDetails;
@@ -11,6 +15,7 @@ class GameDetails extends StatefulWidget {
 
 class _GameDetailsState extends State<GameDetails> {
   bool isHeartFilled = false;
+  Map<String, dynamic>? userInfo;
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +68,8 @@ class _GameDetailsState extends State<GameDetails> {
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.9,
       child: ElevatedButton(
-        onPressed: () {
+        onPressed: () async {
+          await checkLevelUp(context);
           if (widget.gameDetails['route'] != null) {
             context.go(widget.gameDetails['route']!);
           }
@@ -84,6 +90,55 @@ class _GameDetailsState extends State<GameDetails> {
         ),
       ),
     );
+  }
+
+  Future<void> fetchUserInfo() async {
+    try {
+      final dio = Dio();
+      final email = Auth().currentUser?.email;
+      final response = await dio.get('$serverURLExpress/user-info/$email');
+      if (response.statusCode == 200) {
+        userInfo = response.data;
+        if (context.mounted) {
+          setState(() {});
+        }
+      }
+    } catch (e) {
+      return createQuickAlert(
+        context: context.mounted ? context : context,
+        title: "Error",
+        message: "An error occurred while updating user coins",
+        type: "error",
+      );
+    }
+  }
+
+  Future<void> checkLevelUp(BuildContext context) async {
+    try {
+      await fetchUserInfo();
+
+      if (userInfo?["current_level"] == 4) {
+        final dio = Dio();
+        final email = Auth().currentUser?.email;
+        final response = await dio.patch('$serverURLExpress/level-up/$email');
+        if (response.statusCode == 200) {
+          userInfo = response.data;
+          createQuickAlert(
+            context: context.mounted ? context : context,
+            title: "Congratulations!",
+            message: "You level has been increased!",
+            type: "success",
+          );
+        }
+      }
+    } catch (e) {
+      return createQuickAlert(
+        context: context.mounted ? context : context,
+        title: "Error",
+        message: "An error occurred while updating user coins",
+        type: "error",
+      );
+    }
   }
 
   Container buildRatingCard() {
