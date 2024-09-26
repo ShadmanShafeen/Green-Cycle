@@ -91,6 +91,8 @@ class _HomePageState extends State<HomePage> {
                           height: 50,
                         ),
                         path: '/home/waste-item-list',
+                        disabled: userInfo?["current_level"] < 2,
+                        disabledMessage: "Join the community to unlock",
                       ),
                       ActionCard(
                         label: "Voucher",
