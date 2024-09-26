@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:green_cycle/auth.dart';
+import 'package:green_cycle/src/authentication/login.dart';
 
 class VendorProfileTab extends StatelessWidget {
   const VendorProfileTab({super.key});
@@ -142,7 +145,10 @@ class VendorProfileTab extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
           ),
           child: ListTile(
-            onTap: () {},
+            onTap: () {
+              Auth().signOut();
+              context.go("/login");
+            },
             splashColor: Colors.grey,
             trailing: Icon(
               Icons.arrow_right,
