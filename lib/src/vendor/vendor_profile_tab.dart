@@ -32,29 +32,29 @@ class VendorProfileTab extends StatelessWidget {
           ],
         ),
         const SizedBox(
-          height: 100,
+          height: 50,
           width: double.infinity,
         ),
-        Card(
-          color: Theme.of(context)
-              .colorScheme
-              .surfaceContainerHigh
-              .withOpacity(0.7),
-          elevation: 5,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: ListTile(
-            onTap: () {},
-            splashColor: Colors.grey,
-            trailing: Icon(
-              Icons.arrow_right,
-              color: Theme.of(context).colorScheme.primaryFixed,
-            ),
-            title: const Text("Recycling History"),
-            leading: const Icon(Icons.history),
-          ),
-        ),
+        // Card(
+        //   color: Theme.of(context)
+        //       .colorScheme
+        //       .surfaceContainerHigh
+        //       .withOpacity(0.7),
+        //   elevation: 5,
+        //   shape: RoundedRectangleBorder(
+        //     borderRadius: BorderRadius.circular(10),
+        //   ),
+        //   child: ListTile(
+        //     onTap: () {},
+        //     splashColor: Colors.grey,
+        //     trailing: Icon(
+        //       Icons.arrow_right,
+        //       color: Theme.of(context).colorScheme.primaryFixed,
+        //     ),
+        //     title: const Text("Recycling History"),
+        //     leading: const Icon(Icons.history),
+        //   ),
+        // ),
         Card(
           color: Theme.of(context)
               .colorScheme

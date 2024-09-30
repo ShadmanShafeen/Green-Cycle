@@ -6,7 +6,7 @@ class Task extends StatefulWidget {
   final String task;
   final levelNumber;
   final Map<int, String> taskLinking = {
-    1: "/home/locate-map",
+    1: "/home",
     2: "/home/waste-item-list",
     3: "/home/waste-item-list",
     4: "/games",

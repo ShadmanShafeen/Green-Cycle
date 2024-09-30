@@ -37,7 +37,7 @@ class _VendorCommunityTabState extends State<VendorCommunityTab> {
      
       widget.ranked_members = community.data["rank"];
       widget.members = community.data['members'];
-     
+      
     } catch (e) {
       print(e);
     }
