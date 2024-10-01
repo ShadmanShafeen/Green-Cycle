@@ -1,14 +1,13 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:green_cycle/src/leveltracking/animated_line.dart';
 import 'package:green_cycle/src/leveltracking/coins_earned_container.dart';
 import 'package:green_cycle/src/leveltracking/level_container.dart';
-import 'package:green_cycle/src/utils/server.dart';
 
 class LevelList extends StatefulWidget {
-  LevelList({super.key, required this.currentLevel, required this.coinsEarned});
+  const LevelList(
+      {super.key, required this.currentLevel, required this.coinsEarned});
   final int currentLevel;
   final int coinsEarned;
   @override
@@ -88,7 +87,8 @@ class _LevelListState extends State<LevelList> {
                         alignment: Alignment.centerRight,
                         // right: MediaQuery.of(context).size.width * 0.02,
                         child: Padding(
-                          padding: EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.01),
+                          padding: EdgeInsets.only(
+                              right: MediaQuery.of(context).size.width * 0.01),
                           child: CoinsEarnedContainer(
                               coinsEarned: widget.coinsEarned),
                         ),

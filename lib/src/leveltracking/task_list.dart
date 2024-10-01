@@ -1,12 +1,10 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:green_cycle/src/leveltracking/task.dart';
-import 'package:green_cycle/src/utils/server.dart';
 
 class TaskList extends StatefulWidget {
-  TaskList({super.key, required this.tasks , required this.levelNumber});
+  TaskList({super.key, required this.tasks, required this.levelNumber});
   List tasks;
   int levelNumber;
   @override
@@ -22,7 +20,6 @@ class _TaskListState extends State<TaskList> {
   @override
   void initState() {
     super.initState();
-    print(widget.tasks);
   }
 
   @override
@@ -44,7 +41,10 @@ class _TaskListState extends State<TaskList> {
           SizedBox(
             height: 5,
           ),
-          ...widget.tasks.map((task) => Task(task: task , levelNumber: widget.levelNumber,)),
+          ...widget.tasks.map((task) => Task(
+                task: task,
+                levelNumber: widget.levelNumber,
+              )),
           SizedBox(
             height: 10,
           ),

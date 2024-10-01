@@ -2,12 +2,10 @@
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:green_cycle/auth.dart';
 import 'package:green_cycle/src/community/my_community_view/member-circle.dart';
 import 'package:green_cycle/src/utils/server.dart';
 import 'package:green_cycle/src/vendor/vendor_widgets/member_add_modal.dart';
-import 'package:green_cycle/src/widgets/app_bar.dart';
 
 class VendorCommunityTab extends StatefulWidget {
   VendorCommunityTab({super.key});
@@ -34,10 +32,9 @@ class _VendorCommunityTabState extends State<VendorCommunityTab> {
       await dio.patch("$serverURLExpress/community/rank-members/$vendor_email");
       community = await dio
           .get("$serverURLExpress/vendor/fetch-community/$vendor_email");
-     
+
       widget.ranked_members = community.data["rank"];
       widget.members = community.data['members'];
-     
     } catch (e) {
       print(e);
     }
@@ -188,13 +185,12 @@ class _VendorCommunityTabState extends State<VendorCommunityTab> {
                         ],
                       ),
                       MemberCircle(
-                        isVisible:
-                            widget.ranked_members.length == 0 ? false : true,
+                        isVisible: widget.ranked_members.isEmpty ? false : true,
                         imageUrl: 'lib/assets/img/avatar1.png',
-                        name: widget.ranked_members.length > 0
+                        name: widget.ranked_members.isNotEmpty
                             ? widget.ranked_members[0]['name']
                             : "",
-                        points: widget.ranked_members.length > 0
+                        points: widget.ranked_members.isNotEmpty
                             ? widget.ranked_members[0]['coins'].toString()
                             : "",
                         rank: 1,

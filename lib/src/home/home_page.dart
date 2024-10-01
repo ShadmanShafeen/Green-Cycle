@@ -12,6 +12,7 @@ import 'package:green_cycle/src/utils/snackbars_alerts.dart';
 import 'package:green_cycle/src/widgets/app_bar.dart';
 import 'package:green_cycle/src/widgets/nav_bar.dart';
 import 'package:location/location.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -121,7 +122,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                         path: '/home/community-explore',
                         disabled: userInfo?["current_level"] < 2,
-                        disabledMessage: "Unlocks at level 4",
+                        disabledMessage: "Unlocks at level 2",
                       ),
                     ],
                   ),
@@ -254,9 +255,19 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-void showLocationPermission(BuildContext context) async {
+Future<void> showLocationPermission(BuildContext context) async {
   final Location location = Location();
   final serviceStatus = await location.serviceEnabled();
+
+  // check if permission is granted
+  Permission locationPermission = Permission.location;
+  final status = await locationPermission.status;
+  if (status.isPermanentlyDenied || status.isRestricted) {
+    openAppSettings();
+  } else if (!status.isGranted) {
+    await locationPermission.request();
+  }
+
   if (!serviceStatus && context.mounted) {
     showModalBottomSheet(
       showDragHandle: true,
@@ -268,11 +279,22 @@ void showLocationPermission(BuildContext context) async {
     return;
   }
 
-  final locationData = await location.getLocation();
-  if (context.mounted) {
-    context.go(
-      "/home/locate-map",
-      extra: locationData,
+  try {
+    final locationData = await location.getLocation();
+    if (context.mounted) {
+      context.go(
+        "/home/locate-map",
+        extra: locationData,
+      );
+    }
+  } catch (e) {
+    await createQuickAlert(
+      context: context,
+      title: "Location Error",
+      message: "$e",
+      type: "error",
     );
+
+    openAppSettings();
   }
 }
