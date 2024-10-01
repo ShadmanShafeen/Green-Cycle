@@ -8,10 +8,11 @@ class LevelContainer extends StatefulWidget {
       {super.key,
       required this.size,
       required this.level,
-      required this.levelReached});
+      required this.levelReached, required this.displayBottomSheet});
 
   final double size;
   final int level;
+  final Future Function(BuildContext) displayBottomSheet;
   bool levelReached;
 
   @override
@@ -26,7 +27,8 @@ class _LevelContainerState extends State<LevelContainer> {
       child: GestureDetector(
         onTap: () {
           setState(() {
-            widget.levelReached = !widget.levelReached;
+            // widget.levelReached = !widget.levelReached;
+            widget.displayBottomSheet(context);
           });
         },
         child: AnimatedContainer(
