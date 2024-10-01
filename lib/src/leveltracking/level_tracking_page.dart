@@ -2,12 +2,11 @@
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:green_cycle/auth.dart';
-import 'package:green_cycle/src/authentication/login.dart';
 import 'package:green_cycle/src/leveltracking/level_list.dart';
 import 'package:green_cycle/src/leveltracking/task_list.dart';
 import 'package:green_cycle/src/utils/server.dart';
+import 'package:green_cycle/src/utils/snackbars_alerts.dart';
 import 'package:green_cycle/src/widgets/app_bar.dart';
 import 'package:green_cycle/src/widgets/coins_container.dart';
 import 'package:green_cycle/src/widgets/nav_bar.dart';
@@ -23,6 +22,7 @@ class _LevelTrackingPageState extends State<LevelTrackingPage> {
   late int currentLevel = 0;
   late int coinsEarned = 0;
   late List objectives = [];
+
   Future<void> getUserInfo() async {
     try {
       final dio = Dio();
@@ -30,7 +30,12 @@ class _LevelTrackingPageState extends State<LevelTrackingPage> {
       final response = await dio.get("$serverURLExpress/user-info/$email");
       currentLevel = response.data['current_level'];
     } catch (e) {
-      print(e);
+      createQuickAlert(
+        context: context,
+        title: "Error fetching user info",
+        message: "$e",
+        type: "error",
+      );
     }
   }
 
@@ -42,15 +47,18 @@ class _LevelTrackingPageState extends State<LevelTrackingPage> {
       coinsEarned = response.data['coins_earned'];
       objectives = response.data['objectives'];
     } catch (e) {
-      print(e);
+      createQuickAlert(
+        context: context,
+        title: "Error fetching level details",
+        message: "$e",
+        type: "error",
+      );
     }
   }
 
   @override
   void initState() {
     super.initState();
-    getUserInfo();
-    getLevelDetails();
   }
 
   Future<void> fetchDataSequentially() async {
@@ -62,9 +70,10 @@ class _LevelTrackingPageState extends State<LevelTrackingPage> {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage('lib/assets/images/LevelTrackingPage.jpeg'),
-              fit: BoxFit.cover)),
+        image: DecorationImage(
+            image: AssetImage('lib/assets/images/LevelTrackingPage.jpeg'),
+            fit: BoxFit.cover),
+      ),
       child: Scaffold(
         appBar: CustomAppBar(),
         bottomNavigationBar: NavBar(),

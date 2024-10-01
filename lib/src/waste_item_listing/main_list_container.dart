@@ -31,8 +31,8 @@ class _WasteListContainerState extends State<WasteListContainer> {
                   padding: EdgeInsets.all(15),
                   child: TabBarView(
                     children: [
-                      RecentItems(),
                       DraftItems(),
+                      RecentItems(),
                     ],
                   ),
                 ),
