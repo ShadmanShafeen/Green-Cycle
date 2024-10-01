@@ -8,6 +8,7 @@ import 'package:green_cycle/src/community/my_community_view/member-circle.dart';
 import 'package:green_cycle/src/utils/server.dart';
 import 'package:green_cycle/src/vendor/vendor_widgets/member_add_modal.dart';
 import 'package:green_cycle/src/widgets/app_bar.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 class VendorCommunityTab extends StatefulWidget {
   VendorCommunityTab({super.key});
@@ -29,18 +30,27 @@ class _VendorCommunityTabState extends State<VendorCommunityTab> {
   final dio = Dio();
   final vendor_email = Auth().currentUser?.email;
 
+  GlobalKey globalKeyMemberAdd = GlobalKey();
+
   Future<void> getCommunity() async {
     try {
       await dio.patch("$serverURLExpress/community/rank-members/$vendor_email");
       community = await dio
           .get("$serverURLExpress/vendor/fetch-community/$vendor_email");
-     
+
       widget.ranked_members = community.data["rank"];
       widget.members = community.data['members'];
-      
     } catch (e) {
       print(e);
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) =>
+      ShowCaseWidget.of(context).startShowCase([globalKeyMemberAdd])
+    );
   }
 
   @override
@@ -110,8 +120,21 @@ class _VendorCommunityTabState extends State<VendorCommunityTab> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
+      floatingActionButton: Showcase(
+        key: globalKeyMemberAdd,
+        title: "Add Members",
+        description:
+            "Accept member join requests to add members to your community",
+        tooltipBackgroundColor:
+            Theme.of(context).colorScheme.primary.withOpacity(0.5),
+        textColor: Theme.of(context).colorScheme.onPrimary,
+        titleTextStyle: TextStyle(
+            fontSize: 16, color: Theme.of(context).colorScheme.onPrimary),
+        descTextStyle: TextStyle(
+            fontSize: 12,
+            color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8)),
+        disposeOnTap: true,
+        onTargetClick: () {
           showModalBottomSheet(
             backgroundColor: Colors.transparent,
             showDragHandle: true,
@@ -119,10 +142,20 @@ class _VendorCommunityTabState extends State<VendorCommunityTab> {
             builder: (ctx) => MemberAddModal(),
           );
         },
-        backgroundColor: Theme.of(context).colorScheme.primaryFixed,
-        child: const Icon(
-          Icons.person_add,
-          color: Colors.white,
+        child: FloatingActionButton(
+          onPressed: () {
+            showModalBottomSheet(
+              backgroundColor: Colors.transparent,
+              showDragHandle: true,
+              context: context,
+              builder: (ctx) => MemberAddModal(),
+            );
+          },
+          backgroundColor: Theme.of(context).colorScheme.primaryFixed,
+          child: const Icon(
+            Icons.person_add,
+            color: Colors.white,
+          ),
         ),
       ),
     );

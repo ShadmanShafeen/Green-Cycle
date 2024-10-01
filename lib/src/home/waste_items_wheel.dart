@@ -14,7 +14,7 @@ class WasteItemsWheel extends StatelessWidget {
     return SpeedDial(
       openCloseDial: isDialOpen,
       label: Text(
-        'Search',
+        'Learn',
         style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
       ),
       icon: Icons.recycling,

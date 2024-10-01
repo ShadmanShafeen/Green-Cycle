@@ -11,6 +11,8 @@ import 'package:green_cycle/src/utils/server.dart';
 import 'package:green_cycle/src/widgets/app_bar.dart';
 import 'package:green_cycle/src/widgets/coins_container.dart';
 import 'package:green_cycle/src/widgets/nav_bar.dart';
+import 'package:green_cycle/src/widgets/show_case_view.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 class LevelTrackingPage extends StatefulWidget {
   LevelTrackingPage({super.key});
@@ -23,6 +25,8 @@ class _LevelTrackingPageState extends State<LevelTrackingPage> {
   late int currentLevel = 0;
   late int coinsEarned = 0;
   late List objectives = [];
+
+  final GlobalKey globalKeyTaskListView = GlobalKey();
   Future<void> getUserInfo() async {
     try {
       final dio = Dio();
@@ -51,6 +55,11 @@ class _LevelTrackingPageState extends State<LevelTrackingPage> {
     super.initState();
     getUserInfo();
     getLevelDetails();
+    WidgetsBinding.instance.addPostFrameCallback((_) => beginTutorial());
+  }
+
+  void beginTutorial() {
+    ShowCaseWidget.of(context).startShowCase([globalKeyTaskListView]);
   }
 
   Future<void> fetchDataSequentially() async {
@@ -84,25 +93,41 @@ class _LevelTrackingPageState extends State<LevelTrackingPage> {
               } else {
                 return Stack(children: [
                   LevelList(
-                    currentLevel: currentLevel,
-                    coinsEarned: coinsEarned,
-                    displayBottomSheet : _displayBottomSheet
-                  ),
+                      currentLevel: currentLevel,
+                      coinsEarned: coinsEarned,
+                      displayBottomSheet: _displayBottomSheet),
                   Positioned(top: 10, right: 10, child: CoinsContainer()),
                 ]);
               }
             }),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
+        floatingActionButton: Showcase(
+          key: globalKeyTaskListView,
+          title: "Tap To View Tasks",
+          description: "Finish tasks to level up and earn coins!",
+          tooltipBackgroundColor:
+              Theme.of(context).colorScheme.primary.withOpacity(0.5),
+          textColor: Theme.of(context).colorScheme.onPrimary,
+          titleTextStyle: TextStyle(
+              fontSize: 16, color: Theme.of(context).colorScheme.onPrimary),
+          descTextStyle: TextStyle(
+              fontSize: 12,
+              color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8)),
+          disposeOnTap: true,
+          onTargetClick: () {
             _displayBottomSheet(context);
           },
-          backgroundColor: Theme.of(context).colorScheme.secondary,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-          child: Image.asset(
-            'lib/assets/animations/Tasks.gif',
-            height: 50,
-            width: 50,
+          child: FloatingActionButton(
+            onPressed: () {
+              _displayBottomSheet(context);
+            },
+            backgroundColor: Theme.of(context).colorScheme.secondary,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+            child: Image.asset(
+              'lib/assets/animations/Tasks.gif',
+              height: 50,
+              width: 50,
+            ),
           ),
         ),
       ),

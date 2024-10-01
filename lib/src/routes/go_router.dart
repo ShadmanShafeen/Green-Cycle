@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:green_cycle/src/routes/gameRouter.dart';
 import 'package:green_cycle/src/routes/home/home_router.dart';
 import 'package:green_cycle/src/widgets/transitions.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 import '../authentication/login.dart';
 import '../authentication/signup.dart';
@@ -11,15 +12,17 @@ import '../welcome_screen/splash_screen.dart';
 import '../welcome_screen/welcome_screen.dart';
 
 final goRouter = GoRouter(
-  initialLocation: '/login',
+  initialLocation: '/home',
   routes: [
     homeRouter,
     GoRoute(
       path: '/level-tracking',
       name: 'level-tracking',
+      builder: (context , state) => ShowCaseWidget(builder: (context) => LevelTrackingPage()), 
       pageBuilder: (context, state) {
         return returnCustomTransitionPage(
-          child: LevelTrackingPage(),
+          child: ShowCaseWidget(builder: (context) => LevelTrackingPage()
+          ),
           context: context,
           type: PageTransitionType.rightToLeft,
         );
@@ -29,9 +32,10 @@ final goRouter = GoRouter(
     GoRoute(
       path: '/vendor',
       name: 'vendor',
+      builder: (context , state) => ShowCaseWidget(builder: (context) => VendorPage()), 
       pageBuilder: (context, state) {
         return returnCustomTransitionPage(
-          child: const VendorPage(),
+          child: ShowCaseWidget(builder: (context) => VendorPage()) ,
           context: context,
           type: PageTransitionType.fade,
         );
