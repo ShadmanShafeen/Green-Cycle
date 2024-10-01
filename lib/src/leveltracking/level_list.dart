@@ -8,9 +8,10 @@ import 'package:green_cycle/src/leveltracking/level_container.dart';
 import 'package:green_cycle/src/utils/server.dart';
 
 class LevelList extends StatefulWidget {
-  LevelList({super.key, required this.currentLevel, required this.coinsEarned});
+  LevelList({super.key, required this.currentLevel, required this.coinsEarned , required this.displayBottomSheet});
   final int currentLevel;
   final int coinsEarned;
+  final Future Function(BuildContext) displayBottomSheet;
   @override
   State<LevelList> createState() => _LevelListState();
 }
@@ -57,7 +58,7 @@ class _LevelListState extends State<LevelList> {
             for (int i = 1; i <= 20; i++)
               if (i == widget.currentLevel - 1) ...[
                 LevelContainer(
-                    key: _targetKey, size: 75, level: i, levelReached: true),
+                    key: _targetKey, size: 75, level: i, levelReached: true , displayBottomSheet: widget.displayBottomSheet,),
                 SizedBox(
                   height: MediaQuery.of(context).size.height / 5,
                   child: AnimatedLine(
@@ -65,7 +66,7 @@ class _LevelListState extends State<LevelList> {
                   ),
                 ),
               ] else if (i < widget.currentLevel) ...[
-                LevelContainer(size: 75, level: i, levelReached: true),
+                LevelContainer(size: 75, level: i, levelReached: true , displayBottomSheet: widget.displayBottomSheet),
                 SizedBox(
                   height: MediaQuery.of(context).size.height / 5,
                   child: AnimatedLine(
@@ -81,14 +82,16 @@ class _LevelListState extends State<LevelList> {
                         child: LevelContainer(
                             size: 90,
                             level: i,
-                            levelReached: currentLevelReached)),
+                            levelReached: currentLevelReached,
+                            displayBottomSheet: widget.displayBottomSheet)),
                     Visibility(
                       visible: coinsEarnedContainerVisible,
                       child: Align(
                         alignment: Alignment.centerRight,
                         // right: MediaQuery.of(context).size.width * 0.02,
                         child: Padding(
-                          padding: EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.01),
+                          padding: EdgeInsets.only(
+                              right: MediaQuery.of(context).size.width * 0.01),
                           child: CoinsEarnedContainer(
                               coinsEarned: widget.coinsEarned),
                         ),
@@ -100,7 +103,7 @@ class _LevelListState extends State<LevelList> {
                   height: MediaQuery.of(context).size.height / 5,
                 ),
               ] else ...[
-                LevelContainer(size: 75, level: i, levelReached: false),
+                LevelContainer(size: 75, level: i, levelReached: false , displayBottomSheet: widget.displayBottomSheet),
                 Container(
                   height: MediaQuery.of(context).size.height / 5,
                 ),

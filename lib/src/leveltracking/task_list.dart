@@ -33,7 +33,7 @@ class _TaskListState extends State<TaskList> {
         children: [
           Center(
             child: Text(
-              "Current Tasks",
+              "Current Task",
               style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
               textScaler: TextScaler.linear(1.75),
             ),

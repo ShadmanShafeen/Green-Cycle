@@ -24,7 +24,7 @@ class _TaskState extends State<Task> {
     return InkWell(
       onTap: () {
         context.pop();
-        context.go(widget.taskLinking[widget.levelNumber]!);
+        context.push(widget.taskLinking[widget.levelNumber]!);
       },
       child: ListTile(
         tileColor: Theme.of(context).colorScheme.surfaceContainer,

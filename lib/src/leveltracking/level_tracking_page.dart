@@ -86,6 +86,7 @@ class _LevelTrackingPageState extends State<LevelTrackingPage> {
                   LevelList(
                     currentLevel: currentLevel,
                     coinsEarned: coinsEarned,
+                    displayBottomSheet : _displayBottomSheet
                   ),
                   Positioned(top: 10, right: 10, child: CoinsContainer()),
                 ]);
