@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:green_cycle/auth.dart';
-import 'package:green_cycle/src/community/my_community_view/new_mem_req.dart';
 import 'package:green_cycle/src/notification/notification_service.dart';
 import 'package:green_cycle/src/utils/server.dart';
 import 'package:green_cycle/src/utils/snackbars_alerts.dart';
@@ -15,7 +14,8 @@ class MemberAddModal extends StatefulWidget {
 
 class _MemberAddModalState extends State<MemberAddModal> {
   final dio = Dio();
-  final vendor_email = Auth().currentUser?.email;
+  final String? vendor_email = Auth().currentUser?.email;
+
   Future<void> getJoinRequests() async {
     try {
       final response =
@@ -56,13 +56,20 @@ class _MemberAddModalState extends State<MemberAddModal> {
             context.mounted ? context : context);
       }
       createQuickAlert(
-          context: context,
-          title: "Request Accepted",
-          message: "New member added to your community",
-          type: "success");
+        context: context,
+        title: "Request Accepted",
+        message: "New member added to your community",
+        type: "success",
+      );
+
       await refreshJoinRequests();
     } catch (e) {
-      print(e);
+      return createQuickAlert(
+        context: context,
+        title: "Error Accepting Request",
+        message: "$e",
+        type: "error",
+      );
     }
   }
 

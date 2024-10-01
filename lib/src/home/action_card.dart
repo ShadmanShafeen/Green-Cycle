@@ -22,7 +22,7 @@ class ActionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
+      onTap: () async {
         if (disabled) {
           createQuickAlert(
               context: context,
@@ -33,7 +33,7 @@ class ActionCard extends StatelessWidget {
         }
 
         if (path == "/home/locate-map") {
-          showLocationPermission(context);
+          await showLocationPermission(context);
         } else {
           context.go(path);
         }

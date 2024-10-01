@@ -23,6 +23,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   bool isLoggedIn = true;
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
+  bool obscureText = true;
 
   Future<void> signInWithEmailAndPassword() async {
     try {
@@ -186,7 +187,12 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                       ),
                     ),
                     TextFormField(
-                      obscureText: true,
+                      onTap: () {
+                        setState(() {
+                          obscureText = !obscureText;
+                        });
+                      },
+                      obscureText: obscureText,
                       controller: _controllerPassword,
                       style: const TextStyle(color: Colors.white),
                       decoration: const InputDecoration(

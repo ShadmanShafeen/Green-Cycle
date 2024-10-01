@@ -25,6 +25,7 @@ class LocationPermissionModalState extends State<LocationPermissionModal> {
 
   Future<bool> checkLocationPermission() async {
     serviceEnabled = await location.serviceEnabled();
+
     if (!serviceEnabled) {
       serviceEnabled = await location.requestService();
     }

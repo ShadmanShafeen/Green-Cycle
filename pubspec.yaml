@@ -58,6 +58,9 @@ dependencies:
   fluttertoast: ^8.2.1
   showcaseview: ^3.0.0
 
+  google_generative_ai: ^0.4.6
+  chatview: ^2.2.0
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

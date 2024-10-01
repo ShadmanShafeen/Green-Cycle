@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:green_cycle/src/Locate_Vendor/location_permission_modal.dart';
+import 'package:green_cycle/src/utils/snackbars_alerts.dart';
+import 'package:location/location.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class Task extends StatefulWidget {
   Task({super.key, required this.task, required this.levelNumber});
@@ -22,9 +26,44 @@ class _TaskState extends State<Task> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        context.pop();
-        context.push(widget.taskLinking[widget.levelNumber]!);
+      onTap: () async {
+        if (widget.levelNumber == 1) {
+          final Location location = Location();
+          final serviceStatus = await location.serviceEnabled();
+          if (!serviceStatus && context.mounted) {
+            showModalBottomSheet(
+              showDragHandle: true,
+              context: context,
+              builder: (BuildContext context) {
+                return const LocationPermissionModal();
+              },
+            );
+            return;
+          }
+
+          try {
+            final locationData = await location.getLocation();
+            if (context.mounted) {
+              context.go(
+                "/home/locate-map",
+                extra: locationData,
+              );
+            }
+          } catch (e) {
+            await createQuickAlert(
+              context: context,
+              title: "Location Error",
+              message: "$e",
+              type: "error",
+            );
+
+            openAppSettings();
+          }
+          context.pop();
+        } else {
+          context.pop();
+          context.go(widget.taskLinking[widget.levelNumber]!);
+        }
       },
       child: ListTile(
         tileColor: Theme.of(context).colorScheme.surfaceContainer,

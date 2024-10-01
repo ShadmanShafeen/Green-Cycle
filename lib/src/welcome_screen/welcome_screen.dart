@@ -1,8 +1,11 @@
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:green_cycle/auth.dart';
+import 'package:green_cycle/src/utils/server.dart';
+import 'package:green_cycle/src/utils/snackbars_alerts.dart';
 import 'package:slide_to_act/slide_to_act.dart';
 import 'package:video_player/video_player.dart';
 
@@ -16,6 +19,7 @@ class WelcomeScreen extends StatefulWidget {
 class _WelcomeScreenState extends State<WelcomeScreen>
     with SingleTickerProviderStateMixin {
   late VideoPlayerController _controller;
+  Map<String, dynamic>? userInfo;
 
   @override
   void initState() {
@@ -31,12 +35,16 @@ class _WelcomeScreenState extends State<WelcomeScreen>
           _controller.setVolume(0);
         });
       });
+
+    fetchUserInfo(context);
   }
 
   @override
   void dispose() {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-        overlays: SystemUiOverlay.values);
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: SystemUiOverlay.values,
+    );
     _controller.dispose();
     super.dispose();
   }
@@ -47,10 +55,12 @@ class _WelcomeScreenState extends State<WelcomeScreen>
       body: Stack(
         children: <Widget>[
           // Background image
-          Positioned.fill(
+          Positioned(
+            top: 250,
+            height: MediaQuery.of(context).size.height / 2,
             child: _controller.value.isInitialized
                 ? AspectRatio(
-                    aspectRatio: MediaQuery.of(context).size.aspectRatio,
+                    aspectRatio: 16 / 9,
                     child: VideoPlayer(_controller),
                   )
                 : const SizedBox(),
@@ -88,9 +98,9 @@ class _WelcomeScreenState extends State<WelcomeScreen>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 RichText(
-                  text: const TextSpan(
+                  text: TextSpan(
                     children: [
-                      TextSpan(
+                      const TextSpan(
                         text: 'Welcome to ',
                         style: TextStyle(
                           color: Colors.white,
@@ -99,8 +109,9 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                         ),
                       ),
                       TextSpan(
-                        text: 'Green Cycle',
-                        style: TextStyle(
+                        text:
+                            'Green Cycle ${userInfo != null ? userInfo!['name'] : ''}',
+                        style: const TextStyle(
                           color: Colors.green,
                           fontSize: 30,
                           fontWeight: FontWeight.bold,
@@ -135,11 +146,16 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
-                    onSubmit: () {
+                    onSubmit: () async {
                       final Auth auth = Auth();
                       User? user = auth.currentUser;
                       if (user != null) {
-                        context.go('/home');
+                        await fetchUserInfo(context);
+                        if (userInfo!['role'] == "user") {
+                          context.go('/home');
+                        } else {
+                          context.go('/vendor');
+                        }
                       } else {
                         context.go('/signup');
                       }
@@ -153,5 +169,26 @@ class _WelcomeScreenState extends State<WelcomeScreen>
         ],
       ),
     );
+  }
+
+  Future<void> fetchUserInfo(BuildContext context) async {
+    try {
+      final Dio dio = Dio();
+      final email = Auth().currentUser?.email;
+      final response = await dio.get('$serverURLExpress/user-info/$email');
+      if (response.statusCode == 200) {
+        userInfo = response.data;
+        if (context.mounted) {
+          setState(() {});
+        }
+      }
+    } catch (e) {
+      return createQuickAlert(
+        context: context.mounted ? context : context,
+        title: "Error",
+        message: "An error occurred while updating user coins",
+        type: "error",
+      );
+    }
   }
 }

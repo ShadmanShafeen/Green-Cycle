@@ -1,6 +1,6 @@
 import 'package:go_router/go_router.dart';
+import 'package:green_cycle/src/community/my_community_view/community_chat.dart';
 
-import '../../community/com_goals/community_goals.dart';
 import '../../community/community_calendar.dart';
 import '../../community/community_explore.dart';
 import '../../community/explore_community/communities_nearby.dart';
@@ -32,21 +32,21 @@ final communityRouter = GoRoute(
     GoRoute(
       path: 'my_com',
       name: 'my_com',
-      builder: (context, state) => const MyCommunity(),
+      builder: (context, state) => MyCommunity(),
       pageBuilder: (context, state) {
         return returnCustomTransitionPage(
-          child: const MyCommunity(),
+          child: MyCommunity(),
           context: context,
           type: PageTransitionType.rightToLeft,
         );
       },
     ),
     GoRoute(
-      path: "com-goals",
-      name: "com-goals",
+      path: "com-chat",
+      name: "com-chat",
       pageBuilder: (context, state) {
         return returnCustomTransitionPage(
-          child: const CommunityGoals(),
+          child: const CommunityChat(),
           context: context,
           type: PageTransitionType.bottomToTop,
         );

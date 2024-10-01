@@ -1,14 +1,21 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:green_cycle/auth.dart';
 import 'package:green_cycle/src/community/my_community_view/member-circle.dart';
-import 'package:green_cycle/src/community/my_community_view/member_add_modal.dart';
-import 'package:green_cycle/src/models/members.dart';
-import 'package:green_cycle/src/widgets/app_bar.dart';
+import 'package:green_cycle/src/utils/server.dart';
+import 'package:green_cycle/src/utils/snackbars_alerts.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
-class MyCommunity extends StatelessWidget {
-  const MyCommunity({super.key});
+class MyCommunity extends StatefulWidget {
+  MyCommunity({super.key});
+  late List ranked_members = [];
+  late List members = [];
+  @override
+  State<MyCommunity> createState() => _MyCommunityState();
+}
+
+class _MyCommunityState extends State<MyCommunity> {
   bool isUser(String name) {
     if (name == 'You') {
       return true;
@@ -16,10 +23,47 @@ class MyCommunity extends StatelessWidget {
     return false;
   }
 
+  late var community;
+  final Dio dio = Dio();
+  final user_email = Auth().currentUser?.email;
+
+  Future<void> getCommunity() async {
+    try {
+      await dio.patch("$serverURLExpress/community/rank-members/$user_email");
+      community =
+          await dio.get("$serverURLExpress/vendor/fetch-community/$user_email");
+
+      widget.ranked_members = community.data["rank"];
+      widget.members = community.data['members'];
+    } catch (e) {
+      createQuickAlert(
+        context: context,
+        title: "Error Fetching Community",
+        message: "$e",
+        type: "error",
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(),
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        title: const Text(
+          'My Community',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            context.go('/home/community-explore');
+          },
+        ),
+      ),
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
@@ -30,222 +74,373 @@ class MyCommunity extends StatelessWidget {
             opacity: .5,
           ),
         ),
-        // padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            SizedBox(height: 350, child: topCard(context)),
+            SizedBox(
+              height: 380,
+              child: topCard(context),
+            ),
             const SizedBox(
               height: 10,
             ),
             Expanded(
-              child: ListView.builder(
-                itemCount: members.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return viewListItem(index, context);
-                },
-              ),
-            ),
+                child: FutureBuilder(
+                    future: getCommunity(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return LinearProgressIndicator(
+                          backgroundColor:
+                              Theme.of(context).colorScheme.surfaceContainerLow,
+                          color: Theme.of(context).colorScheme.surfaceBright,
+                        );
+                      } else if (snapshot.hasError) {
+                        return const Center(
+                          child: Text("Error Fetching Data"),
+                        );
+                      } else {
+                        return ListView(
+                          children: [
+                            ...widget.members.asMap().entries.map((entry) {
+                              int index =
+                                  entry.key; // Get the index of the member
+                              var member = entry.value; // Get the member itself
+
+                              return Card(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .surface
+                                    .withOpacity(0.5),
+                                child: ListTile(
+                                  leading: const Icon(Icons.person_2_rounded),
+                                  title: Text(
+                                    member.toString(), // Show index (1-based)
+                                    style: const TextStyle(fontSize: 11),
+                                  ),
+                                  trailing: CircleAvatar(
+                                    child: Text(
+                                        '${index + 1}'), // Show index inside CircleAvatar (optional)
+                                  ),
+                                ),
+                              );
+                            }),
+                          ],
+                        );
+                      }
+                    })),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showModalBottomSheet(
-            backgroundColor: Colors.transparent,
-            showDragHandle: true,
+          createQuickAlertConfirm(
             context: context,
-            builder: (ctx) => const MemberAddModal(),
+            title: "Are you sure?",
+            message: "This will remove from the community",
+            type: "confirm",
+            onConfirmBtnTap: () async {
+              try {
+                final response = await dio.patch(
+                  "$serverURLExpress/leave-community/$user_email",
+                );
+
+                if (response.statusCode == 200) {
+                  createQuickAlert(
+                    context: context,
+                    title: "Success",
+                    message: "You have left the ${community.data["name"]}",
+                    type: "success",
+                  );
+                  context.go('/home/community-explore');
+                } else {
+                  createQuickAlert(
+                    context: context,
+                    title: "Error",
+                    message: "Error leaving community",
+                    type: "error",
+                  );
+                }
+              } catch (e) {
+                createQuickAlert(
+                  context: context,
+                  title: "Error",
+                  message: "Error leaving community: $e",
+                  type: "error",
+                );
+              }
+            },
+            onCancelBtnTap: () {
+              context.pop();
+            },
           );
         },
-        backgroundColor: Theme.of(context).colorScheme.primaryFixed,
-        child: const Icon(
-          Icons.person_add,
-          color: Colors.white,
-        ),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        child: const Icon(Icons.logout_rounded),
       ),
     );
   }
 
-  Widget viewListItem(int index, BuildContext context) {
-    return Card(
-      color: const Color(0xFF2C2C2C).withOpacity(0.7),
-      elevation: 5,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: ListTile(
-        tileColor: isUser(members[index].name)
-            ? Theme.of(context).colorScheme.onInverseSurface.withOpacity(0.8)
-            : Theme.of(context)
-                .colorScheme
-                .surfaceContainerHigh
-                .withOpacity(0.7),
-        leading: CircleAvatar(
-          radius: 30,
-          backgroundImage: AssetImage(members[index].image),
-        ),
-        title: Text(
-          members[index].name,
-          style: isUser(members[index].name)
-              ? TextStyle(
-                  color: Theme.of(context).colorScheme.tertiary,
-                  fontWeight: FontWeight.bold,
-                )
-              : TextStyle(
-                  color: Theme.of(context).colorScheme.primary,
-                  fontWeight: FontWeight.bold,
+  Widget topCard(BuildContext context) {
+    return FutureBuilder(
+      future: getCommunity(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return LinearProgressIndicator(
+            backgroundColor: Theme.of(context).colorScheme.surfaceContainerLow,
+            color: Theme.of(context).colorScheme.surfaceBright,
+          );
+        } else if (snapshot.hasError) {
+          return const Center(
+            child: Text("Error Fetching Data"),
+          );
+        } else {
+          return Card(
+            color: const Color(0xFF2C2C2C).withOpacity(0.7),
+            elevation: 5,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: Image.asset(
+                    'lib/assets/img/leaderboard_bg3.jpg',
+                    fit: BoxFit.cover,
+                  ),
                 ),
-        ),
-        subtitle: Text(
-          '${members[index].points} coins',
-          style: isUser(members[index].name)
-              ? TextStyle(
-                  color: Theme.of(context).colorScheme.surfaceContainerLowest,
-                  fontWeight: FontWeight.bold,
-                )
-              : TextStyle(
-                  color: Theme.of(context).colorScheme.onSurface,
-                  fontWeight: FontWeight.bold,
+                Container(
+                  color: Colors.black.withOpacity(0),
                 ),
-        ),
-        trailing: Text(
-          '${index + 4}',
-          style: TextStyle(
-              color: Theme.of(context).colorScheme.tertiary,
-              fontSize: 18),
-        ),
-      ),
+                Column(
+                  children: [
+                    const SizedBox(
+                      height: 90,
+                    ),
+                    MemberCircle(
+                      isVisible: widget.ranked_members.isEmpty ? false : true,
+                      imageUrl: 'lib/assets/img/avatar1.png',
+                      name: widget.ranked_members.isNotEmpty
+                          ? widget.ranked_members[0]['name']
+                          : "",
+                      points: widget.ranked_members.isNotEmpty
+                          ? widget.ranked_members[0]['coins'].toString()
+                          : "",
+                      rank: 1,
+                      isTopMember: true,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        MemberCircle(
+                          isVisible:
+                              widget.ranked_members.length <= 1 ? false : true,
+                          imageUrl: 'lib/assets/img/avatar2.png',
+                          name: widget.ranked_members.length > 1
+                              ? widget.ranked_members[1]['name']
+                              : "",
+                          points: widget.ranked_members.length > 1
+                              ? widget.ranked_members[1]['coins'].toString()
+                              : "",
+                          rank: 2,
+                        ),
+                        const SizedBox(
+                          width: 70,
+                        ),
+                        MemberCircle(
+                          isVisible:
+                              widget.ranked_members.length <= 2 ? false : true,
+                          imageUrl: 'lib/assets/img/avatar3.png',
+                          name: widget.ranked_members.length > 2
+                              ? widget.ranked_members[2]['name']
+                              : "",
+                          points: widget.ranked_members.length > 2
+                              ? widget.ranked_members[2]['coins'].toString()
+                              : "",
+                          rank: 3,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 40,
+                          width: 90,
+                          child: FilledButton(
+                            onPressed: () {
+                              context.go('/home/community-explore/com-chat');
+                            },
+                            style: const ButtonStyle(
+                              backgroundColor: WidgetStatePropertyAll<Color>(
+                                Color.fromARGB(240, 136, 68, 240),
+                              ),
+                              fixedSize: WidgetStatePropertyAll<Size>(
+                                Size.fromWidth(200),
+                              ),
+                            ),
+                            child: const Center(
+                              child: Text(
+                                'Chat',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        SizedBox(
+                          height: 40,
+                          width: 120,
+                          child: FilledButton(
+                            onPressed: () {
+                              context.go(
+                                '/home/community-explore/community-calender',
+                              );
+                            },
+                            style: const ButtonStyle(
+                              backgroundColor: WidgetStatePropertyAll<Color>(
+                                Color.fromARGB(240, 136, 68, 240),
+                              ),
+                              fixedSize: WidgetStatePropertyAll<Size>(
+                                Size.fromWidth(200),
+                              ),
+                            ),
+                            child: const Center(
+                              child: Text(
+                                'Schedule',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        SizedBox(
+                          height: 40,
+                          width: 100,
+                          child: FilledButton(
+                            onPressed: () async {
+                              Map<String, dynamic> userInfo = {};
+                              try {
+                                final dio = Dio();
+                                final email = community.data["vendor_email"];
+                                final response = await dio
+                                    .get('$serverURLExpress/user-info/$email');
+                                if (response.statusCode == 200) {
+                                  userInfo = response.data;
+                                  if (context.mounted) {
+                                    setState(() {});
+                                  }
+                                }
+
+                                showModalBottomSheet(
+                                  backgroundColor:
+                                      Theme.of(context).colorScheme.surface,
+                                  showDragHandle: true,
+                                  context: context,
+                                  elevation: 10,
+                                  useRootNavigator: true,
+                                  builder: (context) => SingleChildScrollView(
+                                    controller:
+                                        ModalScrollController.of(context),
+                                    child:
+                                        vendorDetailsModal(context, userInfo),
+                                  ),
+                                );
+                              } catch (e) {
+                                createQuickAlert(
+                                  context: context.mounted ? context : context,
+                                  title: "Error",
+                                  message: "Error fetching vendor details: $e",
+                                  type: "error",
+                                );
+                              }
+                            },
+                            style: const ButtonStyle(
+                              backgroundColor: WidgetStatePropertyAll<Color>(
+                                Color.fromARGB(240, 136, 68, 240),
+                              ),
+                              fixedSize: WidgetStatePropertyAll<Size>(
+                                Size.fromWidth(200),
+                              ),
+                            ),
+                            child: const Center(
+                              child: Text(
+                                'Vendor',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        }
+      },
     );
   }
 
-  Card topCard(BuildContext context) {
-    return Card(
-      color: const Color(0xFF2C2C2C).withOpacity(0.7),
-      elevation: 5,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Stack(
+  Container vendorDetailsModal(
+      BuildContext context, Map<String, dynamic> vendorDetails) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+      color: Theme.of(context).colorScheme.surface,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Positioned.fill(
-            child: Image.asset(
-              'lib/assets/img/leaderboard_bg3.jpg',
-              fit: BoxFit.cover,
+          Text(
+            "Vendor Details",
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurface,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          Container(
-            color: Colors.black.withOpacity(0),
-          ),
-          Column(
-            children: [
-              Row(
-            children: [
-              Expanded(
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    'My Community Members',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontSize: 18,
-                    ),
-                  ),
-                ),
-              ),
-              // IconButton(
-              //   icon: const Icon(
-              //     Icons.logout,
-              //     color: Colors.white,
-              //   ),
-              //   onPressed: () {},
-              // ),
-            ],
-          ),
-              MemberCircle(
-                isVisible: true,
-                imageUrl: 'lib/assets/img/avatar1.png',
-                name: 'Bryan Wolf',
-                points: '542 coins',
-                rank: 1,
-                isTopMember: true,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  MemberCircle(
-                    isVisible: true,
-                    imageUrl: 'lib/assets/img/avatar2.png',
-                    name: 'Alex Turner',
-                    points: '450 coins',
-                    rank: 2,
-                  ),
-                  SizedBox(width: 70,),
-                  MemberCircle(
-                    isVisible: true,
-                    imageUrl: 'lib/assets/img/avatar3.png',
-                    name: 'Nick Burg',
-                    points: '312 coins',
-                    rank: 3,
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: 40,
-                    width: 150,
-                    child: FilledButton(
-                      onPressed: () {
-                        context.go('/home/community-explore/com-goals');
-                      },
-                      style: const ButtonStyle(
-                        backgroundColor: WidgetStatePropertyAll<Color>(
-                          Color.fromARGB(240, 136, 68, 240),
-                        ),
-                        fixedSize: WidgetStatePropertyAll<Size>(
-                          Size.fromWidth(200),
-                        ),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          'Goals',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 20),
-                  SizedBox(
-                    height: 40,
-                    width: 150,
-                    child: FilledButton(
-                      onPressed: () {
-                        context.go('/home/community-explore/community-calender');
-                      },
-                      style: const ButtonStyle(
-                        backgroundColor: WidgetStatePropertyAll<Color>(
-                          Color.fromARGB(240, 136, 68, 240),
-                        ),
-                        fixedSize: WidgetStatePropertyAll<Size>(
-                          Size.fromWidth(200),
-                        ),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          'Schedule',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ],
+          const SizedBox(height: 20),
+          SizedBox(
+            width: double.infinity,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                buildColumn(context, "Vendor Name", vendorDetails['name']),
+                const SizedBox(height: 10),
+                buildColumn(context, "Vendor Email", vendorDetails['email']),
+                const SizedBox(height: 10),
+                buildColumn(context, "Vendor Phone", vendorDetails['contact']),
+              ],
+            ),
           ),
         ],
       ),
+    );
+  }
+
+  Column buildColumn(BuildContext context, String title, dynamic value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.primaryFixed,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 5),
+        Text(
+          value,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onSurface,
+            fontSize: 14,
+          ),
+        ),
+      ],
     );
   }
 }

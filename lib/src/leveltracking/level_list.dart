@@ -1,11 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:green_cycle/src/leveltracking/animated_line.dart';
 import 'package:green_cycle/src/leveltracking/coins_earned_container.dart';
 import 'package:green_cycle/src/leveltracking/level_container.dart';
-import 'package:green_cycle/src/utils/server.dart';
 
 class LevelList extends StatefulWidget {
   LevelList({super.key, required this.currentLevel, required this.coinsEarned , required this.displayBottomSheet});

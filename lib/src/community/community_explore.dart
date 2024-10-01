@@ -1,7 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:green_cycle/src/utils/responsive_functions.dart';
 import 'package:green_cycle/src/widgets/app_bar.dart';
 import 'package:green_cycle/src/widgets/nav_bar.dart';
 
@@ -9,7 +8,6 @@ class CommunityExplore extends StatelessWidget {
   final List<String> imgList = [
     'lib/assets/images/community1.png',
     'lib/assets/images/recycle1.png',
-    // 'lib/assets/images/community2.png',
     'lib/assets/images/calendar.png',
     'lib/assets/images/recycle2.png',
     'lib/assets/images/recycle3.png',
@@ -37,19 +35,14 @@ class CommunityExplore extends StatelessWidget {
             CarouselSlider(
               items: imgList
                   .map(
-                    (item) => InkWell(
-                      onTap: () {
-                        context.go("/home/community-explore/my_com");
-                      },
-                      child: Center(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: Image.asset(
-                            item,
-                            fit: BoxFit.cover,
-                            width: 1000,
-                            height: 300,
-                          ),
+                    (item) => Center(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8.0),
+                        child: Image.asset(
+                          item,
+                          fit: BoxFit.cover,
+                          width: 1000,
+                          height: 300,
                         ),
                       ),
                     ),
@@ -80,20 +73,19 @@ class CommunityExplore extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  context.go("/home/community-explore/explore-communities");
+                  context.go("/home/community-explore/my_com");
                 },
-                child: Row(
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       "Start Exploring Communities",
                       style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12
-                      ),
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12),
                     ),
-                    const Icon(
+                    Icon(
                       Icons.arrow_forward,
                       color: Colors.black,
                     ),
