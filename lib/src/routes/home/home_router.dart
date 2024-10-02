@@ -7,6 +7,7 @@ import 'package:green_cycle/src/routes/home/profile_router.dart';
 import 'package:green_cycle/src/search_waste/search_waste.dart';
 import 'package:green_cycle/src/widgets/transitions.dart';
 import 'package:location/location.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 import '../../../main.dart';
 import '../../Locate_Vendor/map.dart';
@@ -18,10 +19,10 @@ import '../../waste_item_listing/main_list_container.dart';
 
 final homeRouter = GoRoute(
   path: '/home',
-  builder: (context, state) => const HomePage(),
+  builder: (context, state) => ShowCaseWidget(builder: (context) =>HomePage()),
   pageBuilder: (context, state) {
     return returnCustomTransitionPage(
-      child: const HomePage(),
+      child: ShowCaseWidget(builder: (context) => HomePage()),
       context: context,
       type: PageTransitionType.bottomToTop,
     );
