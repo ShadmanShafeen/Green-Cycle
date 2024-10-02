@@ -11,7 +11,9 @@ import 'package:green_cycle/src/utils/server.dart';
 import 'package:green_cycle/src/utils/snackbars_alerts.dart';
 import 'package:green_cycle/src/widgets/app_bar.dart';
 import 'package:green_cycle/src/widgets/nav_bar.dart';
+import 'package:green_cycle/src/widgets/show_case_view.dart';
 import 'package:location/location.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class HomePage extends StatefulWidget {
@@ -25,16 +27,46 @@ class _HomePageState extends State<HomePage> {
   final ScrollController scrollController = ScrollController();
   Map<String, dynamic>? userInfo;
 
+  final GlobalKey globalKeyLocate = GlobalKey();
+  final GlobalKey globalKeySchedule = GlobalKey();
+  final GlobalKey globalKeyList = GlobalKey();
+  final GlobalKey globalKeyVoucher = GlobalKey();
+  final GlobalKey globalKeyCommunity = GlobalKey();
+  final GlobalKey globalKeyLearn = GlobalKey();
+  final GlobalKey globalKeyScan = GlobalKey();
+
   @override
   void initState() {
     super.initState();
+    // WidgetsBinding.instance.addPostFrameCallback((_) => beginTutorial());
     fetchUserInfo();
+  }
+
+  void beginTutorial() {
+    ShowCaseWidget.of(context).startShowCase([
+      globalKeyLocate,
+      globalKeySchedule,
+      globalKeyList,
+      globalKeyVoucher,
+      globalKeyCommunity,
+      globalKeyLearn,
+      globalKeyScan
+    ]);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: FloatingActionButton.extended(
+        // ignore: sort_child_properties_last
+          label: Text("Tutorial" , style: TextStyle(fontSize: 10),),
+          icon: Icon(Icons.info),
+        backgroundColor: Theme.of(context).colorScheme.secondary.withOpacity(0.2),
+        onPressed: () {
+        beginTutorial();
+      }),
       appBar: const CustomAppBar(),
       bottomNavigationBar: userInfo != null
           ? NavBar(
@@ -66,43 +98,66 @@ class _HomePageState extends State<HomePage> {
                     mainAxisSpacing: 10,
                     childAspectRatio: 1,
                     children: [
-                      ActionCard(
-                        label: "Locate",
-                        animatedIcon: Image.asset(
-                          "lib/assets/animations/Locate.gif",
-                          width: 50,
-                          height: 50,
+                      ShowCaseView(
+                        globalKey: globalKeyLocate,
+                        title: "Join A Community",
+                        description: "Locate vendors and join their community",
+                        child: ActionCard(
+                          label: "Locate",
+                          animatedIcon: Image.asset(
+                            "lib/assets/animations/Locate.gif",
+                            width: 50,
+                            height: 50,
+                          ),
+                          path: '/home/locate-map',
                         ),
-                        path: '/home/locate-map',
                       ),
-                      ActionCard(
-                        label: "Schedule",
-                        animatedIcon: Image.asset(
-                          "lib/assets/animations/Schedule.gif",
-                          width: 50,
-                          height: 50,
+                      ShowCaseView(
+                        globalKey: globalKeySchedule,
+                        title: "View Your Schedule",
+                        description:
+                            "View pickup dates scheduled by your vendor",
+                        child: ActionCard(
+                          label: "Schedule",
+                          animatedIcon: Image.asset(
+                            "lib/assets/animations/Schedule.gif",
+                            width: 50,
+                            height: 50,
+                          ),
+                          path: '/home/calendar',
                         ),
-                        path: '/home/calendar',
                       ),
-                      ActionCard(
-                        label: "List",
-                        animatedIcon: Image.asset(
-                          "lib/assets/animations/List.gif",
-                          width: 50,
-                          height: 50,
+                      ShowCaseView(
+                        globalKey: globalKeyList,
+                        title: "List Items To Recycle",
+                        description:
+                            "List and confirm items you want to recycle to your vendor",
+                        child: ActionCard(
+                          label: "List",
+                          animatedIcon: Image.asset(
+                            "lib/assets/animations/List.gif",
+                            width: 50,
+                            height: 50,
+                          ),
+                          path: '/home/waste-item-list',
+                          disabled: userInfo?["current_level"] < 2,
+                          disabledMessage: "Join the community to unlock",
                         ),
-                        path: '/home/waste-item-list',
-                        disabled: userInfo?["current_level"] < 2,
-                        disabledMessage: "Join the community to unlock",
                       ),
-                      ActionCard(
-                        label: "Voucher",
-                        animatedIcon: Image.asset(
-                          "lib/assets/animations/Vouchers.gif",
-                          width: 50,
-                          height: 50,
+                      ShowCaseView(
+                        globalKey: globalKeyVoucher,
+                        title: "Buy Vouchers!",
+                        description:
+                            "Get exclusive vouchers with coins earned from leveling up",
+                        child: ActionCard(
+                          label: "Voucher",
+                          animatedIcon: Image.asset(
+                            "lib/assets/animations/Vouchers.gif",
+                            width: 50,
+                            height: 50,
+                          ),
+                          path: '/home/voucher-redemption',
                         ),
-                        path: '/home/voucher-redemption',
                       ),
                       ActionCard(
                         label: "Stories",
@@ -113,16 +168,22 @@ class _HomePageState extends State<HomePage> {
                         ),
                         path: '/home',
                       ),
-                      ActionCard(
-                        label: "Community",
-                        animatedIcon: Image.asset(
-                          "lib/assets/animations/Community.gif",
-                          width: 50,
-                          height: 50,
+                      ShowCaseView(
+                        globalKey: globalKeyCommunity,
+                        title: "View Your Community",
+                        description:
+                            "See your community members, chat and vendor information",
+                        child: ActionCard(
+                          label: "Community",
+                          animatedIcon: Image.asset(
+                            "lib/assets/animations/Community.gif",
+                            width: 50,
+                            height: 50,
+                          ),
+                          path: '/home/community-explore',
+                          disabled: userInfo?["current_level"] < 2,
+                          disabledMessage: "Unlocks at level 2",
                         ),
-                        path: '/home/community-explore',
-                        disabled: userInfo?["current_level"] < 2,
-                        disabledMessage: "Unlocks at level 2",
                       ),
                     ],
                   ),
@@ -144,41 +205,53 @@ class _HomePageState extends State<HomePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  WasteItemsWheel(scrollController: scrollController),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      shape: WidgetStatePropertyAll(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
+                  ShowCaseView(
+                      globalKey: globalKeyLearn,
+                      title: "Learn Waste Categories",
+                      description:
+                          "Know about how to recycle each category of waste",
+                      child:
+                          WasteItemsWheel(scrollController: scrollController)),
+                  ShowCaseView(
+                    globalKey: globalKeyScan,
+                    title: "Scan Waste Item",
+                    description:
+                        "Take a picture of any item to know its waste category",
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        shape: WidgetStatePropertyAll(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                        ),
+                        backgroundColor: WidgetStatePropertyAll(
+                            Theme.of(context).colorScheme.tertiary),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 15, bottom: 15),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Icon(
+                              Icons.photo_camera,
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              'Scan',
+                              style: TextStyle(
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface),
+                            )
+                          ],
                         ),
                       ),
-                      backgroundColor: WidgetStatePropertyAll(
-                          Theme.of(context).colorScheme.tertiary),
+                      onPressed: () {
+                        context.go("/home/camera-control");
+                      },
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          top: 15, bottom: 15, left: 5, right: 5),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Icon(
-                            Icons.photo_camera,
-                            color: Theme.of(context).colorScheme.onSurface,
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            'Scan',
-                            style: TextStyle(
-                                color: Theme.of(context).colorScheme.onSurface),
-                          )
-                        ],
-                      ),
-                    ),
-                    onPressed: () {
-                      context.go("/home/camera-control");
-                    },
                   ),
                 ],
               ),

@@ -342,17 +342,7 @@ class _SignupPageState extends State<SignupPage> with TickerProviderStateMixin {
               ),
               TextButton(
                 onPressed: () {
-                  if(errorMessage == "") {
                     context.go("/login");
-                  }
-                  else {
-                    createQuickAlert(
-          context: context,
-          title: "Invalid Email or Password",
-          message: "",
-          type: 'error',
-        );
-                  }
                 },
                 child: Text(
                   'Log In',
