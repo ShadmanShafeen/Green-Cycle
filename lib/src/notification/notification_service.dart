@@ -12,7 +12,6 @@ class NotificationService {
     final message = {
       'message': {
         'notification': {
-          'title': title,
           'body': body,
         },
         'token': token,
