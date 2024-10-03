@@ -12,17 +12,17 @@ import '../welcome_screen/splash_screen.dart';
 import '../welcome_screen/welcome_screen.dart';
 
 final goRouter = GoRouter(
-  initialLocation: '/home',
+  initialLocation: '/',
   routes: [
     homeRouter,
     GoRoute(
       path: '/level-tracking',
       name: 'level-tracking',
-      builder: (context , state) => ShowCaseWidget(builder: (context) => LevelTrackingPage()), 
+      builder: (context, state) =>
+          ShowCaseWidget(builder: (context) => LevelTrackingPage()),
       pageBuilder: (context, state) {
         return returnCustomTransitionPage(
-          child: ShowCaseWidget(builder: (context) => LevelTrackingPage()
-          ),
+          child: ShowCaseWidget(builder: (context) => LevelTrackingPage()),
           context: context,
           type: PageTransitionType.rightToLeft,
         );
@@ -32,10 +32,11 @@ final goRouter = GoRouter(
     GoRoute(
       path: '/vendor',
       name: 'vendor',
-      builder: (context , state) => ShowCaseWidget(builder: (context) => VendorPage()), 
+      builder: (context, state) =>
+          ShowCaseWidget(builder: (context) => VendorPage()),
       pageBuilder: (context, state) {
         return returnCustomTransitionPage(
-          child: ShowCaseWidget(builder: (context) => VendorPage()) ,
+          child: ShowCaseWidget(builder: (context) => VendorPage()),
           context: context,
           type: PageTransitionType.fade,
         );

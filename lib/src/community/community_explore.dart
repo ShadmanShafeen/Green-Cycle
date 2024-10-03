@@ -79,7 +79,7 @@ class CommunityExplore extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Start Exploring Communities",
+                      "My Community",
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
