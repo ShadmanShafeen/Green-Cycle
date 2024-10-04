@@ -13,8 +13,8 @@ import 'package:green_cycle/src/widgets/app_bar.dart';
 import 'package:green_cycle/src/widgets/nav_bar.dart';
 import 'package:green_cycle/src/widgets/show_case_view.dart';
 import 'package:location/location.dart';
-import 'package:showcaseview/showcaseview.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -60,13 +60,17 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Theme.of(context).colorScheme.surface,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton.extended(
-        // ignore: sort_child_properties_last
-          label: Text("Tutorial" , style: TextStyle(fontSize: 10),),
+          // ignore: sort_child_properties_last
+          label: Text(
+            "Tutorial",
+            style: TextStyle(fontSize: 10),
+          ),
           icon: Icon(Icons.info),
-        backgroundColor: Theme.of(context).colorScheme.secondary.withOpacity(0.2),
-        onPressed: () {
-        beginTutorial();
-      }),
+          backgroundColor:
+              Theme.of(context).colorScheme.secondary.withOpacity(0.2),
+          onPressed: () {
+            beginTutorial();
+          }),
       appBar: const CustomAppBar(),
       bottomNavigationBar: userInfo != null
           ? NavBar(
@@ -167,6 +171,8 @@ class _HomePageState extends State<HomePage> {
                           height: 50,
                         ),
                         path: '/home',
+                        disabled: true,
+                        disabledMessage: "Coming Soon",
                       ),
                       ShowCaseView(
                         globalKey: globalKeyCommunity,

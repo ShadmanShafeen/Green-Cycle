@@ -46,9 +46,8 @@ class _VendorCommunityTabState extends State<VendorCommunityTab> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) =>
-      ShowCaseWidget.of(context).startShowCase([globalKeyMemberAdd])
-    );
+    WidgetsBinding.instance.addPostFrameCallback(
+        (_) => ShowCaseWidget.of(context).startShowCase([globalKeyMemberAdd]));
   }
 
   @override
@@ -58,7 +57,7 @@ class _VendorCommunityTabState extends State<VendorCommunityTab> {
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage(
-              'lib/assets/img/my_com_bg.jpg',
+              'lib/assets/img/my_com_bg1.jpg',
             ),
             fit: BoxFit.cover,
             opacity: .5,
@@ -267,29 +266,29 @@ class _VendorCommunityTabState extends State<VendorCommunityTab> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(
-                            height: 40,
-                            width: 150,
-                            child: FilledButton(
-                              onPressed: () {
-                                // context.go('/home/community-explore/com-goals');
-                              },
-                              style: const ButtonStyle(
-                                backgroundColor: WidgetStatePropertyAll<Color>(
-                                  Color.fromARGB(240, 136, 68, 240),
-                                ),
-                                fixedSize: WidgetStatePropertyAll<Size>(
-                                  Size.fromWidth(200),
-                                ),
-                              ),
-                              child: const Center(
-                                child: Text(
-                                  'Goals',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ),
-                          ),
+                          // SizedBox(
+                          //   height: 40,
+                          //   width: 150,
+                          //   child: FilledButton(
+                          //     onPressed: () {
+                          //       // context.go('/home/community-explore/com-goals');
+                          //     },
+                          //     style: const ButtonStyle(
+                          //       backgroundColor: WidgetStatePropertyAll<Color>(
+                          //         Color.fromARGB(240, 136, 68, 240),
+                          //       ),
+                          //       fixedSize: WidgetStatePropertyAll<Size>(
+                          //         Size.fromWidth(200),
+                          //       ),
+                          //     ),
+                          //     child: const Center(
+                          //       child: Text(
+                          //         'Goals',
+                          //         style: TextStyle(fontWeight: FontWeight.bold),
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
                           const SizedBox(width: 20),
                           SizedBox(
                             height: 40,

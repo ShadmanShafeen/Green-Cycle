@@ -1,3 +1,2 @@
-
-const serverURLFlask = 'http://192.168.10.162:5000';
-const serverURLExpress = 'http://192.168.10.162:3000';
+const serverURLFlask = 'http://10.103.131.176:5000';
+const serverURLExpress = 'http://10.103.131.176:3000';

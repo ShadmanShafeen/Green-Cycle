@@ -10,7 +10,6 @@ import 'package:green_cycle/src/utils/snackbars_alerts.dart';
 import 'package:green_cycle/src/widgets/app_bar.dart';
 import 'package:green_cycle/src/widgets/coins_container.dart';
 import 'package:green_cycle/src/widgets/nav_bar.dart';
-import 'package:green_cycle/src/widgets/show_case_view.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 class LevelTrackingPage extends StatefulWidget {
@@ -50,12 +49,7 @@ class _LevelTrackingPageState extends State<LevelTrackingPage> {
       coinsEarned = response.data['coins_earned'];
       objectives = response.data['objectives'];
     } catch (e) {
-      createQuickAlert(
-        context: context,
-        title: "Error fetching level details",
-        message: "$e",
-        type: "error",
-      );
+      print(e);
     }
   }
 
