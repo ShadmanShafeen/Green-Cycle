@@ -13,6 +13,7 @@ class NotificationService {
       'message': {
         'notification': {
           'body': body,
+          'title': title,
         },
         'token': token,
         "android": {

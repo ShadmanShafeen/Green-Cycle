@@ -35,8 +35,6 @@ class _WelcomeScreenState extends State<WelcomeScreen>
           _controller.setVolume(0);
         });
       });
-
-    fetchUserInfo(context);
   }
 
   @override
@@ -175,6 +173,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
     try {
       final Dio dio = Dio();
       final email = Auth().currentUser?.email;
+
       final response = await dio.get('$serverURLExpress/user-info/$email');
       if (response.statusCode == 200) {
         userInfo = response.data;
@@ -186,7 +185,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
       return createQuickAlert(
         context: context.mounted ? context : context,
         title: "Error",
-        message: "An error occurred while updating user coins",
+        message: "An error occurred $e",
         type: "error",
       );
     }

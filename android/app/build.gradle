@@ -70,6 +70,12 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
 }
 
+dependencies {
+    // ...
+    implementation("com.google.android.material:material:1.13.0-alpha07")
+    // ...
+}
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'com.google.gms.google-services' // Add this line
