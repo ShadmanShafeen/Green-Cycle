@@ -42,7 +42,7 @@ class _WelcomeSplashScreenState extends State<WelcomeSplashScreen>
         alignment: Alignment.center,
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("lib/assets/images/splash bg.png"),
+            image: AssetImage("lib/assets/images/gamebg.png"),
             fit: BoxFit.cover,
           ),
         ),
@@ -50,7 +50,7 @@ class _WelcomeSplashScreenState extends State<WelcomeSplashScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Lottie.network(
-                "https://lottie.host/477c5dd8-342d-4416-ae9a-1d9226413d13/qGmpCi9CXG.json",
+                "https://lottie.host/dc4a8c03-c081-4e00-811d-aca38d0f91e4/d18yRidNRF.json",
                 width: 300,
                 height: 300,
                 fit: BoxFit.contain,
@@ -68,7 +68,7 @@ class _WelcomeSplashScreenState extends State<WelcomeSplashScreen>
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 35,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w900,
               ),
             ),
           ],

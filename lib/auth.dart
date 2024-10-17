@@ -163,9 +163,9 @@ class Auth {
     });
 
     FirebaseMessaging.onBackgroundMessage((message) async {
-        if (message != null) {
-          handleMessage(message);
-        }
+      if (message != null) {
+        handleMessage(message);
+      }
     });
 
     firebaseMessaging.setForegroundNotificationPresentationOptions(
